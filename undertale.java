@@ -26,17 +26,10 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static int eventState = 0;
 	public static int mouseX;
 	public static int mouseY;
-	public static float alpha = 1.0f;
-	
-	// -1 = no fade, 1 = fade in, 2 = fade out
-	public static boolean fading = false;
-	public static boolean faded = false;
-	public static int fade = -1;
-	public static int fadeSpeed = 1;
-	
+
 	// images
 	BufferedImage titleScreen;
-	BufferedImage ruins;
+	BufferedImage ruins1;
 	
 	// position
 	public static int ruinsX = 295;
@@ -45,6 +38,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	// time
 	Timer timer = new Timer(20, this);
 	
+	// other
+	animation animation = new animation(this);
+
 	public undertale() {
 		
 		// 10 pixels less height and width than the background because
@@ -55,8 +51,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		
 		// import images
 		try {
+			
 			titleScreen = ImageIO.read(new File("assets/undertalestartmenu.png"));
-			ruins = ImageIO.read(new File("assets/ruins.png"));
+			ruins1 = ImageIO.read(new File("assets/ruins1.png"));
 		}
 		catch (Exception e) {
 			System.out.println("Image does not exist");
@@ -72,7 +69,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		addMouseListener(this);
 		
 		// other
-			
+
 
 	}
 	
@@ -94,7 +91,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		if (gameState == 0) {
 			
 			// if the fade animation is finished
-			if (alpha == 0) {
+			if (animation.alpha == 0) {
 				try {
 					Thread.sleep(3000);
 					gameState = 1;
@@ -106,8 +103,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				}
 			}
 			
-			else if (fading) {
-				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+			else if (animation.fading) {
+				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, animation.alpha));
 				g2d.drawImage(titleScreen, 0, 0, null);
 			}
 			
@@ -119,62 +116,28 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		
 		// exploration 
 		else if (gameState == 1) {
-			System.out.println(counter);
-			counter++;
-			if (!faded) { 
+			if (!animation.faded) { 
 				System.out.println("start fade");
-				faded = true;
+				animation.faded = true;
 				timer.start();
 			}
 			
-			else if (fading) {
-				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-				g2d.drawImage(ruins, ruinsX, ruinsY, null);
-				System.out.println("ruins");
+			else if (animation.fading) {
+				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, animation.alpha));
+				System.out.println("opacity = " + animation.alpha);
+				g2d.drawImage(ruins1, 0, 0, null);
 			}
 			
 			else {
-				g.drawImage(ruins, ruinsX, ruinsY, null);
+				g.drawImage(ruins1, 0, 0, null);
 				System.out.println("ruins rendering done");
-				g.drawImage(titleScreen, 0, 0, null);
 				
-				// this is weird. it can draw the title screen but can't 
-				// draw ruins.png
-				// im pretty sure the coordinates for ruins.png gives a valid location tho
-				// some fault with the picture
+
 
 			}
-		}
-			
-			
-				
-			
+		}				
 	}
 	
-		
-			
-	
-	
-	public void fadeOut() {
-		alpha -= 0.01 * fadeSpeed;
-		if (alpha < 0) {
-			alpha = 0;
-			timer.stop();
-			fade = 1;
-		}
-		repaint();
-	}
-	
-	public void fadeIn() {	
-		alpha += 0.01 * fadeSpeed;
-		if (alpha > 1) {
-			alpha = 1;
-			timer.stop();
-			fade = -1;
-			fading = false;
-		}
-		repaint();
-	}
 
 
 	
@@ -189,8 +152,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			// play game
 			if (370 <= mouseX && mouseX <= 670 && 185 <= mouseY && mouseY <= 270) {
 				System.out.println("play");
-				fading = true;
-				fade = 2;
+				animation.fading = true;
+				animation.fade = 2;
 				timer.start();  // the timer calls the actionListener method
 
 			}
@@ -218,8 +181,11 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		if (fade == 1) fadeIn();
-		else if (fade == 2) fadeOut();
+		if (animation.fading) {
+			if (animation.fade == 1) animation.fadeIn();
+			else if (animation.fade == 2) animation.fadeOut();
+			repaint();
+		}
 		
 	}
 
