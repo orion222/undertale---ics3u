@@ -116,7 +116,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		// create boundaries
 		
 		// ruins
-		ruinsBounds.add(new dimension(new corner (135, -10), new corner (775, 375)));
+		ruinsBounds.add(new dimension(new corner (135, -10), new corner (800, 375)));
 		ruinsBounds.add(new dimension(new corner(-50, 260), new corner(135, 375)));
 
 	}
@@ -196,7 +196,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			if (370 <= mouseX && mouseX <= 670 && 185 <= mouseY && mouseY <= 270) {
 				System.out.println("play");
 				animation.fading = true;
-				animation.wait = true;
+				animation.wait = false;
 				fadeStart = titleScreen;
 				fadeEnd = ruinsImages[0];
 				gameState = 1;
@@ -230,29 +230,23 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	@Override
     public void keyPressed(KeyEvent e) {
 		if (!animation.fading && 1 <= gameState && gameState <= 3) {
-			System.out.println("yo");
-			System.out.println(withinBounds(charaX, charaY - charaSpeed, curBounds));
 	        if(e.getKeyChar() == 'w' && withinBounds(charaX, charaY - charaSpeed, curBounds))
 	        {
-	            System.out.println("w");
 	            charaY -= charaSpeed;
 	            charaAnimation.key = 1;
 	        }
 	        else if(e.getKeyChar() == 'a' && withinBounds(charaX - charaSpeed, charaY, curBounds))
 	        {
-	            System.out.println("a");
 	            charaX -= charaSpeed;
 	            charaAnimation.key = 2;
 	        }
 	        else if(e.getKeyChar() == 's' && withinBounds(charaX, charaY + charaSpeed, curBounds))
 	        {
-	            System.out.println("s");
 	            charaY += charaSpeed;
 	            charaAnimation.key = 3;
 	        }
 	        else if(e.getKeyChar() == 'd' && withinBounds(charaX + charaSpeed, charaY, curBounds))
 	        {
-	            System.out.println("d");
 	            charaX += charaSpeed;
 	            charaAnimation.key = 4;
 	        }
