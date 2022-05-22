@@ -10,12 +10,6 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
 
     BufferedImage[] chara = new BufferedImage[10];
 
-    // Indicates which picture should be drawn
-    // from all the chara pictures
-    public static int num = 0;
-
-    public static int x = 100;
-    public static int y = 100;
 
     // Allows the program to know what
     // movement key has been pressed,
@@ -38,7 +32,14 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
     // Creating a path to import the pictures
     File path = new File("assets/charaAnimation");
     File[] charaImages = path.listFiles();
-
+    
+	public undertale game;
+	
+	public charaAnimation(undertale e){
+		
+		 game = e;
+	}
+	
     public charaAnimation() {
         setPreferredSize(new Dimension(1000, 500));
         setBackground(new Color(32, 55, 200));
@@ -63,7 +64,6 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
 
         try {Thread.sleep(120);}
         catch (Exception e) {e.printStackTrace();}
-        g.drawImage(chara[num], x, y, null);
     }
 
     public static void main(String[] args) {
@@ -80,26 +80,26 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
     public void run() {
         if(key > 0)
         {
-            repaint();
             // w
             if(key == 1){
-                if(!legW){num = 4; legW = true;}
-                else {num = 5; legW = false;}
+                if(!legW){game.curChara = 4; legW = true;}
+                else {game.curChara = 5; legW = false;}
             }
             // a
             else if(key == 2)
-                if(!legA){num = 8; legA = true;}
-                else {num = 1; legA = false;}
+                if(!legA){game.curChara = 8; legA = true;}
+                else {game.curChara = 1; legA = false;}
             // s
             else if(key == 3){
-                if(!legS){num = 6; legS = true;}
-                else {num = 7; legS = false;}
+                if(!legS){game.curChara = 6; legS = true;}
+                else {game.curChara = 7; legS = false;}
             }
             // d
             else{
-                if(!legD){num = 9; legD = true;}
-                else{num = 3; legD = false;}
+                if(!legD){game.curChara = 9; legD = true;}
+                else{game.curChara = 3; legD = false;}
             }
+            game.repaint();
         }
     }
 
@@ -138,26 +138,26 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
         if(e.getKeyChar() == 'w')
         {
             System.out.println("w");
-            num = 0;
+            game.curChara = 0;
         }
         else if(e.getKeyChar() == 'a')
         {
             System.out.println("a");
-            num = 1;
+            game.curChara = 1;
             legA = false;
         }
         else if(e.getKeyChar() == 's')
         {
             System.out.println("s");
-            num = 2;
+            game.curChara = 2;
             legS = false;
         }
         else if(e.getKeyChar() == 'd')
         {
             System.out.println("d");
-            num = 3;
+            game.curChara = 3;
         }
-        repaint();
+        game.repaint();
     }
 }
 

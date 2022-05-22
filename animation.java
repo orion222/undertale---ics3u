@@ -77,4 +77,7 @@ public class animation implements ActionListener{
 		game.repaint();
 		
 	}
+	
+	
+	
 }
