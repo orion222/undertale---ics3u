@@ -41,22 +41,27 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	
 	public static BufferedImage titleScreen;
 
-	// maps
+	// map images
     public static File path2 = new File("assets/maps/ruins");
     public static File[] ruinsFile = path2.listFiles();
     public static BufferedImage[] ruinsImages = new BufferedImage[4];
 	public static int curRuins = 0;  // know which frame of ruins to show
+	public static ArrayList<dimension> ruinsBounds = new ArrayList<dimension>();
 	
     public static File path3 = new File("assets/maps/snowden");
     public static File[] snowdenFile = path3.listFiles();
     public static BufferedImage[] snowdenImages = new BufferedImage[4];
 	public static int curSnowden = 0;  // know which frame of snowden to show
+	public static ArrayList<dimension> snowdenBounds = new ArrayList<dimension>();
+
 	
     public static File path4 = new File("assets/maps/temp");
     public static File[] tempFile = path4.listFiles();
     public static BufferedImage[] tempImages = new BufferedImage[4];
 	public static int curTemp = 0;  // know which frame of temp to show
-	
+	public static ArrayList<dimension> tempBounds = new ArrayList<dimension>();
+
+	public static ArrayList<dimension> curBounds;
 	
 	BufferedImage fadeStart;
 	BufferedImage fadeEnd;
@@ -108,8 +113,11 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		this.setFocusable(true);
 		addMouseListener(this);
 		
-		// other
-
+		// create boundaries
+		
+		// ruins
+		ruinsBounds.add(new dimension(new corner (135, -10), new corner (775, 375)));
+		ruinsBounds.add(new dimension(new corner(-50, 260), new corner(135, 375)));
 
 	}
 	
@@ -192,6 +200,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				fadeStart = titleScreen;
 				fadeEnd = ruinsImages[0];
 				gameState = 1;
+				curBounds = ruinsBounds;
 				animation.fade(fadeStart, fadeEnd, "slow");
 				
 
@@ -221,26 +230,27 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	@Override
     public void keyPressed(KeyEvent e) {
 		if (!animation.fading && 1 <= gameState && gameState <= 3) {
-
-	        if(e.getKeyChar() == 'w')
+			System.out.println("yo");
+			System.out.println(withinBounds(charaX, charaY - charaSpeed, curBounds));
+	        if(e.getKeyChar() == 'w' && withinBounds(charaX, charaY - charaSpeed, curBounds))
 	        {
 	            System.out.println("w");
 	            charaY -= charaSpeed;
 	            charaAnimation.key = 1;
 	        }
-	        else if(e.getKeyChar() == 'a')
+	        else if(e.getKeyChar() == 'a' && withinBounds(charaX - charaSpeed, charaY, curBounds))
 	        {
 	            System.out.println("a");
 	            charaX -= charaSpeed;
 	            charaAnimation.key = 2;
 	        }
-	        else if(e.getKeyChar() == 's')
+	        else if(e.getKeyChar() == 's' && withinBounds(charaX, charaY + charaSpeed, curBounds))
 	        {
 	            System.out.println("s");
 	            charaY += charaSpeed;
 	            charaAnimation.key = 3;
 	        }
-	        else if(e.getKeyChar() == 'd')
+	        else if(e.getKeyChar() == 'd' && withinBounds(charaX + charaSpeed, charaY, curBounds))
 	        {
 	            System.out.println("d");
 	            charaX += charaSpeed;
@@ -250,10 +260,20 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		}
     }
 
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
+	public static boolean withinBounds(int x, int y, ArrayList<dimension> q) {
 		
+		for (dimension i: q) {
+			// check if within top left corner
+			corner topL = i.topLeft;
+			corner bottomR = i.bottomRight;
+			if (topL.x < x && x < bottomR.x && topL.y < y && y < bottomR.y) {
+				return true;
+			}
+			
+		}
+		
+		
+		return false;
 	}
 	
 	@Override
@@ -263,13 +283,22 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	
 	
 	// create an objects to measure the boundaries
-	public static class dimension{
+	public static class corner{
 		
 		public int x;
 		public int y;
-		public dimension(int x, int y) {
+		public corner(int x, int y) {
 			this.x = x;
 			this.y = y;
+		}
+	}
+	
+	public static class dimension {
+		public corner topLeft;
+		public corner bottomRight;
+		public dimension(corner topLeft, corner bottomRight) {
+			this.topLeft = topLeft;
+			this.bottomRight = bottomRight;
 		}
 	}
 
@@ -283,6 +312,11 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	
 	// useless methods
 	
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
