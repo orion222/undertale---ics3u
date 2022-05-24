@@ -1,5 +1,4 @@
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
@@ -230,22 +229,22 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	@Override
     public void keyPressed(KeyEvent e) {
 		if (!animation.fading && 1 <= gameState && gameState <= 3) {
-	        if(e.getKeyChar() == 'w' && withinBounds(charaX, charaY - charaSpeed, curBounds))
+	        if(e.getKeyCode() == 38 && withinBounds(charaX, charaY - charaSpeed, curBounds))
 	        {
 	            charaY -= charaSpeed;
 	            charaAnimation.key = 1;
 	        }
-	        else if(e.getKeyChar() == 'a' && withinBounds(charaX - charaSpeed, charaY, curBounds))
+	        else if(e.getKeyCode() == 37 && withinBounds(charaX - charaSpeed, charaY, curBounds))
 	        {
 	            charaX -= charaSpeed;
 	            charaAnimation.key = 2;
 	        }
-	        else if(e.getKeyChar() == 's' && withinBounds(charaX, charaY + charaSpeed, curBounds))
+	        else if(e.getKeyCode() == 40 && withinBounds(charaX, charaY + charaSpeed, curBounds))
 	        {
 	            charaY += charaSpeed;
 	            charaAnimation.key = 3;
 	        }
-	        else if(e.getKeyChar() == 'd' && withinBounds(charaX + charaSpeed, charaY, curBounds))
+	        else if(e.getKeyCode() == 39 && withinBounds(charaX + charaSpeed, charaY, curBounds))
 	        {
 	            charaX += charaSpeed;
 	            charaAnimation.key = 4;
