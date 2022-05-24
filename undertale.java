@@ -166,17 +166,15 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		// exploration 
 		else if (gameState == 1) {
 			g2d.drawImage(ruinsImages[curRuins], 0, 0, null);
+			
 			try {
-				Thread.sleep(100);
-		        g2d.drawImage(charaImages[curChara], charaX, charaY, null);
-			} 
-			catch (InterruptedException e) {
+				Thread.sleep(60);
+			    g2d.drawImage(charaImages[curChara], charaX, charaY, null);
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			
-			
 		}				
 	}
 	
@@ -228,7 +226,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 	@Override
     public void keyPressed(KeyEvent e) {
-		if (!animation.fading && 1 <= gameState && gameState <= 3) {
+		if (!animation.fading && 1 <= gameState && gameState <= 3 ) {
 	        if(e.getKeyCode() == 38 && withinBounds(charaX, charaY - charaSpeed, curBounds))
 	        {
 	            charaY -= charaSpeed;
@@ -270,6 +268,36 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	}
 	
 	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		if (!animation.fading && 1 <= gameState && gameState <= 3 ) {
+			if(e.getKeyCode() == 38)
+	        {
+	            System.out.println("w");
+	            System.out.println("w hsa been released");
+	            curChara = 0;
+	        }
+	        else if(e.getKeyCode() == 37)
+	        {
+	            System.out.println("a");
+	            curChara = 1;
+	        }
+	        else if(e.getKeyCode() == 40)
+	        {
+	            System.out.println("s");
+	            curChara = 2;
+	        }
+	        else if(e.getKeyCode() == 39)
+	        {
+	            System.out.println("d");
+	            curChara = 3;
+	        }
+	        repaint();
+		}
+		
+	}
+	
+	@Override
 	public void run() {
 		
 	}
@@ -305,11 +333,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	
 	// useless methods
 	
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
