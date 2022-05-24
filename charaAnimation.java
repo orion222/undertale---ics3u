@@ -36,7 +36,6 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
 	public undertale game;
 	
 	public charaAnimation(undertale e){
-		
 		 game = e;
 	}
 	
@@ -108,22 +107,24 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
     // Declaring a value to key to indicate
     // which movement button has been pressed
     public void keyPressed(KeyEvent e) {
-        if(e.getKeyChar() == 'w')
+        
+    	
+    	if(e.getKeyCode() == 38)
         {
             System.out.println("w");
             key = 1;
         }
-        else if(e.getKeyChar() == 'a')
+        else if(e.getKeyCode() == 37)
         {
             System.out.println("a");
             key = 2;
         }
-        else if(e.getKeyChar() == 's')
+        else if(e.getKeyCode() == 40)
         {
             System.out.println("s");
             key = 3;
         }
-        else if(e.getKeyChar() == 'd')
+        else if(e.getKeyCode() == 39)
         {
             System.out.println("d");
             key = 4;
@@ -160,4 +161,3 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
         game.repaint();
     }
 }
-
