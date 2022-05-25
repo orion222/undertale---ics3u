@@ -290,26 +290,21 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	// position in whichever direction
 	public void keyReleased(KeyEvent e) {
 		int x = e.getKeyCode();
-		if(x == 38)
-		{
-			curChara = 0;
+		if(!animation.fading && 1 <= gameState && gameState <= 3) {
+			if (x == 38) {
+				curChara = 0;
+			} else if (x == 37) {
+				curChara = 1;
+				charaAnimation.legA = false;
+			} else if (x == 40) {
+				curChara = 2;
+				charaAnimation.legS = false;
+			} else if (x == 39) {
+				System.out.println("d");
+				curChara = 3;
+			}
+			repaint();
 		}
-		else if(x == 37)
-		{
-			curChara = 1;
-			charaAnimation.legA = false;
-		}
-		else if(x == 40)
-		{
-			curChara = 2;
-			charaAnimation.legS = false;
-		}
-		else if(x == 39)
-		{
-			System.out.println("d");
-			curChara = 3;
-		}
-		repaint();
 	}
 	public static boolean withinBounds(int x, int y, ArrayList<dimension> q) {
 		for (dimension i: q) {
