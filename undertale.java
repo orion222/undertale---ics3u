@@ -1,4 +1,5 @@
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
@@ -18,7 +19,7 @@ import java.util.*;
 
 
 public class undertale extends JPanel implements KeyListener, MouseListener, Runnable{
-	
+
 	public static int counter;
 	public static int gameState = 0;
 	public static int eventState = 0;
@@ -46,6 +47,11 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
     public static BufferedImage[] ruinsImages = new BufferedImage[4];
 	public static int curRuins = 0;  // know which frame of ruins to show
 	public static ArrayList<dimension> ruinsBounds = new ArrayList<dimension>();
+
+	// [x][y]
+	// x represents which map of ruins
+	// y represents exit or entrance
+	public static dimension[][] ruinsExits = new dimension[4][2];
 	
     public static File path3 = new File("assets/maps/snowden");
     public static File[] snowdenFile = path3.listFiles();
@@ -61,6 +67,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static ArrayList<dimension> tempBounds = new ArrayList<dimension>();
 
 	public static ArrayList<dimension> curBounds;
+	public static dimension[][] curExits;
+	public static BufferedImage[][] allSettings = {null, ruinsImages, snowdenImages, tempImages};
 	
 	BufferedImage fadeStart;
 	BufferedImage fadeEnd;
@@ -166,22 +174,34 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		// exploration 
 		else if (gameState == 1) {
 			g2d.drawImage(ruinsImages[curRuins], 0, 0, null);
-			
 			try {
-				Thread.sleep(60);
-			    g2d.drawImage(charaImages[curChara], charaX, charaY, null);
-			} catch (InterruptedException e) {
+				Thread.sleep(100);
+		        g2d.drawImage(charaImages[curChara], charaX, charaY, null);
+			} 
+			catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
+			
+			
 		}				
 	}
-	
 
+	// 0 means not within exit, 0 means go back to previous setting, 1 means go to next setting
+	public static int withinExit(int x, int y, dimension[] exits) {
+		// exits is an array of pairs in form of 1D dimensions (entrance dimension, exit dimension)
+		// we check if the character is within these dimensions and return which setting that
+		// the character actually entered
+		for (int n = 0; n < 2; n++) {
+			dimension i = exits[n];
+			if (i.topLeft.y < y && y < i.bottomRight.y && i.topLeft.x == x) {
+				return n;
+			}
+		}
+		return -1;
+	}
 
-	
-	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
@@ -223,36 +243,75 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		
 	}
 
-
-	@Override
+	// Declaring a value to key to indicate
+	// which movement button has been pressed
     public void keyPressed(KeyEvent e) {
-		if (!animation.fading && 1 <= gameState && gameState <= 3 ) {
-	        if(e.getKeyCode() == 38 && withinBounds(charaX, charaY - charaSpeed, curBounds))
+		int x = e.getKeyCode();
+		charaAnimation.x = e.getKeyCode();
+		if (!animation.fading && 1 <= gameState && gameState <= 3) {
+	        if(x == 38 && withinBounds(charaX, charaY - charaSpeed, curBounds))
 	        {
 	            charaY -= charaSpeed;
 	            charaAnimation.key = 1;
 	        }
-	        else if(e.getKeyCode() == 37 && withinBounds(charaX - charaSpeed, charaY, curBounds))
+	        else if(x == 37 && withinBounds(charaX - charaSpeed, charaY, curBounds))
 	        {
 	            charaX -= charaSpeed;
 	            charaAnimation.key = 2;
 	        }
-	        else if(e.getKeyCode() == 40 && withinBounds(charaX, charaY + charaSpeed, curBounds))
+	        else if(x == 40 && withinBounds(charaX, charaY + charaSpeed, curBounds))
 	        {
 	            charaY += charaSpeed;
 	            charaAnimation.key = 3;
 	        }
-	        else if(e.getKeyCode() == 39 && withinBounds(charaX + charaSpeed, charaY, curBounds))
+	        else if(x == 39 && withinBounds(charaX + charaSpeed, charaY, curBounds))
 	        {
 	            charaX += charaSpeed;
 	            charaAnimation.key = 4;
 	        }
 	        charaAnimation.run();
+			int change = withinExit(charaX, charaY, curExits[curRuins]);
+			if (change > -1) {
+				if (change == 0) {
+					fadeStart = ruinsImages[curRuins];
+					if (curRuins - 1 < 0) {
+						gameState--;
+
+					}
+					animation.fade(fadeStart, fadeEnd, "fast");
+				}
+
+			}
 		}
     }
 
+	// When button is released, chara
+	// should go back to default standing
+	// position in whichever direction
+	public void keyReleased(KeyEvent e) {
+		int x = e.getKeyCode();
+		if(x == 38)
+		{
+			curChara = 0;
+		}
+		else if(x == 37)
+		{
+			curChara = 1;
+			charaAnimation.legA = false;
+		}
+		else if(x == 40)
+		{
+			curChara = 2;
+			charaAnimation.legS = false;
+		}
+		else if(x == 39)
+		{
+			System.out.println("d");
+			curChara = 3;
+		}
+		repaint();
+	}
 	public static boolean withinBounds(int x, int y, ArrayList<dimension> q) {
-		
 		for (dimension i: q) {
 			// check if within top left corner
 			corner topL = i.topLeft;
@@ -262,39 +321,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			}
 			
 		}
-		
-		
 		return false;
-	}
-	
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		if (!animation.fading && 1 <= gameState && gameState <= 3 ) {
-			if(e.getKeyCode() == 38)
-	        {
-	            System.out.println("w");
-	            System.out.println("w hsa been released");
-	            curChara = 0;
-	        }
-	        else if(e.getKeyCode() == 37)
-	        {
-	            System.out.println("a");
-	            curChara = 1;
-	        }
-	        else if(e.getKeyCode() == 40)
-	        {
-	            System.out.println("s");
-	            curChara = 2;
-	        }
-	        else if(e.getKeyCode() == 39)
-	        {
-	            System.out.println("d");
-	            curChara = 3;
-	        }
-	        repaint();
-		}
-		
 	}
 	
 	@Override
@@ -332,8 +359,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	
 	
 	// useless methods
-	
-
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub

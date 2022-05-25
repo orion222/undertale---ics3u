@@ -9,6 +9,7 @@ import java.awt.event.KeyListener;
 public class charaAnimation extends JPanel implements Runnable, KeyListener {
 
     BufferedImage[] chara = new BufferedImage[10];
+    int x = 0;
 
 
     // Allows the program to know what
@@ -36,6 +37,7 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
 	public undertale game;
 	
 	public charaAnimation(undertale e){
+		
 		 game = e;
 	}
 	
@@ -65,19 +67,11 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
         catch (Exception e) {e.printStackTrace();}
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("animation");
-        charaAnimation panel = new charaAnimation();
-        frame.add(panel);
-        frame.pack();
-        frame.setVisible(true);
-    }
-
     // Determining which direction the
     // user is going at and figuring out
     // the correct pictures to draw
     public void run() {
-        if(key > 0)
+        if(x >= 37 && x <= 40)
         {
             // w
             if(key == 1){
@@ -103,61 +97,7 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
     }
 
     public void keyTyped(KeyEvent e) {}
-
-    // Declaring a value to key to indicate
-    // which movement button has been pressed
-    public void keyPressed(KeyEvent e) {
-        
-    	
-    	if(e.getKeyCode() == 38)
-        {
-            System.out.println("w");
-            key = 1;
-        }
-        else if(e.getKeyCode() == 37)
-        {
-            System.out.println("a");
-            key = 2;
-        }
-        else if(e.getKeyCode() == 40)
-        {
-            System.out.println("s");
-            key = 3;
-        }
-        else if(e.getKeyCode() == 39)
-        {
-            System.out.println("d");
-            key = 4;
-        }
-        run();
-    }
-
-    // When button is released, chara
-    // should go back to default standing
-    // position in whichever direction
-    public void keyReleased(KeyEvent e) {
-        if(e.getKeyChar() == 'w')
-        {
-            System.out.println("w");
-            game.curChara = 0;
-        }
-        else if(e.getKeyChar() == 'a')
-        {
-            System.out.println("a");
-            game.curChara = 1;
-            legA = false;
-        }
-        else if(e.getKeyChar() == 's')
-        {
-            System.out.println("s");
-            game.curChara = 2;
-            legS = false;
-        }
-        else if(e.getKeyChar() == 'd')
-        {
-            System.out.println("d");
-            game.curChara = 3;
-        }
-        game.repaint();
-    }
+    public void keyPressed(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {}
 }
+
