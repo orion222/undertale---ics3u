@@ -318,7 +318,26 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		}
 		return false;
 	}
-	
+	// -1 equals go back, 0 equals we haven't exited, 1 equals go to next setting
+	public static int exiting(int x, int y, ArrayList<dimension> exits) {
+		dimension entrance = exits.get(0);
+		dimension exit = exits.get(1);
+		
+		if (entrance.bottomRight.y <= y && y <= entrance.topLeft.y
+				&& entrance.topLeft.x == x) {
+			// we entered the entrance so we go back to the previous setting
+			return -1;
+		}
+		else if (exit.bottomRight.y <= y && y <= exit.topLeft.y
+				&& exit.topLeft.x == x) {
+			// we entered the entrance so we go back to the previous setting
+			return 1;
+		}
+		
+		
+		
+		return 0; // we have not exited the map
+	}
 	@Override
 	public void run() {
 		
