@@ -31,6 +31,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static int charaX = 475;
 	public static int charaY = 220;
 	public static int charaSpeed = 5;
+	// [map][setting][1 = start, 2 = exit]
+	public static corner[][][] charaPos = new corner[4][5][3];
 	
     // Creating a path to import the pictures
     public static File path = new File("assets/charaAnimation");
@@ -145,6 +147,14 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			}
 		}
 		
+		// Positions of Chara
+		// ruins1
+		allPos[1][1][1] = new corner(480, 220); // Initial position after menu //65 435
+		allPos[1][1][2] = new corner(65, 435); // In front of exit
+
+		// ruins2
+		allPos[1][2][1] = new corner(950, 355); // In front of entrance
+		allPos[1][2][2] = new corner(175, 280); // In front of exit
 		
 		// ruins1
 		ruinsBounds[1].add(new dimension(new corner (135, -10), new corner (800, 375)));
