@@ -32,7 +32,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static int charaY = 220;
 	public static int charaSpeed = 5;
 	// [map][setting][1 = start, 2 = exit]
-	public static corner[][][] charaPos = new corner[4][5][3];
+	public static corner[][][] allPos = new corner[4][5][3];
 	
     // Creating a path to import the pictures
     public static File path = new File("assets/charaAnimation");
