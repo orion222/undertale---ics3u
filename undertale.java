@@ -153,9 +153,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		ruinsExits[1].add(new dimension(new corner(-35, 260), new corner(-35, 375))); // exit
 		
 		// ruins 2
-		ruinsBounds[2].add(new dimension(new corner (55, 290), new corner (995, 415)));
-		ruinsBounds[2].add(new dimension(new corner (120, 250), new corner (230, 290)));
-		ruinsExits[2].add(new dimension(new corner(995,290), new corner(995, 415))); // entrance
+		ruinsBounds[2].add(new dimension(new corner (45, 175), new corner (1050, 300)));
+		ruinsBounds[2].add(new dimension(new corner (100, 150), new corner (170, 175)));
+		ruinsExits[2].add(new dimension(new corner(1025,175), new corner(1025, 300))); // entrance
 		ruinsExits[2].add(new dimension(new corner(120,250), new corner(230, 250))); // exit
 		
 		
@@ -386,8 +386,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				
 				// you entered the exit so you progress to next map
 				else if (i == 1) {
-					charaX = 925;
-					charaY = 320;
+					charaX = 980;
+					charaY = 220;
 					return 1;
 				}
 			}
