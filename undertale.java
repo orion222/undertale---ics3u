@@ -26,11 +26,14 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static int mouseY;
 	public static int mapX = 0;
 	public static int mapY = 0;
+	public static int change = 1;
 
 	// chara variables
 	public static int charaX = 475;
 	public static int charaY = 220;
 	public static int charaSpeed = 5;
+	
+	
 	// [map][setting][1 = start, 2 = exit]
 	public static corner[][][] allPos = new corner[4][5][3];
 
@@ -154,19 +157,19 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		// Positions of Chara
 		// ruins1
 		allPos[1][1][1] = new corner(480, 220); // Initial position after menu
-		allPos[1][1][2] = new corner(65, 435); // In front of exit
+		allPos[1][1][2] = new corner(15, 340); // In front of exit
 
 		// ruins2
-		allPos[1][2][1] = new corner(950, 355); // In front of entrance
-		allPos[1][2][2] = new corner(175, 280); // In front of exit
+		allPos[1][2][1] = new corner(930, 255); // In front of entrance
+		allPos[1][2][2] = new corner(130, 185); // In front of exit
 
 		// ruins3
 		allPos[1][3][1] = new corner(85, 240); // In front of entrance
-		allPos[1][2][2] = new corner(890, 920); // In front of exit
+		allPos[1][3][2] = new corner(890, 920); // In front of exit
 
 		// ruins4
-		allPos[1][3][1] = new corner(475, 1080); // In front of entrance
-		allPos[1][2][2] = new corner(475, 215); // In front of exit
+		allPos[1][4][1] = new corner(475, 1080); // In front of entrance
+		allPos[1][4][2] = new corner(475, 215); // In front of exit
 
 		// ruins1
 		ruinsBounds[1].add(new dimension(new corner (135, -10), new corner (800, 375)));
@@ -177,7 +180,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		// ruins2
 		ruinsBounds[2].add(new dimension(new corner (45, 175), new corner (1050, 300)));
 		ruinsBounds[2].add(new dimension(new corner (100, 150), new corner (170, 175)));
-		ruinsExits[2].add(new dimension(new corner(1025,175), new corner(1025, 300))); // entrance
+		ruinsExits[2].add(new dimension(new corner(940,175), new corner(940, 300))); // entrance
 		ruinsExits[2].add(new dimension(new corner(100,150), new corner(170, 150))); // exit
 
 		// ruins3
@@ -243,6 +246,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			}
 			else {
 				// change chara position
+				charaX = allPos[gameState][setting][change].x;
+				charaY = allPos[gameState][setting][change].y;
+				
 				g2d.drawImage(fadeEnd, 0, 0, null);
 				// fade in the character as well
 				if (1 <= gameState && gameState <= 3) {
@@ -299,9 +305,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			}
 			charaAnimation.run();
 
-			int change = withinExit(charaX, charaY, allExits[gameState][setting]);
+			change = withinExit(charaX, charaY, allExits[gameState][setting]);
 			System.out.println("chara x = " + charaX + " " + "charaY = " + charaY);
-			System.out.println("change = " + change);
 
 			if (change != 0) {
 				// save the current map
@@ -313,13 +318,18 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					System.out.println("next setting");
 					// if there are no more maps
 					if (gameState + 1 == 4) {
-						setting = 0;
+						setting = 1;
 						gameState++;
+					}
+					
+					else if (setting + 1 == 5) {
+						gameState++;
+						setting = 1;
 					}
 					else setting++;
 				}
 
-				else if (change == -1) {
+				else if (change == 2) {
 					// go to the previous MAP
 					if (setting - 1 < 0) {
 						gameState--;
@@ -328,12 +338,10 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					// go to the previous setting but still in same map
 					else setting--;
 				}
-
+				
 				fadeEnd = allMaps[gameState][setting];
 				System.out.println("new: " + gameState + " " + setting);
 
-				// these 2 lines must be written for every fade transition
-				animation.fading = true;
 				animation.fade(fadeStart, fadeEnd, "fast");
 
 
@@ -353,7 +361,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			// play game
 			if (370 <= mouseX && mouseX <= 670 && 185 <= mouseY && mouseY <= 270) {
 				System.out.println("play");
-				animation.fading = true;
 				animation.wait = false;
 				fadeStart = titleScreen;
 				fadeEnd = ruinsImages[1];
@@ -392,7 +399,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 //
 //	}
 	public static boolean withinBounds(int x, int y, ArrayList<dimension> q) {
-		for (dimension cur: q) {
+		for (dimension cur: q) { // for every boundary in the current setting
 			// check if within top left corner
 			corner topL = cur.topLeft;
 			corner bottomR = cur.bottomRight;
@@ -407,10 +414,10 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	}
 
 
-	// -1 equals go back, 0 equals we haven't exited, 1 equals go to next setting
+	// 1 equals go back, 0 equals we haven't exited, 2 equals go to next setting
 	public static int withinExit(int x, int y, ArrayList<dimension> exits) {
 		for (int i = 0; i < 2; i++) {
-			dimension cur = exits.get(i);
+			dimension cur = exits.get(i); 
 
 
 
@@ -423,13 +430,13 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			if (exitingVertically || exitingHorizontally) {
 
 				// you entered the entrance so u go back
-				if (i == 0) return -1;
+				if (i == 0) return 2;
+				// go to the exit of the previous setting
 
 					// you entered the exit so you progress to next map
 				else if (i == 1) {
-					charaX = 500;
-					charaY = 300;
 					return 1;
+					// go to the entrance of the next setting
 				}
 			}
 		}
