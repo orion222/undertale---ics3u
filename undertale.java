@@ -34,6 +34,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	// [map][setting][1 = start, 2 = exit]
 	public static corner[][][] allPos = new corner[4][5][3];
 
+	// y-coords to indicate when to move map
+	public static int[][] moveMapY = new int[4][5];
+
 	// Creating a path to import the pictures
 	public static File path = new File("assets/charaAnimation");
 	public static File[] charaFile = path.listFiles();
@@ -93,7 +96,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		// 10 pixels less height and width than the background because
 		// for some reason there is extra space when defining the frame
 		// to be the same size as the background image
-		setPreferredSize(new Dimension(990, 615));
+		// 615
+		setPreferredSize(new Dimension(990, 3000));
 		setBackground(new Color(0, 0, 0));
 
 		// import images
@@ -156,6 +160,10 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		allPos[1][2][1] = new corner(950, 355); // In front of entrance
 		allPos[1][2][2] = new corner(175, 280); // In front of exit
 
+		// ruins3
+		allPos[1][3][1] = new corner(85, 240); // In front of entrance
+		allPos[1][2][2] = new corner(890, 920); // In front of exit
+
 		// ruins1
 		ruinsBounds[1].add(new dimension(new corner (135, -10), new corner (800, 375)));
 		ruinsBounds[1].add(new dimension(new corner(-35, 260), new corner(135, 375)));
@@ -165,19 +173,22 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		// ruins2
 		ruinsBounds[2].add(new dimension(new corner (45, 175), new corner (1050, 300)));
 		ruinsBounds[2].add(new dimension(new corner (100, 150), new corner (170, 175)));
-		// x = 945, y = 175, 300
 		ruinsExits[2].add(new dimension(new corner(1025,175), new corner(1025, 300))); // entrance
 		ruinsExits[2].add(new dimension(new corner(100,150), new corner(170, 150))); // exit
 
 		// ruins3
-		// x = 70 y = 180, 135, 290
-		ruinsBounds[3].add(new dimension(new corner(0, 0), new corner(2000,2000)));
-		// 135, 125 . 765, 1065
-		ruinsExits[3].add(new dimension(new corner(0,0), new corner(0,0)));
-		ruinsExits[3].add(new dimension(new corner(0,0), new corner(0,0)));
+		ruinsBounds[3].add(new dimension(new corner(55, 180), new corner(135,290)));
+		ruinsBounds[3].add(new dimension(new corner(135, 125), new corner(765,1070)));
+		ruinsBounds[3].add(new dimension(new corner(765, 855), new corner(915,960)));
+		ruinsExits[3].add(new dimension(new corner(55,180), new corner(55,290))); // entrance
+		ruinsExits[3].add(new dimension(new corner(915,855), new corner(915,960))); // exit
 
-
-
+		// ruins4
+		ruinsBounds[4].add(new dimension(new corner(445, 895), new corner(500,1090)));
+		ruinsBounds[4].add(new dimension(new corner(250, 470), new corner(695,895)));
+		ruinsBounds[4].add(new dimension(new corner(395, 200), new corner(550,470)));
+		ruinsExits[4].add(new dimension(new corner(475,1080), new corner(475,1080))); // entrance
+		ruinsExits[4].add(new dimension(new corner(475,215), new corner(475,215))); // exit
 
 		// putting them all in a list
 		allBounds[1] = ruinsBounds;
@@ -369,12 +380,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	}
 
 	// in ruins3 y > 500 is when map moves
-	public static boolean moveMap(int y, int[] x) {
-
-
-
-
-	}
+//	public static boolean moveMap(int y, int[] x) {
+//
+//
+//
+//
+//	}
 	public static boolean withinBounds(int x, int y, ArrayList<dimension> q) {
 		for (dimension cur: q) {
 			// check if within top left corner
@@ -411,8 +422,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 					// you entered the exit so you progress to next map
 				else if (i == 1) {
-					charaX = 980;
-					charaY = 220;
+					charaX = 500;
+					charaY = 300;
 					return 1;
 				}
 			}
