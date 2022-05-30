@@ -164,6 +164,10 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		allPos[1][3][1] = new corner(85, 240); // In front of entrance
 		allPos[1][2][2] = new corner(890, 920); // In front of exit
 
+		// ruins4
+		allPos[1][3][1] = new corner(475, 1080); // In front of entrance
+		allPos[1][2][2] = new corner(475, 215); // In front of exit
+
 		// ruins1
 		ruinsBounds[1].add(new dimension(new corner (135, -10), new corner (800, 375)));
 		ruinsBounds[1].add(new dimension(new corner(-35, 260), new corner(135, 375)));
@@ -187,8 +191,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		ruinsBounds[4].add(new dimension(new corner(445, 895), new corner(500,1090)));
 		ruinsBounds[4].add(new dimension(new corner(250, 470), new corner(695,895)));
 		ruinsBounds[4].add(new dimension(new corner(395, 200), new corner(550,470)));
-		ruinsExits[4].add(new dimension(new corner(475,1080), new corner(475,1080))); // entrance
-		ruinsExits[4].add(new dimension(new corner(475,215), new corner(475,215))); // exit
+		ruinsBounds[4].add(new dimension(new corner(465,185), new corner(475,200)));
+		ruinsExits[4].add(new dimension(new corner(445,1095), new corner(500,1095))); // entrance
+		ruinsExits[4].add(new dimension(new corner(465,190), new corner(475,190))); // exit
 
 		// putting them all in a list
 		allBounds[1] = ruinsBounds;
