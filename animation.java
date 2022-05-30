@@ -29,6 +29,7 @@ public class animation implements ActionListener{
 	}
 	
 	public void fade(BufferedImage start, BufferedImage end, String speed) {
+		fade = true;
 		if (speed.equals("fast")) {
 			fadeSpeed = 0.05;
 		}
