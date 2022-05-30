@@ -12,7 +12,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import java.util.*; 
+import java.util.*;
+
 
 
 
@@ -106,24 +107,17 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		try {
 			titleScreen = ImageIO.read(new File("assets/undertalestartmenu.png"));
 
-			snowdenImages[1] = ImageIO.read(new File("assets/maps/snowden/snowden1.png"));
+			for (int i = 1; i < 5; i++) {
+				ruinsImages[i] = ImageIO.read(ruinsFile[i - 1]);
+				snowdenImages[i] = ImageIO.read(snowdenFile[i - 1]);
+				// tempImages[i] = ImageIO.read(tempFile[i]);
 
-			ruinsImages[1] = ImageIO.read(new File("assets/maps/ruins/ruins1.png"));
-			ruinsImages[2] = ImageIO.read(new File("assets/maps/ruins/ruins2.png"));
-			ruinsImages[3] = ImageIO.read(new File("assets/maps/ruins/ruins3.png"));
-			ruinsImages[4] = ImageIO.read(new File("assets/maps/ruins/ruins4.png"));
 
-			charaImages[0] = ImageIO.read(new File("assets/charaAnimation/AcharaB1.png"));
-			charaImages[1] = ImageIO.read(new File("assets/charaAnimation/AcharaL1.png"));
-			charaImages[2] = ImageIO.read(new File("assets/charaAnimation/BcharaF1.png"));
-			charaImages[3] = ImageIO.read(new File("assets/charaAnimation/BcharaR1.png"));
-			charaImages[4] = ImageIO.read(new File("assets/charaAnimation/charaB2.png"));
-			charaImages[5] = ImageIO.read(new File("assets/charaAnimation/charaB3.png"));
-			charaImages[6] = ImageIO.read(new File("assets/charaAnimation/charaF2.png"));
-			charaImages[7] = ImageIO.read(new File("assets/charaAnimation/charaF3.png"));
-			charaImages[8] = ImageIO.read(new File("assets/charaAnimation/charaL2.png"));
-			charaImages[9] = ImageIO.read(new File("assets/charaAnimation/charaR2.png"));
+			}
 
+			for (int i = 0; i < 10; i++) {
+				charaImages[i] = ImageIO.read(charaFile[i]);
+			}
             /*
             startSongInput = AudioSystem.getAudioInputStream(new File("audio/mus_musicbox.ogg"));
             startSong = AudioSystem.getClip();
@@ -337,7 +331,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 				else if (change == 2) {
 					// go to the previous MAP
-					if (setting - 1 == 0) {
+					if (setting - 1 < 0) {
 						gameState--;
 						setting = 4;
 					}
