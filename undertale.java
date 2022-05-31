@@ -12,8 +12,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import java.util.*;
-
+import java.util.*; 
 
 
 
@@ -27,7 +26,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static int mapX = 0;
 	public static int mapY = 0;
 	public static int change = 1;
-	public static boolean battle = true;
 
 	// chara variables
 	public static int charaX = 475;
@@ -38,9 +36,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	// [map][setting][1 = start, 2 = exit]
 	public static corner[][][] allPos = new corner[4][5][3];
 
-	// y-coords to indicate when to move map
-	public static int[][] moveMapY = new int[4][5];
-
 	// Creating a path to import the pictures
 	public static File path = new File("assets/charaAnimation");
 	public static File[] charaFile = path.listFiles();
@@ -48,7 +43,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static int curChara = 2;  // know which frame of chara to show
 
 	//IMAGES
-
 	public static BufferedImage titleScreen;
 
 	// map images
@@ -77,13 +71,15 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static ArrayList<dimension>[][] allBounds = new ArrayList[4][5];
 	public static ArrayList<dimension>[][] allExits = new ArrayList[4][5];
 	public static BufferedImage[][] allMaps = new BufferedImage[4][5];
+	
+	// set of coords in specific maps where the map camera needs to move
+	public static dimension[][] moveMap = new dimension[3][5];
 
 	BufferedImage fadeStart;
 	BufferedImage fadeEnd;
 
 	// audio
 	public static Clip startSong;
-
 
 	public static AudioInputStream startSongInput;
 
@@ -108,17 +104,24 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		try {
 			titleScreen = ImageIO.read(new File("assets/undertalestartmenu.png"));
 
-			for (int i = 1; i < 5; i++) {
-				ruinsImages[i] = ImageIO.read(ruinsFile[i - 1]);
-				snowdenImages[i] = ImageIO.read(snowdenFile[i - 1]);
-				// tempImages[i] = ImageIO.read(tempFile[i]);
+			snowdenImages[1] = ImageIO.read(new File("assets/maps/snowden/snowden1.png"));
 
+			ruinsImages[1] = ImageIO.read(new File("assets/maps/ruins/ruins1.png"));
+			ruinsImages[2] = ImageIO.read(new File("assets/maps/ruins/ruins2.png"));
+			ruinsImages[3] = ImageIO.read(new File("assets/maps/ruins/ruins3.png"));
+			ruinsImages[4] = ImageIO.read(new File("assets/maps/ruins/ruins4.png"));
 
-			}
+			charaImages[0] = ImageIO.read(new File("assets/charaAnimation/AcharaB1.png"));
+			charaImages[1] = ImageIO.read(new File("assets/charaAnimation/AcharaL1.png"));
+			charaImages[2] = ImageIO.read(new File("assets/charaAnimation/BcharaF1.png"));
+			charaImages[3] = ImageIO.read(new File("assets/charaAnimation/BcharaR1.png"));
+			charaImages[4] = ImageIO.read(new File("assets/charaAnimation/charaB2.png"));
+			charaImages[5] = ImageIO.read(new File("assets/charaAnimation/charaB3.png"));
+			charaImages[6] = ImageIO.read(new File("assets/charaAnimation/charaF2.png"));
+			charaImages[7] = ImageIO.read(new File("assets/charaAnimation/charaF3.png"));
+			charaImages[8] = ImageIO.read(new File("assets/charaAnimation/charaL2.png"));
+			charaImages[9] = ImageIO.read(new File("assets/charaAnimation/charaR2.png"));
 
-			for (int i = 0; i < 10; i++) {
-				charaImages[i] = ImageIO.read(charaFile[i]);
-			}
             /*
             startSongInput = AudioSystem.getAudioInputStream(new File("audio/mus_musicbox.ogg"));
             startSong = AudioSystem.getClip();
@@ -186,10 +189,11 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 		// ruins3
 		ruinsBounds[3].add(new dimension(new corner(55, 180), new corner(135,290)));
-		ruinsBounds[3].add(new dimension(new corner(135, 125), new corner(765,1070)));
-		ruinsBounds[3].add(new dimension(new corner(765, 855), new corner(915,960)));
+		ruinsBounds[3].add(new dimension(new corner(135, 125), new corner(765,695)));
+		// boundary needs to move
+		ruinsBounds[3].add(new dimension(new corner(765, 570), new corner(915,620)));
 		ruinsExits[3].add(new dimension(new corner(55,180), new corner(55,290))); // entrance
-		ruinsExits[3].add(new dimension(new corner(915,855), new corner(915,960))); // exit
+		ruinsExits[3].add(new dimension(new corner(915,570), new corner(915,620))); // exit
 
 		// ruins4
 		ruinsBounds[4].add(new dimension(new corner(445, 895), new corner(500,1090)));
@@ -211,6 +215,10 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		allExits[1] = ruinsExits;
 		allExits[2] = snowdenExits;
 		allExits[3] = tempExits;
+		
+		// Coords to move map
+		moveMap[1][3] = new dimension(new corner(0, 290), new corner(0, 655));
+		moveMap[1][4] = new dimension(new corner(0, 290), new corner(0, 700));
 
 
 
@@ -225,8 +233,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		frame.pack();
 		frame.setVisible(true);
 		frame.setResizable(false);
-
-
 	}
 
 	public void paintComponent(Graphics g) {
@@ -241,9 +247,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				g2d.drawImage(fadeStart, 0, 0, null);
 
 				// fade out the character as well
-				if (gameState - 1 != 0 && 1 <= gameState && gameState <= 3)
+				if (gameState - 1 != 0 && 1 <= gameState && gameState <= 3) {
 					g2d.drawImage(charaImages[curChara], charaX, charaY, null);
-				
+				}
 			}
 			else {
 				// change chara position
@@ -252,9 +258,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				
 				g2d.drawImage(fadeEnd, 0, 0, null);
 				// fade in the character as well
-				if (1 <= gameState && gameState <= 3)
+				if (1 <= gameState && gameState <= 3) {
 					g2d.drawImage(charaImages[curChara], charaX, charaY, null);
-				
+				}
 			}
 
 		}
@@ -288,6 +294,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			{
 				charaY -= charaSpeed;
 				charaAnimation.key = 1;
+				if(setting > 2 && orion(charaX, charaY)) {
+					mapY += charaSpeed;
+				}
 			}
 			else if(e.getKeyCode() == 37 && withinBounds(charaX - charaSpeed, charaY, allBounds[gameState][setting]))
 			{
@@ -298,6 +307,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			{
 				charaY += charaSpeed;
 				charaAnimation.key = 3;
+				if(setting > 2 && orion(charaX, charaY)) {
+					mapY -= charaSpeed;
+				}
 			}
 			else if(e.getKeyCode() == 39 && withinBounds(charaX + charaSpeed, charaY, allBounds[gameState][setting]))
 			{
@@ -332,7 +344,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 				else if (change == 2) {
 					// go to the previous MAP
-					if (setting - 1 < 0) {
+					if (setting - 1 == 0) {
 						gameState--;
 						setting = 4;
 					}
@@ -344,8 +356,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				System.out.println("new: " + gameState + " " + setting);
 
 				animation.fade(fadeStart, fadeEnd, "fast");
-
-
+				
+				mapX = 0;
+				mapY = 0;
 			}
 		}
 	}
@@ -393,12 +406,21 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	}
 
 	// in ruins3 y > 500 is when map moves
-//	public static boolean moveMap(int y, int[] x) {
-//
-//
-//
-//
-//	}
+	public static boolean orion(int x, int y) {
+		corner topL = moveMap[gameState][setting].topLeft;
+		corner bottomR = moveMap[gameState][setting].bottomRight;
+		if(gameState == 1) {
+			if(topL.y <= y && y <= bottomR.y) {
+				return true;
+			}
+		}
+		else if(gameState == 2) {
+			if(topL.x <= x && x <= bottomR.x) {
+				return true;
+			}
+		}
+		return false;
+	}
 	public static boolean withinBounds(int x, int y, ArrayList<dimension> q) {
 		for (dimension cur: q) { // for every boundary in the current setting
 			// check if within top left corner
