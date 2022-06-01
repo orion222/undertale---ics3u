@@ -213,7 +213,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		snowdenBounds[1].add(new dimension(new corner(210, 265), new corner(365, 320)));
 		snowdenBounds[1].add(new dimension(new corner(210, 320), new corner(2000, 470)));
 		snowdenBounds[1].add(new dimension(new corner(80, 370), new corner(210, 470)));
-		snowdenExits[1].add(new dimension(new corner(100, 370), new corner (100, 415))); 
+		snowdenExits[1].add(new dimension(new corner(80, 370), new corner (80, 415))); 
 		snowdenExits[1].add(new dimension(new corner(1970, 530), new corner(1970, 705))); // exit IS BROKEN
 
 		// putting them all in a list
