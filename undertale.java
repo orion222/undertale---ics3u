@@ -196,7 +196,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		ruinsExits[2].add(new dimension(new corner(100,150), new corner(170, 150))); // exit
 
 		// ruins3
-		ruinsBounds[3].add(new dimension(new corner(55, 180), new corner(135,290)));
+		ruinsBounds[3].add(new dimension(new corner(55, 180), new corner(135,285)));
 		ruinsBounds[3].add(new dimension(new corner(135, 125), new corner(765,460)));
 		// boundary needs to move
 		ruinsBounds[3].add(new dimension(new corner(765, 355), new corner(915,460)));
