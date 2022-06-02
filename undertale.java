@@ -179,7 +179,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		allPos[1][4][2] = new corner(475, 215); // In front of exit
 		
 		//snowden 1
-		allPos[2][1][1] = new corner(140, 430); // In front of entrance
+		allPos[2][1][1] = new corner(140, 420); // In front of entrance
 		allPos[2][1][2] = new corner(1960, 620); // In front of exit
 
 
