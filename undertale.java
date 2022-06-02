@@ -172,7 +172,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 		// ruins3
 		allPos[1][3][1] = new corner(85, 240); // In front of entrance
-		allPos[1][3][2] = new corner(890, 920); // In front of exit
+		allPos[1][3][2] = new corner(870, 415); // In front of exit
 
 		// ruins4
 		allPos[1][4][1] = new corner(475, 450); // In front of entrance
@@ -200,16 +200,16 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		ruinsBounds[3].add(new dimension(new corner(135, 125), new corner(765,460)));
 		// boundary needs to move
 		ruinsBounds[3].add(new dimension(new corner(765, 355), new corner(915,460)));
-		ruinsExits[3].add(new dimension(new corner(55,180), new corner(55,290))); // entrance
+		ruinsExits[3].add(new dimension(new corner(55,180), new corner(55,285))); // entrance
 		ruinsExits[3].add(new dimension(new corner(915,355), new corner(915,460))); // exit
 
 		// ruins4
 		ruinsBounds[4].add(new dimension(new corner(445, 895), new corner(500,1090)));
 		ruinsBounds[4].add(new dimension(new corner(250, 470), new corner(695,895)));
 		ruinsBounds[4].add(new dimension(new corner(395, 200), new corner(550,470)));
-		ruinsBounds[4].add(new dimension(new corner(465,185), new corner(475,200)));
+		ruinsBounds[4].add(new dimension(new corner(465,170), new corner(475,200)));
 		ruinsExits[4].add(new dimension(new corner(445,480), new corner(500,480))); // entrance
-		ruinsExits[4].add(new dimension(new corner(465,190), new corner(475,190))); // exit
+		ruinsExits[4].add(new dimension(new corner(465,180), new corner(475, 180))); // exit
 		
 		//snowden1
 		snowdenBounds[1].add(new dimension(new corner(210, 265), new corner(365, 320)));
@@ -260,7 +260,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 		if (animation.fading) {
 			if (!animation.faded) {
-				g2d.drawImage(fadeStart, 0, 0, null);
+				g2d.drawImage(fadeStart, mapX, mapY, null);
 
 				// fade out the character as well
 				if (gameState - 1 != 0 && 1 <= gameState && gameState <= 3) {
@@ -271,9 +271,17 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				// change chara position
 				charaX = allPos[gameState][setting][change].x;
 				charaY = allPos[gameState][setting][change].y;
-				globalPos = charaY;
+				
+				// if chara spawns at the bottom
+				if (charaY > 312 && gameState == 1) {
+					globalPos = 1250 - (625 - charaY);
 
-				g2d.drawImage(fadeEnd, 0, 0, null);
+				}
+				else if (gameState == 1) {
+					globalPos = charaY;
+				}
+
+				g2d.drawImage(fadeEnd, mapX, mapY, null);
 				// fade in the character as well
 				if (1 <= gameState && gameState <= 3) {
 					g2d.drawImage(charaImages[curChara], charaX, charaY, null);
@@ -394,6 +402,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				System.out.println("new: " + gameState + " " + setting);
 				mapX = 0;
 				mapY = 0;
+				
 				if (gameState == 1 && setting == 4 && change == 1) {
 					mapY = -625;
 				}
@@ -450,28 +459,16 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 	}
 
-	// in ruins3 y > 500 is when map moves
-	public static boolean orion(int x, int y) {
-		corner topL = moveMap[gameState][setting].topLeft;
-		corner bottomR = moveMap[gameState][setting].bottomRight;
-		if(gameState == 1) {
-			if(topL.y <= y && y <= bottomR.y) {
-				return true;
-			}
-		}
-		else if(gameState == 2) {
-			if(topL.x <= x && x <= bottomR.x) {
-				return true;
-			}
-		}
-		return false;
-	}
+
+	
 	public static boolean withinBounds(int x, int y, ArrayList<dimension> q) {
 		for (dimension cur: q) { // for every boundary in the current setting
 			// check if within top left corner
 			corner topL = cur.topLeft;
 			corner bottomR = cur.bottomRight;
+			System.out.println(topL.x + " <= " + x + " <= " + bottomR.x);
 			if (topL.x <= x && x <= bottomR.x && topL.y <= y && y <= bottomR.y) {
+				System.out.println("goes thru");
 				return true;
 			}
 
@@ -490,7 +487,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 
 			System.out.println(cur.topLeft.y + " <= " + y + " <= " + cur.bottomRight.y + "  x == " + cur.topLeft.x);
-			System.out.println("x: " + charaX + "y: " + charaY);
 			boolean exitingVertically = cur.topLeft.x <= x && x <= cur.bottomRight.x && cur.topLeft.y == y;
 			boolean exitingHorizontally = cur.topLeft.y <= y && y <= cur.bottomRight.y && cur.topLeft.x == x;
 
