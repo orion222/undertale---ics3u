@@ -204,12 +204,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		ruinsExits[3].add(new dimension(new corner(915,355), new corner(915,460))); // exit
 
 		// ruins4
-		ruinsBounds[4].add(new dimension(new corner(445, 895), new corner(500,1090)));
+		ruinsBounds[4].add(new dimension(new corner(450, 275), new corner(495,480)));
 		ruinsBounds[4].add(new dimension(new corner(250, 470), new corner(695,895)));
 		ruinsBounds[4].add(new dimension(new corner(395, 200), new corner(550,470)));
-		ruinsBounds[4].add(new dimension(new corner(465,170), new corner(475,200)));
+		ruinsBounds[4].add(new dimension(new corner(465,150), new corner(475,200)));
 		ruinsExits[4].add(new dimension(new corner(445,480), new corner(500,480))); // entrance
-		ruinsExits[4].add(new dimension(new corner(465,180), new corner(475, 180))); // exit
+		ruinsExits[4].add(new dimension(new corner(465,160), new corner(475, 160))); // exit
 		
 		//snowden1
 		snowdenBounds[1].add(new dimension(new corner(210, 265), new corner(365, 320)));
@@ -233,8 +233,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		allExits[3] = tempExits;
 
 		// Coords to move map
-		moveMap[1][3] = new dimension(new corner(0, 290), new corner(0, 290));
-		moveMap[1][4] = new dimension(new corner(0, 290), new corner(0, 700));
+		moveMap[1][3] = new dimension(new corner(0, 290), new corner(0, 900));
+		moveMap[1][4] = new dimension(new corner(0, 420), new corner(0, 900));
 
 
 
@@ -325,7 +325,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				// when test is at value 290, the next click should subtract from charaY and run through
 				// the else statement, but since test is test >= 290, it goes through the first if statement
 				// and the value of charaY will be off by 5
-				if(setting > 2 && globalPos > 290 && globalPos <= 900) {
+				if(setting > 2 && moveMap[gameState][setting].topLeft.y <= globalPos && globalPos <= moveMap[gameState][setting].bottomRight.y) {
 					mapY += charaSpeed;
 					globalPos -= charaSpeed;
 				}
@@ -345,7 +345,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				// when test is at value 900, the next click should add to charaY and run through the else statement,
 				// but since test is <= 900, it will run through the first if statement and the value of charaY will
 				// be off by 5 and will not run
-				if(setting > 2 && globalPos >= 290 && globalPos < 900) {
+				if(setting > 2 && moveMap[gameState][setting].topLeft.y <= globalPos && globalPos <= moveMap[gameState][setting].bottomRight.y) {
 					mapY -= charaSpeed;
 					globalPos += charaSpeed;
 				}
@@ -360,8 +360,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				charaAnimation.key = 4;
 			}
 			charaAnimation.run();
-			System.out.println("TEST: " + globalPos);
-			System.out.println("mapCharaY: " + mapCharaY);
+			System.out.println("globalPos: " + globalPos);
 
 			change = withinExit(charaX, charaY, allExits[gameState][setting]);
 			System.out.println("chara x = " + charaX + " " + "charaY = " + charaY);
@@ -468,7 +467,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			corner bottomR = cur.bottomRight;
 			System.out.println(topL.x + " <= " + x + " <= " + bottomR.x);
 			if (topL.x <= x && x <= bottomR.x && topL.y <= y && y <= bottomR.y) {
-				System.out.println("goes thru");
 				return true;
 			}
 
@@ -479,7 +477,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	}
 
 
-	// 1 equals go back, 0 equals we haven't exited, 2 equals go to next setting
+	// 1 equals you go to the entrance of the next setting
+	// 0 equals we haven't exited
+	// 2 equals go to the exit of the previous setting
 	public static int withinExit(int x, int y, ArrayList<dimension> exits) {
 		for (int i = 0; i < 2; i++) {
 			dimension cur = exits.get(i);
