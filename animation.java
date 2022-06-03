@@ -11,25 +11,25 @@ import javax.swing.Timer;
 
 public class animation implements ActionListener{
 	public static float alpha = 1.0f;
-	
+
 	// -1 = no fade, 1 = fade in, 2 = fade out
 	public static boolean fading = false;
 	public static boolean faded = false;
 	public static int fade = -1;
 	public static double fadeSpeed;
 	public static boolean wait = false;
-	
+
 	// time
 	Timer timer = new Timer(20, this);
 	public undertale game;
-	
+
 	public animation(undertale e){
-		
-		 game = e;
+
+		game = e;
 	}
-	
+
 	public void fade(BufferedImage start, BufferedImage end, String speed) {
-		fade = true;
+		fading = true;
 		if (speed.equals("fast")) {
 			fadeSpeed = 0.05;
 		}
@@ -52,10 +52,26 @@ public class animation implements ActionListener{
 					e.printStackTrace();
 				}
 			}
+			game.mapX = 0;
+			game.mapY = 0;
+
+			if (game.gameState == 1 && game.setting == 4 && game.change == 1) {
+				game.mapY = -610;
+				System.out.println("WRONG!!");
+			}
+			else if (game.gameState == 1 && game.setting == 3 && game.change == 2) {
+				game.mapY = -610;
+				System.out.println("HESHEDASG");
+				// when coming back from snowden, map needs to draw at -140
+			}
+			else if (game.gameState == 1 && game.setting == 4 && game.change == 2) {
+
+				game.mapY = -145;
+			}
 		}
 	}
-	
-	public void fadeIn() {	
+
+	public void fadeIn() {
 		alpha += fadeSpeed;
 		if (alpha > 1) {
 			alpha = 1;
@@ -71,14 +87,14 @@ public class animation implements ActionListener{
 		if (!faded) { // if we are currently fading out
 			fadeOut();
 		}
-		
+
 		else {
 			fadeIn();
 		}
 		game.repaint();
-		
+
 	}
-	
-	
-	
+
+
+
 }
