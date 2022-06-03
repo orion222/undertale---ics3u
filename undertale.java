@@ -281,6 +281,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				}
 				else if (gameState == 1) {
 					globalPos = charaY;
+					if (setting == 4 && change == 2) {
+						globalPos = 205;
+					}
 				}
 
 				g2d.drawImage(fadeEnd, mapX, mapY, null);
