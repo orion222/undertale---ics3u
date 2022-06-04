@@ -225,10 +225,10 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		
 		// snowden2
 		snowdenBounds[2].add(new dimension(new corner(-25, 250), new corner(2000, 445)));
-		snowdenBounds[2].add(new dimension(new corner(420, 5), new corner(950, 250)));
-		
+		snowdenBounds[2].add(new dimension(new corner(420, 5), new corner(510, 250)));
+		snowdenBounds[2].add(new dimension(new corner(510, 190), new corner(735, 445)));
 		snowdenExits[2].add(new dimension(new corner(-25, 250), new corner(-25, 445)));
-		snowdenExits[2].add(new dimension(new corner(0, 0), new corner(0,0)));
+		snowdenExits[2].add(new dimension(new corner(955, 250), new corner(955, 445)));
 
 
 		// putting them all in a list
@@ -248,7 +248,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		moveMap[1][3] = new dimension(new corner(0, 290), new corner(0, 900));
 		moveMap[1][4] = new dimension(new corner(0, 435), new corner(0, 900));
 		moveMap[2][1] = new dimension(new corner(370, 0), new corner(1200, 0));
-		moveMap[2][2] = new dimension(new corner(435, 0), new corner(995, 0));
+		moveMap[2][2] = new dimension(new corner(435, 0), new corner(950, 0));
 
 
 
@@ -484,7 +484,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				fadeStart = titleScreen;
 				fadeEnd = ruinsImages[1];
 				gameState = 2;
-				setting = 1;
+				setting = 2;
 				animation.fade(fadeStart, fadeEnd, "fast");
 
 
