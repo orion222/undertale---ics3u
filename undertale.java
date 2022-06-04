@@ -109,6 +109,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 			snowdenImages[1] = ImageIO.read(new File("assets/maps/snowden/snowden1.png"));
 			snowdenImages[2] = ImageIO.read(new File("assets/maps/snowden/snowden2.png"));
+			snowdenImages[3] = ImageIO.read(new File("assets/maps/snowden/snowden3.png"));
+			snowdenImages[4] = ImageIO.read(new File("assets/maps/snowden/snowden4.png"));
+
 
 			ruinsImages[1] = ImageIO.read(new File("assets/maps/ruins/ruins1.png"));
 			ruinsImages[2] = ImageIO.read(new File("assets/maps/ruins/ruins2.png"));
@@ -185,7 +188,14 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		
 		// snowden2
 		allPos[2][2][1] = new corner(10, 360); // In front of entrance
+		allPos[2][2][2] = new corner(940, 345); // In front of exit
 		
+		// snowden3
+		allPos[2][3][1] = new corner(920, 380); // In front of entrance
+		allPos[2][3][2] = new corner(60, 155); // In front of exit
+					 
+				
+
 
 
 		// ruins1
@@ -225,10 +235,21 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		
 		// snowden2
 		snowdenBounds[2].add(new dimension(new corner(-25, 250), new corner(2000, 445)));
-		snowdenBounds[2].add(new dimension(new corner(420, 5), new corner(510, 250)));
-		snowdenBounds[2].add(new dimension(new corner(510, 190), new corner(735, 445)));
+		snowdenBounds[2].add(new dimension(new corner(70, 0), new corner(605, 250)));
+		snowdenBounds[2].add(new dimension(new corner(605, 180), new corner(820, 250)));
+
 		snowdenExits[2].add(new dimension(new corner(-25, 250), new corner(-25, 445)));
-		snowdenExits[2].add(new dimension(new corner(955, 250), new corner(955, 445)));
+		snowdenExits[2].add(new dimension(new corner(940, 250), new corner(940, 445)));
+		
+		//snowden3
+		snowdenBounds[3].add(new dimension(new corner(0, 0), new corner(1025, 625)));
+		snowdenBounds[3].add(new dimension(new corner(850, 310), new corner(960, 400)));
+		snowdenBounds[3].add(new dimension(new corner(525, 160), new corner(850, 400)));
+		snowdenBounds[3].add(new dimension(new corner(125, 250), new corner(525, 400)));
+		snowdenBounds[3].add(new dimension(new corner(35, 160), new corner(390, 250)));
+
+		snowdenExits[3].add(new dimension(new corner(945, 310), new corner(945, 400)));
+		snowdenExits[3].add(new dimension(new corner(45, 130), new corner(75, 130)));
 
 
 		// putting them all in a list
@@ -248,7 +269,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		moveMap[1][3] = new dimension(new corner(0, 290), new corner(0, 900));
 		moveMap[1][4] = new dimension(new corner(0, 435), new corner(0, 900));
 		moveMap[2][1] = new dimension(new corner(370, 0), new corner(1200, 0));
-		moveMap[2][2] = new dimension(new corner(435, 0), new corner(950, 0));
 
 
 
@@ -295,9 +315,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				}
 				else if (gameState == 1) {
 					globalPos = charaY;
-					if (setting == 4 && change == 2) {
-						globalPos = 205;
-					}
+
 				}
 				else if(gameState == 2 && charaX > 625) {
 					globalPos = (1250 - (640 - charaX));
@@ -340,16 +358,15 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public void keyPressed(KeyEvent e) {
 		charaAnimation.x = e.getKeyCode();
 		if (!animation.fading && 1 <= gameState && gameState <= 2) {
-			System.out.println("orion chen: " + charaY);
 			if(e.getKeyCode() == 38 && withinBounds(charaX, charaY - charaSpeed, allBounds[gameState][setting]))
 			{
 				charaAnimation.key = 1;
 
-				// test > 290 and test <= 900 is temporarily there specifically for ruins3, put values in
-				// an array or smth
+				// globalPos > 290 and globalPos <= 900 is temporarily there specifically for ruins3, put values in
+				// an array or something
 
-				// when test is at value 290, the next click should subtract from charaY and run through
-				// the else statement, but since test is test >= 290, it goes through the first if statement
+				// when globalPos is at value 290, the next click should subtract from charaY and run through
+				// the else statement, but since globalPos is globalPos >= 290, it goes through the first if statement
 				// and the value of charaY will be off by 5
 				if(gameState == 1) {
 					if(setting > 2 && moveMap[gameState][setting].topLeft.y < globalPos && globalPos <= moveMap[gameState][setting].bottomRight.y) {
@@ -369,7 +386,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			else if(e.getKeyCode() == 37 && withinBounds(charaX - charaSpeed, charaY, allBounds[gameState][setting]))
 			{
 				charaAnimation.key = 2;
-				if(gameState == 2 && (setting == 1 || setting == 2 || setting == 4)) {
+				
+				// for moving the camera horizontally
+				if(gameState == 2 && (setting == 1 || setting == 4)) {
 					if(moveMap[gameState][setting].topLeft.x < globalPos && globalPos <= moveMap[gameState][setting].bottomRight.x) {
 						mapX += charaSpeed;
 					}
@@ -385,7 +404,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			else if(e.getKeyCode() == 40 && withinBounds(charaX, charaY + charaSpeed, allBounds[gameState][setting]))
 			{
 				charaAnimation.key = 3;
-				// when test is at value 900, the next click should add to charaY and run through the else statement,
+				// when globalPos is at value 900, the next click should add to charaY and run through the else statement,
 				// but since test is <= 900, it will run through the first if statement and the value of charaY will
 				// be off by 5 and will not run
 				if(gameState == 1) {
@@ -405,7 +424,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			else if(e.getKeyCode() == 39 && withinBounds(charaX + charaSpeed, charaY, allBounds[gameState][setting]))
 			{
 				charaAnimation.key = 4;
-				if(gameState == 2 && (setting == 1 || setting == 2 || setting == 4)) {
+				if(gameState == 2 && (setting == 1 || setting == 4)) {
 					if(moveMap[gameState][setting].topLeft.x <= globalPos && globalPos < moveMap[gameState][setting].bottomRight.x) {
 						mapX -= charaSpeed;
 					}
@@ -459,7 +478,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 				fadeEnd = allMaps[gameState][setting];
 				System.out.println("new: " + gameState + " " + setting);
-				System.out.println("anti orion: " + mapY);
 	
 
 				animation.fade(fadeStart, fadeEnd, "fast");
