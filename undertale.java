@@ -248,7 +248,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		moveMap[1][3] = new dimension(new corner(0, 290), new corner(0, 900));
 		moveMap[1][4] = new dimension(new corner(0, 435), new corner(0, 900));
 		moveMap[2][1] = new dimension(new corner(370, 0), new corner(1200, 0));
-		moveMap[2][2] = new dimension(new corner(1950, 0), new corner(3000, 0));
+		moveMap[2][2] = new dimension(new corner(435, 0), new corner(995, 0));
 
 
 
@@ -301,6 +301,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				}
 				else if(gameState == 2 && charaX > 625) {
 					globalPos = (1250 - (640 - charaX));
+				}
+				else if (gameState == 2 && charaX < 625) {
+					globalPos = charaX;
 				}
 
 				g2d.drawImage(fadeEnd, mapX, mapY, null);
