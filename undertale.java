@@ -196,6 +196,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		
 		// snowden4
 		
+		
+		allPos[2][4][1] = new corner(0, 265); // In front of exit
+		
 					 
 				
 
@@ -255,8 +258,10 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		
 		//snowden4
 		
-		snowdenBounds[4].add(new dimension(new corner(0, 0), new corner(2000,2000)));
-		
+		snowdenBounds[4].add(new dimension(new corner(-40, 0), new corner(2000,2000)));
+		snowdenBounds[4].add(new dimension(new corner(0, 190), new corner(420, 305)));
+		snowdenExits[4].add(new dimension(new corner(-35, 190), new corner(-35, 305)));
+		snowdenExits[4].add(new dimension(new corner(2000, 100), new corner(2000, 235))); // exit is wrong
 		
 		// putting them all in a list
 		allBounds[1] = ruinsBounds;
