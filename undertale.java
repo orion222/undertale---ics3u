@@ -259,9 +259,10 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		snowdenBounds[4].add(new dimension(new corner(-40, 185), new corner(400,310)));
 		snowdenBounds[4].add(new dimension(new corner(400, 10), new corner(700,310)));
 		snowdenBounds[4].add(new dimension(new corner(700, 130), new corner(760,150)));
-		snowdenBounds[4].add(new dimension(new corner(760, -30), new corner(1000,150)));
+		snowdenBounds[4].add(new dimension(new corner(760, 130), new corner(880,150)));
+		snowdenBounds[4].add(new dimension(new corner(880, 130), new corner(920,280)));
 		snowdenExits[4].add(new dimension(new corner(-35, 190), new corner(-35, 305)));
-		snowdenExits[4].add(new dimension(new corner(2000, 100), new corner(2000, 235))); // exit is wrong
+		snowdenExits[4].add(new dimension(new corner(900, 130), new corner(900, 155))); // exit is wrong
 
 		// putting them all in a list
 		allBounds[1] = ruinsBounds;
@@ -280,7 +281,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		moveMap[1][3] = new dimension(new corner(0, 290), new corner(0, 900));
 		moveMap[1][4] = new dimension(new corner(0, 435), new corner(0, 900));
 		moveMap[2][1] = new dimension(new corner(370, 0), new corner(1200, 0));
-		moveMap[2][4] = new dimension(new corner(755, 0), new corner(2080, 0));
+		moveMap[2][4] = new dimension(new corner(755, 0), new corner(1765, 0));
 
 
 
