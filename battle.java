@@ -61,20 +61,29 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public void run() {
     	while (true) {
 	    	
-	    	if (up) {
-	    		playerY -= 5;
-	    		
-	    	}
-	    	else if (down) {
-	    		playerY += 5;
-	    		
-	    	}
-	    	else if (left) {
-	    		playerX -= 5;
-	    	}
-	    	else if (right) {
-	    		playerX += 5;
-	    	}
+    		try {
+				Thread.sleep(50);
+				if (up) {
+		    		playerY -= 5;
+		    		
+		    	}
+		    	if (down) {
+		    		playerY += 5;
+		    		
+		    	}
+		    	if (left) {
+		    		playerX -= 5;
+		    	}
+		    	if (right) {
+		    		playerX += 5;
+		    	}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	repaint();
+
+	    	
     	}
 
 	}
@@ -100,24 +109,42 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			up = true;
 		}
 		
-		else if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
+		if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
 			down = true;
 		}
 		
 
-		else if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
+		if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
 			left = true;
 		}
 		
 
-		else if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
-			down = true;
+		if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
+			right = true;
 		}
-		run();
-		repaint();
     }
 
     public void keyTyped(KeyEvent e) {    	
     }
-    public void keyReleased(KeyEvent e) {}
+    public void keyReleased(KeyEvent e)
+    {
+		if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { // keycode 39 is the up arrow key
+			System.out.println("up");
+			up = false;
+		}
+		
+		if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
+			down = false;
+		}
+		
+
+		if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
+			left = false;
+		}
+		
+
+		if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
+			right = false;
+		}
+    }
 }
