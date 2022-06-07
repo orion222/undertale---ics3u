@@ -54,19 +54,13 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static ArrayList<dimension>[] ruinsBounds = new ArrayList[5];
 	public static ArrayList<dimension>[] ruinsExits = new ArrayList[5];
 
-	public static File path3 = new File("assets/maps/snowden");
-	public static File[] snowdenFile = path3.listFiles();
 	public static BufferedImage[] snowdenImages = new BufferedImage[5];
 	public static ArrayList<dimension>[] snowdenBounds = new ArrayList[5];
 	public static ArrayList<dimension>[] snowdenExits = new ArrayList[5];
 
-
-	public static File path4 = new File("assets/maps/temp");
-	public static File[] tempFile = path4.listFiles();
-	public static BufferedImage[] tempImages = new BufferedImage[5];
-	public static ArrayList<dimension>[] tempBounds = new ArrayList[5];
-	public static ArrayList<dimension>[] tempExits = new ArrayList[5];
-
+	public static BufferedImage[] flowey = new BufferedImage[2];
+	public static ArrayList<dimension>[] floweyBounds = new ArrayList[2];
+	public static ArrayList<dimension>[] floweyExits = new ArrayList[2];
 
 	// gameState is the map, setting is the current place
 	public static ArrayList<dimension>[][] allBounds = new ArrayList[4][5];
@@ -126,6 +120,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			charaImages[7] = ImageIO.read(new File("assets/charaAnimation/charaF3.png"));
 			charaImages[8] = ImageIO.read(new File("assets/charaAnimation/charaL2.png"));
 			charaImages[9] = ImageIO.read(new File("assets/charaAnimation/charaR2.png"));
+			
+			flowey[1] = ImageIO.read(new File("assets/story/Flowey2.png"));
 
             /*
             startSongInput = AudioSystem.getAudioInputStream(new File("audio/mus_musicbox.ogg"));
@@ -152,12 +148,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			ruinsExits[i] = new ArrayList<dimension>();
 			snowdenBounds[i] = new ArrayList<dimension>();
 			snowdenExits[i] = new ArrayList<dimension>();
-			tempBounds[i] = new ArrayList<dimension>();
-			tempExits[i] = new ArrayList<dimension>();
 		}
+		floweyBounds[1] = new ArrayList<dimension>();
+		floweyExits[1] = new ArrayList<dimension>();
 
-		for (int i = 1; i < 4; i++) { // map
-			for (int x = 0; x < 4; x++) { // setting
+		for (int i = 1; i < 3; i++) { // map
+			for (int x = 0; x < 3; x++) { // setting
 				allBounds[i][x] = new ArrayList<dimension>();
 				allExits[i][x] = new ArrayList<dimension>();
 			}
@@ -193,9 +189,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		allPos[2][3][2] = new corner(60, 155); // In front of exit
 
 		// snowden4
-
-
-		allPos[2][4][1] = new corner(0, 265); // In front of exit
+		allPos[2][4][1] = new corner(0, 265); // In front of entrance
+		allPos[2][4][2] = new corner(890, 140); // In front of exit
+		
+		// Flowey
+		allPos[3][1][1] = new corner(200, 200);
+		allPos[3][1][2] = new corner(0,0);
 
 
 
@@ -245,7 +244,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		snowdenExits[2].add(new dimension(new corner(-25, 250), new corner(-25, 445)));
 		snowdenExits[2].add(new dimension(new corner(950, 250), new corner(950, 445)));
 
-		//snowden3
+		// snowden3
 		snowdenBounds[3].add(new dimension(new corner(805, 310), new corner(960, 400)));
 		snowdenBounds[3].add(new dimension(new corner(525, 160), new corner(805, 400)));
 		snowdenBounds[3].add(new dimension(new corner(125, 250), new corner(525, 400)));
@@ -254,8 +253,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		snowdenExits[3].add(new dimension(new corner(945, 310), new corner(945, 400)));
 		snowdenExits[3].add(new dimension(new corner(45, 130), new corner(75, 130)));
 
-		//snowden4
-
+		// snowden4
 		snowdenBounds[4].add(new dimension(new corner(-40, 185), new corner(400,310)));
 		snowdenBounds[4].add(new dimension(new corner(400, 10), new corner(700,310)));
 		snowdenBounds[4].add(new dimension(new corner(700, 130), new corner(760,150)));
@@ -263,19 +261,25 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		snowdenBounds[4].add(new dimension(new corner(880, 130), new corner(920,280)));
 		snowdenExits[4].add(new dimension(new corner(-35, 190), new corner(-35, 305)));
 		snowdenExits[4].add(new dimension(new corner(900, 130), new corner(900, 155))); // exit is wrong
+		
+		// Flowey
+		floweyBounds[1].add(new dimension(new corner(0, 0), new corner(1000, 625)));
+		floweyExits[1].add(new dimension(new corner(0, 0), new corner(0,0)));
+		floweyExits[1].add(new dimension(new corner(0, 0), new corner(0,0)));
+		
 
 		// putting them all in a list
 		allBounds[1] = ruinsBounds;
 		allBounds[2] = snowdenBounds;
-		allBounds[3] = tempBounds;
+		allBounds[3] = floweyBounds;
 
 		allMaps[1] = ruinsImages;
 		allMaps[2] = snowdenImages;
-		allMaps[3] = tempImages;
-
+		allMaps[3] = flowey;
+ 
 		allExits[1] = ruinsExits;
 		allExits[2] = snowdenExits;
-		allExits[3] = tempExits;
+		allExits[3] = floweyExits;
 
 		// Coords to move map
 		moveMap[1][3] = new dimension(new corner(0, 290), new corner(0, 900));
@@ -327,7 +331,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					globalPos = 1250 - (625 - charaY);
 
 				}
-				else if (gameState == 1) {
+				else if (gameState == 1 && setting == 3) {
 					globalPos = charaY;
 
 				}
@@ -355,6 +359,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 		// exploration
 		else if (1 <= gameState && gameState <= 3) {
+			System.out.println(gameState + " " + setting);
 			g2d.drawImage(allMaps[gameState][setting], mapX, mapY, null);
 
 			try {
@@ -364,14 +369,23 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		// Determines which direction the user has pressed
+		// and causes the character to move in that direction
+		// if it is within the boundaries
+		
+		// When moving the map, the map is moving and the character is not
+		// This means that her X or Y value will not change. Thus, we use
+		// globalPos to track her theoretical position. If she is within certain
+		// values, the map will move. Otherwise, if she goes beyond those values,
+		// the map will stop moving and the character itself will.
+		
 		charaAnimation.x = e.getKeyCode();
-		if (!animation.fading && 1 <= gameState && gameState <= 2) {
+		if (!animation.fading && 1 <= gameState && gameState <= 3) {
 			if(e.getKeyCode() == 38 && withinBounds(charaX, charaY - charaSpeed, allBounds[gameState][setting]))
 			{
 				charaAnimation.key = 1;
@@ -467,11 +481,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				if (change == 1) {
 					System.out.println("next setting");
 					// if there are no more maps
-					if (gameState + 1 == 4) {
+					if (gameState + 1 == 3) {
 						setting = 1;
 						gameState++;
 					}
-
+					
+					// going to next map
 					else if (setting + 1 == 5) {
 						gameState++;
 						setting = 1;
@@ -488,15 +503,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					// go to the previous setting but still in same map
 					else setting--;
 				}
-
-
 				fadeEnd = allMaps[gameState][setting];
+				
 				System.out.println("new: " + gameState + " " + setting);
 
 
 				animation.fade(fadeStart, fadeEnd, "fast");
-
-
 			}
 		}
 	}
@@ -516,7 +528,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				fadeStart = titleScreen;
 				fadeEnd = ruinsImages[1];
 				gameState = 2;
-				setting = 3;
+				setting = 1;
 				animation.fade(fadeStart, fadeEnd, "fast");
 
 
@@ -542,7 +554,11 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 	}
 
-
+	// Takes in character's current position and the array of boundaries for that
+	// specific setting. Then, it checks if the character's current position is within
+	// the X and Y values of any of the boundaries. Within those values, she will be
+	// able to move freely. Otherwise, if her values go beyond the boundaries, the array
+	// will return false and she will not be able to move.
 
 	public static boolean withinBounds(int x, int y, ArrayList<dimension> q) {
 		for (dimension cur: q) { // for every boundary in the current setting
@@ -556,8 +572,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			}
 
 		}
-
-
 		return false;
 	}
 
@@ -565,6 +579,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	// 1 equals you go to the entrance of the next setting
 	// 0 equals we haven't exited
 	// 2 equals go to the exit of the previous setting
+	
+	// 
 	public static int withinExit(int x, int y, ArrayList<dimension> exits) {
 		for (int i = 0; i < 2; i++) {
 			dimension cur = exits.get(i);
@@ -574,6 +590,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			System.out.println(cur.topLeft.y + " <= " + y + " <= " + cur.bottomRight.y + "  x == " + cur.topLeft.x);
 			boolean exitingVertically = cur.topLeft.x <= x && x <= cur.bottomRight.x && cur.topLeft.y == y;
 			boolean exitingHorizontally = cur.topLeft.y <= y && y <= cur.bottomRight.y && cur.topLeft.x == x;
+			if(exitingVertically) {
+				System.out.println("VERTICAL");
+			}
+			else if(exitingHorizontally) {
+				System.out.println("HORIZONTAL");
+			}
 
 
 			if (exitingVertically || exitingHorizontally) {
