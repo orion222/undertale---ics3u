@@ -11,9 +11,17 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
     public static int key;
     public static int pointerX;
-    public static BufferedImage character;
     public static int playerX = 500;
     public static int playerY = 400;
+    
+    public static boolean up = false;
+    public static boolean down = false;
+    public static boolean right = false;
+    public static boolean left = false;
+    
+    public static BufferedImage character;
+    public static BufferedImage menu;
+    
     
 	public undertale game;
 
@@ -26,8 +34,13 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public battle() {
 		setPreferredSize(new Dimension(990, 615));
 		setBackground(new Color(0, 0, 0));
+		
+		addKeyListener(this);
+		this.setFocusable(true);
         Thread thread = new Thread(this);
         thread.start();
+        
+        
         
         
         try {
@@ -46,6 +59,23 @@ public class battle extends JPanel implements Runnable, KeyListener {
     }
 
     public void run() {
+    	while (true) {
+	    	
+	    	if (up) {
+	    		playerY -= 5;
+	    		
+	    	}
+	    	else if (down) {
+	    		playerY += 5;
+	    		
+	    	}
+	    	else if (left) {
+	    		playerX -= 5;
+	    	}
+	    	else if (right) {
+	    		playerX += 5;
+	    	}
+    	}
 
 	}
 
@@ -67,27 +97,23 @@ public class battle extends JPanel implements Runnable, KeyListener {
     {
 		if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { // keycode 39 is the up arrow key
 			System.out.println("up");
-			playerY -= 10;
-
+			up = true;
 		}
 		
-		if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
-			playerY += 10;
-
-		}
-		
-
-		if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
-			playerX -= 10;
-
+		else if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
+			down = true;
 		}
 		
 
-		if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
-			playerX += 10;
-
+		else if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
+			left = true;
 		}
 		
+
+		else if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
+			down = true;
+		}
+		run();
 		repaint();
     }
 
