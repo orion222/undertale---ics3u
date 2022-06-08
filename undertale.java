@@ -228,7 +228,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		// boundary needs to move
 		ruinsBounds[3].add(new dimension(new corner(765, 355), new corner(915,460)));
 		ruinsExits[3].add(new dimension(new corner(55,180), new corner(55,285))); // entrance
-		ruinsExits[3].add(new dimension(new corner(915,355), new corner(915,460))); // exit
+		ruinsExits[3].add(new dimension(new corner(890,355), new corner(890,460))); // exit
 
 		// ruins4
 		ruinsBounds[4].add(new dimension(new corner(450, 275), new corner(495,480)));
@@ -345,8 +345,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				}
 				else if (gameState == 1 && setting == 3) {
 					globalPos = charaY;
-
 				}
+				
+				else if (gameState == 1 && setting == 4) {
+					
+				}
+			
 				else if(gameState == 2 && charaX > 625) {
 					globalPos = (1250 - (640 - charaX));
 				}
@@ -415,6 +419,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			{
 				right = true;
 			}
+			System.out.println();
 			System.out.println("globalPos: " + globalPos);
 			System.out.println("mapX: " + mapX + " mapY: " + mapY);
 
@@ -513,8 +518,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			// check if within top left corner
 			corner topL = cur.topLeft;
 			corner bottomR = cur.bottomRight;
-			System.out.println("\n" + topL.x + " <= " + x + " <= " + bottomR.x);
-			System.out.println(topL.y + " <= " + y + " <= " + bottomR.y + "\n");
 			if (topL.x <= x && x <= bottomR.x && topL.y <= y && y <= bottomR.y) {
 				return true;
 			}
@@ -533,9 +536,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		for (int i = 0; i < 2; i++) {
 			dimension cur = exits.get(i);
 
-
-
-			System.out.println(cur.topLeft.y + " <= " + y + " <= " + cur.bottomRight.y + "  x == " + cur.topLeft.x);
 			boolean exitingVertically = cur.topLeft.x <= x && x <= cur.bottomRight.x && cur.topLeft.y == y;
 			boolean exitingHorizontally = cur.topLeft.y <= y && y <= cur.bottomRight.y && cur.topLeft.x == x;
 			if(exitingVertically) {
@@ -547,6 +547,11 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 
 			if (exitingVertically || exitingHorizontally) {
+				
+				up = false;
+				down = false;
+				right = false;
+				left = false;
 
 				// you entered the entrance so u go back
 				if (i == 0) return 2;
