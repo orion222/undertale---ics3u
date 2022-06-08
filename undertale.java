@@ -371,7 +371,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 		// exploration
 		else if (1 <= gameState && gameState <= 3) {
-			System.out.println(gameState + " " + setting);
 			g2d.drawImage(allMaps[gameState][setting], mapX, mapY, null);
 
 			try {
@@ -595,7 +594,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
 				right = false;
 				curChara = 3;
-			}
+			}
+
 		}
 	}
 
@@ -605,9 +605,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		
 		while(true) {
     		try {
-    			if(up || down || left || right) { 
-    				test = true;
-    			}
+
 				Thread.sleep(1000 / fps);
 				if (up && withinBounds(charaX, charaY - charaSpeed, allBounds[gameState][setting])) {
 					charaAnimation.key = 1;
@@ -624,6 +622,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					else {
 						charaY -= charaSpeed;
 					}
+			    	charaAnimation.run();
+
 		    	}
 		    	if (down && withinBounds(charaX, charaY + charaSpeed, allBounds[gameState][setting])) {
 		    		charaAnimation.key = 3;
@@ -640,6 +640,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					else {
 						charaY += charaSpeed;
 					}
+			    	charaAnimation.run();
+
 		    		
 		    	}
 		    	if (left && withinBounds(charaX - charaSpeed, charaY, allBounds[gameState][setting])) {
@@ -657,6 +659,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					else {
 						charaX -= charaSpeed;
 					}
+			    	charaAnimation.run();
+
 		    	}
 		    	if (right && withinBounds(charaX + charaSpeed, charaY, allBounds[gameState][setting])) {
 		    		charaAnimation.key = 4;
@@ -672,16 +676,15 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					else {
 						charaX += charaSpeed;
 					}
+			    	charaAnimation.run();
+
 		    	}
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	    	repaint();
-	    	if(test) {
-	    		charaAnimation.run();
-	    		test = false;
-	    	}
+
 		}
 
 	}
