@@ -33,15 +33,15 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static int charaSpeed = 5;
 
 	public static int globalPos;
-	
+
 	public static int fps = 20;
-	
+
 	public static boolean up = false;
 	public static boolean left = false;
 	public static boolean down = false;
 	public static boolean right = false;
 	public static boolean test = false;
-	
+
 
 	// [map][setting][1 = start, 2 = exit]
 	public static corner[][][] allPos = new corner[4][5][3];
@@ -79,15 +79,15 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	// set of coords in specific maps where the map camera needs to move
 	public static dimension[][] moveMap = new dimension[3][5];
 
-	static BufferedImage fadeStart;
-	static BufferedImage fadeEnd;
+	BufferedImage fadeStart;
+	BufferedImage fadeEnd;
 
 	// audio
 	public static Clip startSong;
 
 	public static AudioInputStream startSongInput;
 
-	 // position
+	// position
 
 
 
@@ -129,7 +129,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			charaImages[7] = ImageIO.read(new File("assets/charaAnimation/charaF3.png"));
 			charaImages[8] = ImageIO.read(new File("assets/charaAnimation/charaL2.png"));
 			charaImages[9] = ImageIO.read(new File("assets/charaAnimation/charaR2.png"));
-			
+
 			flowey[1] = ImageIO.read(new File("assets/story/Flowey2.png"));
 
             /*
@@ -174,7 +174,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		allPos[1][1][2] = new corner(15, 340); // In front of exit
 
 		// ruins2
-		allPos[1][2][1] = new corner(920, 255); // In front of entrance
+		allPos[1][2][1] = new corner(900, 255); // In front of entrance
 		allPos[1][2][2] = new corner(130, 185); // In front of exit
 
 		// ruins3
@@ -199,8 +199,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 		// snowden4
 		allPos[2][4][1] = new corner(0, 265); // In front of entrance
-		allPos[2][4][2] = new corner(890, 140); // In front of exit
-		
+		allPos[2][4][2] = new corner(865, 140); // In front of exit
+
 		// Flowey
 		allPos[3][1][1] = new corner(200, 200);
 		allPos[3][1][2] = new corner(0,0);
@@ -217,7 +217,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		ruinsExits[1].add(new dimension(new corner(-35, 260), new corner(-35, 375))); // exit
 
 		// ruins2
-		ruinsBounds[2].add(new dimension(new corner (45, 175), new corner (1050, 300)));
+		ruinsBounds[2].add(new dimension(new corner (45, 175), new corner (940, 300)));
 		ruinsBounds[2].add(new dimension(new corner (100, 150), new corner (170, 175)));
 		ruinsExits[2].add(new dimension(new corner(940,175), new corner(940, 300))); // entrance
 		ruinsExits[2].add(new dimension(new corner(100,150), new corner(170, 150))); // exit
@@ -240,10 +240,10 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 		// snowden1
 		snowdenBounds[1].add(new dimension(new corner(210, 265), new corner(365, 320)));
-		snowdenBounds[1].add(new dimension(new corner(210, 320), new corner(2000, 470)));
-		snowdenBounds[1].add(new dimension(new corner(80, 370), new corner(210, 470)));
-		snowdenExits[1].add(new dimension(new corner(80, 370), new corner (80, 415))); // entrance
-		snowdenExits[1].add(new dimension(new corner(940, 320), new corner(940, 470))); // exit
+		snowdenBounds[1].add(new dimension(new corner(210, 320), new corner(960, 470)));
+		snowdenBounds[1].add(new dimension(new corner(90, 370), new corner(210, 470)));
+		snowdenExits[1].add(new dimension(new corner(90, 370), new corner (90, 415))); // entrance
+		snowdenExits[1].add(new dimension(new corner(945, 320), new corner(945, 470))); // exit
 
 		// snowden2
 		snowdenBounds[2].add(new dimension(new corner(-25, 250), new corner(2000, 445)));
@@ -263,19 +263,21 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		snowdenExits[3].add(new dimension(new corner(45, 130), new corner(75, 130)));
 
 		// snowden4
-		snowdenBounds[4].add(new dimension(new corner(-40, 185), new corner(400,310)));
-		snowdenBounds[4].add(new dimension(new corner(400, 10), new corner(700,310)));
-		snowdenBounds[4].add(new dimension(new corner(700, 130), new corner(760,150)));
-		snowdenBounds[4].add(new dimension(new corner(760, 130), new corner(880,150)));
-		snowdenBounds[4].add(new dimension(new corner(880, 130), new corner(920,280)));
+		snowdenBounds[4].add(new dimension(new corner(-40, 185), new corner(355,290)));
+		snowdenBounds[4].add(new dimension(new corner(65, 10), new corner(355,290)));
+		snowdenBounds[4].add(new dimension(new corner(355, 130), new corner(450,140)));
+		snowdenBounds[4].add(new dimension(new corner(455, 130), new corner(880,140)));
+		snowdenBounds[4].add(new dimension(new corner(880, 130), new corner(910,155)));
+		snowdenBounds[4].add(new dimension(new corner(880, 155), new corner(895,175)));
+		snowdenBounds[4].add(new dimension(new corner(880, 175), new corner(910,280)));
 		snowdenExits[4].add(new dimension(new corner(-35, 190), new corner(-35, 305)));
-		snowdenExits[4].add(new dimension(new corner(900, 130), new corner(900, 155))); // exit is wrong
-		
+		snowdenExits[4].add(new dimension(new corner(910, 130), new corner(910, 155))); // exit is wrong
+
 		// Flowey
 		floweyBounds[1].add(new dimension(new corner(0, 0), new corner(1000, 625)));
 		floweyExits[1].add(new dimension(new corner(0, 0), new corner(0,0)));
 		floweyExits[1].add(new dimension(new corner(0, 0), new corner(0,0)));
-		
+
 
 		// putting them all in a list
 		allBounds[1] = ruinsBounds;
@@ -285,7 +287,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		allMaps[1] = ruinsImages;
 		allMaps[2] = snowdenImages;
 		allMaps[3] = flowey;
- 
+
 		allExits[1] = ruinsExits;
 		allExits[2] = snowdenExits;
 		allExits[3] = floweyExits;
@@ -294,7 +296,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		moveMap[1][3] = new dimension(new corner(0, 290), new corner(0, 900));
 		moveMap[1][4] = new dimension(new corner(0, 435), new corner(0, 900));
 		moveMap[2][1] = new dimension(new corner(370, 0), new corner(1200, 0));
-		moveMap[2][4] = new dimension(new corner(755, 0), new corner(1765, 0));
+		moveMap[2][4] = new dimension(new corner(445, 0), new corner(1115, 0));
 
 
 
@@ -337,7 +339,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 				// Used to determine if map needs to move
 				// at a certain point
-				
+
 				// if chara spawns at the bottom
 				if (charaY > 312 && gameState == 1) {
 					globalPos = 1250 - (625 - charaY);
@@ -346,11 +348,11 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				else if (gameState == 1 && setting == 3) {
 					globalPos = charaY;
 				}
-				
+
 				else if (gameState == 1 && setting == 4) {
-					
+
 				}
-			
+
 				else if(gameState == 2 && charaX > 625) {
 					globalPos = (1250 - (640 - charaX));
 				}
@@ -392,13 +394,13 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		// Determines which direction the user has pressed
 		// and causes the character to move in that direction
 		// if it is within the boundaries
-		
+
 		// When moving the map, the map is moving and the character is not
 		// This means that her X or Y value will not change. Thus, we use
 		// globalPos to track her theoretical position. If she is within certain
 		// values, the map will move. Otherwise, if she goes beyond those values,
 		// the map will stop moving and the character itself will.
-		
+
 		charaAnimation.x = e.getKeyCode();
 		if (!animation.fading && 1 <= gameState && gameState <= 3) {
 			// change animation to run method as it depends on each click
@@ -426,6 +428,45 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			change = withinExit(charaX, charaY, allExits[gameState][setting]);
 			System.out.println("chara x = " + charaX + " " + "charaY = " + charaY);
 
+			if (change != 0) {
+				// save the current map
+				fadeStart = allMaps[gameState][setting];
+				System.out.println(gameState + " " + setting);
+
+				// go to next map
+				if (change == 1) {
+					System.out.println("next setting");
+					// if there are no more maps
+					if (gameState + 1 == 4) {
+						setting = 1;
+						gameState++;
+					}
+
+					// going to next map
+					else if (setting + 1 == 5) {
+						gameState++;
+						setting = 1;
+					}
+					else setting++;
+				}
+
+				else if (change == 2) {
+					// go to the previous MAP
+					if (setting - 1 == 0) {
+						gameState--;
+						setting = 4;
+					}
+					// go to the previous setting but still in same map
+					else setting--;
+				}
+				System.out.println("before: " + gameState + " " + setting);
+				fadeEnd = allMaps[gameState][setting];
+
+				System.out.println("new: " + gameState + " " + setting);
+
+
+				animation.fade(fadeStart, fadeEnd, "fast");
+			}
 		}
 	}
 
@@ -444,7 +485,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				fadeStart = titleScreen;
 				fadeEnd = ruinsImages[1];
 				gameState = 2;
-				setting = 1;
+				setting = 4;
 				animation.fade(fadeStart, fadeEnd, "fast");
 
 
@@ -492,17 +533,14 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	// 1 equals you go to the entrance of the next setting
 	// 0 equals we haven't exited
 	// 2 equals go to the exit of the previous setting
-	
-	// 
+
+	//
 	public static int withinExit(int x, int y, ArrayList<dimension> exits) {
 		for (int i = 0; i < 2; i++) {
 			dimension cur = exits.get(i);
 
 			boolean exitingVertically = cur.topLeft.x <= x && x <= cur.bottomRight.x && cur.topLeft.y == y;
 			boolean exitingHorizontally = cur.topLeft.y <= y && y <= cur.bottomRight.y && cur.topLeft.x == x;
-			System.out.println(cur.topLeft.x + " <= " + x + " <= " + cur.bottomRight.x);
-			System.out.println(cur.topLeft.y + " <= " + y + " <= " + cur.bottomRight.y + "\n");
-
 			if(exitingVertically) {
 				System.out.println("VERTICAL");
 			}
@@ -512,7 +550,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 
 			if (exitingVertically || exitingHorizontally) {
-				
+
 				up = false;
 				down = false;
 				right = false;
@@ -546,31 +584,25 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				up = false;
 				curChara = 0;
 			}
-			
+
 			if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
 				down = false;
 				curChara = 2;
 				charaAnimation.legS = false;
 			}
-			
+
 
 			if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
 				left = false;
 				curChara = 1;
 				charaAnimation.legA = false;
 			}
-			
+
 
 			if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
 				right = false;
 				curChara = 3;
 			}
-			
-	    	change = withinExit(charaX, charaY, allExits[gameState][setting]);
-	    	if (change != 0) {
-	    		changeSettings(change);
-	    		animation.fade(fadeStart, fadeEnd, "fast");
-	    	}
 
 		}
 	}
@@ -578,9 +610,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 	@Override
 	public void run() {
-		
+
 		while(true) {
-    		try {
+			try {
 
 				Thread.sleep(1000 / fps);
 				if (up && withinBounds(charaX, charaY - charaSpeed, allBounds[gameState][setting])) {
@@ -598,12 +630,11 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					else {
 						charaY -= charaSpeed;
 					}
-					
-			    	charaAnimation.run();
+					charaAnimation.run();
 
-		    	}
-		    	if (down && withinBounds(charaX, charaY + charaSpeed, allBounds[gameState][setting])) {
-		    		charaAnimation.key = 3;
+				}
+				if (down && withinBounds(charaX, charaY + charaSpeed, allBounds[gameState][setting])) {
+					charaAnimation.key = 3;
 					if(gameState == 1) {
 						if(setting > 2 && moveMap[gameState][setting].topLeft.y <= globalPos && globalPos < moveMap[gameState][setting].bottomRight.y) {
 							mapY -= charaSpeed;
@@ -617,12 +648,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					else {
 						charaY += charaSpeed;
 					}
-			    	charaAnimation.run();
+					charaAnimation.run();
 
-		    		
-		    	}
-		    	if (left && withinBounds(charaX - charaSpeed, charaY, allBounds[gameState][setting])) {
-		    		charaAnimation.key = 2;
+
+				}
+				if (left && withinBounds(charaX - charaSpeed, charaY, allBounds[gameState][setting])) {
+					charaAnimation.key = 2;
 					// for moving the camera horizontally
 					if(gameState == 2 && (setting == 1 || setting == 4)) {
 						if(moveMap[gameState][setting].topLeft.x < globalPos && globalPos <= moveMap[gameState][setting].bottomRight.x) {
@@ -636,11 +667,11 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					else {
 						charaX -= charaSpeed;
 					}
-			    	charaAnimation.run();
+					charaAnimation.run();
 
-		    	}
-		    	if (right && withinBounds(charaX + charaSpeed, charaY, allBounds[gameState][setting])) {
-		    		charaAnimation.key = 4;
+				}
+				if (right && withinBounds(charaX + charaSpeed, charaY, allBounds[gameState][setting])) {
+					charaAnimation.key = 4;
 					if(gameState == 2 && (setting == 1 || setting == 4)) {
 						if(moveMap[gameState][setting].topLeft.x <= globalPos && globalPos < moveMap[gameState][setting].bottomRight.x) {
 							mapX -= charaSpeed;
@@ -653,61 +684,17 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					else {
 						charaX += charaSpeed;
 					}
-			    	charaAnimation.run();
+					charaAnimation.run();
 
-		    	}
-		    	
-		    	
-
-		    	
+				}
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	    	repaint();
+			repaint();
 
 		}
 
-	}
-	
-	public static void changeSettings(int change) {
-		// save the current map
-		fadeStart = allMaps[gameState][setting];
-		System.out.println(gameState + " " + setting);
-
-		// go to next map
-		if (change == 1) {
-			System.out.println("next setting");
-			// if there are no more maps
-			
-			// deleting this if statement breaks the program bruh
-			if (gameState + 1 == 5) {
-				setting = 1;
-				gameState++;
-			}
-			
-			// going to next map
-			else if (setting + 1 == 5) {
-				gameState++;
-				setting = 1;
-			}
-			else setting++;
-		}
-
-		else if (change == 2) {
-			// go to the previous MAP
-			if (setting - 1 == 0) {
-				gameState--;
-				setting = 4;
-			}
-			// go to the previous setting but still in same map
-			else setting--;
-		}
-		fadeEnd = allMaps[gameState][setting];
-		
-		System.out.println("new: " + gameState + " " + setting);
-
-		
 	}
 
 

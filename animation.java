@@ -11,23 +11,23 @@ import javax.swing.Timer;
 
 public class animation implements ActionListener{
 	public static float alpha = 1.0f;
-	
+
 	// -1 = no fade, 1 = fade in, 2 = fade out
 	public static boolean fading = false;
 	public static boolean faded = false;
 	public static int fade = -1;
 	public static double fadeSpeed;
 	public static boolean wait = false;
-	
+
 	// time
 	Timer timer = new Timer(20, this);
 	public undertale game;
-	
+
 	public animation(undertale e){
-		
-		 game = e;
+
+		game = e;
 	}
-	
+
 	public void fade(BufferedImage start, BufferedImage end, String speed) {
 		fading = true;
 		if (speed.equals("fast")) {
@@ -53,7 +53,7 @@ public class animation implements ActionListener{
 				}
 			}
 			game.mapX = 0;
-			game.mapY = 0; 
+			game.mapY = 0;
 
 			if (game.gameState == 1 && game.setting == 4 && game.change == 1) {
 				game.mapY = -610;
@@ -72,12 +72,15 @@ public class animation implements ActionListener{
 
 			else if (game.gameState == 2 && game.setting == 1 && game.change == 2) {
 				game.mapX = -830;
-	
+			}
+			else if (game.gameState == 2 && game.setting == 4 && game.change == 2) {
+				game.mapX = -670;
+				game.globalPos = 1535;
 			}
 		}
 	}
-	
-	public void fadeIn() {	
+
+	public void fadeIn() {
 		alpha += fadeSpeed;
 		if (alpha > 1) {
 			alpha = 1;
@@ -93,14 +96,14 @@ public class animation implements ActionListener{
 		if (!faded) { // if we are currently fading out
 			fadeOut();
 		}
-		
+
 		else {
 			fadeIn();
 		}
 		game.repaint();
-		
+
 	}
-	
-	
-	
+
+
+
 }
