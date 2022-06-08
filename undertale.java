@@ -79,15 +79,15 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	// set of coords in specific maps where the map camera needs to move
 	public static dimension[][] moveMap = new dimension[3][5];
 
-	BufferedImage fadeStart;
-	BufferedImage fadeEnd;
+	static BufferedImage fadeStart;
+	static BufferedImage fadeEnd;
 
 	// audio
 	public static Clip startSong;
 
 	public static AudioInputStream startSongInput;
 
-	// position
+	 // position
 
 
 
@@ -426,44 +426,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			change = withinExit(charaX, charaY, allExits[gameState][setting]);
 			System.out.println("chara x = " + charaX + " " + "charaY = " + charaY);
 
-			if (change != 0) {
-				// save the current map
-				fadeStart = allMaps[gameState][setting];
-				System.out.println(gameState + " " + setting);
-
-				// go to next map
-				if (change == 1) {
-					System.out.println("next setting");
-					// if there are no more maps
-					if (gameState + 1 == 3) {
-						setting = 1;
-						gameState++;
-					}
-					
-					// going to next map
-					else if (setting + 1 == 5) {
-						gameState++;
-						setting = 1;
-					}
-					else setting++;
-				}
-
-				else if (change == 2) {
-					// go to the previous MAP
-					if (setting - 1 == 0) {
-						gameState--;
-						setting = 4;
-					}
-					// go to the previous setting but still in same map
-					else setting--;
-				}
-				fadeEnd = allMaps[gameState][setting];
-				
-				System.out.println("new: " + gameState + " " + setting);
-
-
-				animation.fade(fadeStart, fadeEnd, "fast");
-			}
 		}
 	}
 
@@ -538,6 +500,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 			boolean exitingVertically = cur.topLeft.x <= x && x <= cur.bottomRight.x && cur.topLeft.y == y;
 			boolean exitingHorizontally = cur.topLeft.y <= y && y <= cur.bottomRight.y && cur.topLeft.x == x;
+			System.out.println(cur.topLeft.x + " <= " + x + " <= " + cur.bottomRight.x);
+			System.out.println(cur.topLeft.y + " <= " + y + " <= " + cur.bottomRight.y + "\n");
+
 			if(exitingVertically) {
 				System.out.println("VERTICAL");
 			}
@@ -600,6 +565,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				right = false;
 				curChara = 3;
 			}
+			
+	    	change = withinExit(charaX, charaY, allExits[gameState][setting]);
+	    	if (change != 0) {
+	    		changeSettings(change);
+	    		animation.fade(fadeStart, fadeEnd, "fast");
+	    	}
 
 		}
 	}
@@ -627,6 +598,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					else {
 						charaY -= charaSpeed;
 					}
+					
 			    	charaAnimation.run();
 
 		    	}
@@ -684,6 +656,10 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			    	charaAnimation.run();
 
 		    	}
+		    	
+		    	
+
+		    	
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -692,6 +668,46 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 		}
 
+	}
+	
+	public static void changeSettings(int change) {
+		// save the current map
+		fadeStart = allMaps[gameState][setting];
+		System.out.println(gameState + " " + setting);
+
+		// go to next map
+		if (change == 1) {
+			System.out.println("next setting");
+			// if there are no more maps
+			
+			// deleting this if statement breaks the program bruh
+			if (gameState + 1 == 5) {
+				setting = 1;
+				gameState++;
+			}
+			
+			// going to next map
+			else if (setting + 1 == 5) {
+				gameState++;
+				setting = 1;
+			}
+			else setting++;
+		}
+
+		else if (change == 2) {
+			// go to the previous MAP
+			if (setting - 1 == 0) {
+				gameState--;
+				setting = 4;
+			}
+			// go to the previous setting but still in same map
+			else setting--;
+		}
+		fadeEnd = allMaps[gameState][setting];
+		
+		System.out.println("new: " + gameState + " " + setting);
+
+		
 	}
 
 
