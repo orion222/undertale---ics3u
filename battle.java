@@ -6,6 +6,9 @@ import javax.imageio.ImageIO;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+
+
+// implement runnable for constant update in main file
 public class battle extends JPanel implements Runnable, KeyListener {
 
 
@@ -13,14 +16,34 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public static int pointerX;
     public static int playerX = 500;
     public static int playerY = 400;
+    public static BufferedImage character;
+
     
     public static boolean up = false;
     public static boolean down = false;
     public static boolean right = false;
     public static boolean left = false;
     
-    public static BufferedImage character;
-    public static BufferedImage menu;
+    public static BufferedImage[] menuImages = new BufferedImage[4];
+	public static File path1 = new File("assets/battleImages/menus");
+	public static File[] menuFiles = path1.listFiles();
+	
+    public static BufferedImage[] healthImages = new BufferedImage[11];
+	public static File path2 = new File("assets/battleImages/health");
+	public static File[] healthFiles = path2.listFiles();
+	
+    public static BufferedImage[] selectionImages = new BufferedImage[4];
+	public static File path3 = new File("assets/battleImages/options");
+	public static File[] selectionFiles = path3.listFiles();
+	
+	
+    
+    public static boolean battling = true;
+	public static int menuState = 1;
+    public static boolean invulnerable = false;
+    public static int selectionState = 1;
+    public static int health = 10;
+    
     
     
 	public undertale game;
@@ -45,24 +68,52 @@ public class battle extends JPanel implements Runnable, KeyListener {
         
         try {
 			character = ImageIO.read(new File("assets/battleImages/heart.png"));
+			menuImages[1] = ImageIO.read(new File("assets/battleImages/menus/menu1.png"));
+			menuImages[2] = ImageIO.read(new File("assets/battleImages/menus/menu2.png"));
+			menuImages[3] = ImageIO.read(new File("assets/battleImages/menus/menu3.png"));
+			System.out.println(healthFiles.length);
+			System.out.println(selectionFiles.length);
 
+			for (int i = 1; i < 11; i++) {
+				healthImages[i] = ImageIO.read(healthFiles[i - 1]);
+			}
+			for (int i = 1; i < 4; i++) {
+				selectionImages[i] = ImageIO.read(selectionFiles[i - 1]);
+			}
             
         }
-        catch (Exception e) {}
+        catch (Exception e) {
+        	System.out.println("image does not exist");
+        }
         
     }
 
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(character, playerX, playerY, null);
+		super.paintComponent(g);
+    	if (battling) {
+            g.drawImage(character, playerX, playerY, null);
+    		g.drawImage(menuImages[menuState], 0, 0, null);
+    		
+    		// highlight selection
+    		if (menuState == 1) {
+    			g.drawImage(selectionImages[selectionState], 0, 0, null);
+    		}
+    		
+    		
+    	}
 
     }
 
     public void run() {
     	while (true) {
-	    	
-    		try {
+			try {
 				Thread.sleep(50);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+    		if (menuState == 3) { //  if you are fighting then we need this
 				if (up) {
 		    		playerY -= 5;
 		    		
@@ -77,10 +128,8 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		    	if (right) {
 		    		playerX += 5;
 		    	}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+	    	}
 	    	repaint();
 
 	    	
@@ -102,49 +151,105 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
     }
     
+
+    
+    
     public void keyPressed(KeyEvent e) 
     {
-		if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { // keycode 39 is the up arrow key
-			System.out.println("up");
-			up = true;
-		}
+    	int x = e.getKeyCode();
+    	if (menuState == 1) {
+    		
+    		// left 
+			if (x == 37) { 
+				if (selectionState - 1 > 0) {
+					selectionState --;
+				}
+			}
+			
+			// right
+			else if (x == 30) {
+				if (selectionState + 1 < 3) {
+					selectionState ++;
+				}
 		
-		if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
-			down = true;
-		}
-		
+				
+			}
+    		// if the key is z, then select
+			else if (x == 90) {
+				menuState ++;
+				if (selectionState == 1) {
+					
+				}
+				else if (selectionState == 2) {
+					
+				}
+				
+			}
+			/*
+			// if the key is x, then go back
+			else if (x == 88) {
+			}
+			*/  		
+    	}
+    	
+    	
+    	// slider
+    	else if (menuState == 2) {
+    		
+    	}
+    	
+    	
+    	else if (menuState == 3) {
+			if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { // keycode 39 is the up arrow key
+				System.out.println("up");
+				up = true;
+			}
+			
+			if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
+				down = true;
+			}
+			
+	
+			if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
+				left = true;
+			}
+			
+	
+			if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
+				right = true;
+			}
+    	}
 
-		if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
-			left = true;
-		}
-		
-
-		if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
-			right = true;
-		}
     }
 
-    public void keyTyped(KeyEvent e) {    	
-    }
     public void keyReleased(KeyEvent e)
     {
-		if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { // keycode 39 is the up arrow key
-			System.out.println("up");
-			up = false;
-		}
-		
-		if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
-			down = false;
-		}
-		
+    	
+    	if (menuState == 3) {
+			if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { 
+				System.out.println("up");
+				up = false;
+			}
+			
+			if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
+				down = false;
+			}
+			
+	
+			if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
+				left = false;
+			}
+			
+	
+			if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
+				right = false;
+			}
+    	}
+    }
+    
+    
+    
 
-		if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
-			left = false;
-		}
-		
-
-		if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
-			right = false;
-		}
+    public void keyTyped(KeyEvent e) {    	
     }
 }
