@@ -1,10 +1,19 @@
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import javax.swing.*;
-import java.io.*;
-import javax.imageio.ImageIO;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 
 
@@ -16,6 +25,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public static int pointerX;
     public static int playerX = 500;
     public static int playerY = 400;
+    public static int playerSpeed = 5;
     public static BufferedImage player;
 
     
@@ -33,7 +43,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	public static File path3 = new File("assets/battleImages/options");
 	public static File[] selectionFiles = path3.listFiles();
 	
-	
+	public static ArrayList<dimension> gameBounds = new ArrayList<dimension>();
     
     public static boolean battling = true;
 	public static int menuState = 1;
@@ -43,7 +53,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public static int textState = 1;
     public static int heals;
     
-    public static position[] optionPos = new position[4];
+    public static corner[] optionPos = new corner[4];
 	public static Font font;
 	
     
@@ -98,12 +108,11 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		//use the font
 		this.setFont(font);
 		
-		optionPos[1] = new position(235, 539);
-		optionPos[2] = new position(442, 539);
-		optionPos[3] = new position(650, 539);
+		optionPos[1] = new corner(235, 539);
+		optionPos[2] = new corner(442, 539);
+		optionPos[3] = new corner(650, 539);
 		
-	
-    
+		gameBounds.add(new dimension(new corner(310, 295), new corner(655,445)));
     }
 
     public void paintComponent(Graphics g) {
@@ -144,7 +153,6 @@ public class battle extends JPanel implements Runnable, KeyListener {
     			
     		}
     		else if (menuState == 3) {
-    			System.out.println("yo");
     			g.drawImage(player, playerX, playerY, null);
     			
     		}
@@ -163,20 +171,16 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	    		
 	    		// left 
 				if (xe == 37) { 
-					System.out.println(selectionState);
 					if (selectionState - 1 > 0) {
 						selectionState --;
-						System.out.println(selectionState);
 	
 					}
 				}
 				
 				// right
 				else if (xe == 39) {
-					System.out.println(selectionState);
 					if (selectionState + 1 < 4) {
 						selectionState ++;
-						System.out.println(selectionState);
 	
 					}
 					
@@ -261,20 +265,20 @@ public class battle extends JPanel implements Runnable, KeyListener {
 				e1.printStackTrace();
 			}
 
-    		if (menuState == 3) { //  if you are fighting then we need this
-				if (up) {
-		    		playerY -= 5;
+    		if (menuState == 3) { //  if you are fighting then we need this 
+				if (up && withinBounds(playerX, playerY - playerSpeed, gameBounds)) {
+		    		playerY -= playerSpeed;
 		    		
 		    	}
-		    	if (down) {
-		    		playerY += 5;
+		    	if (down && withinBounds(playerX, playerY + playerSpeed, gameBounds)) {
+		    		playerY += playerSpeed;
 		    		
 		    	}
-		    	if (left) {
-		    		playerX -= 5;
+		    	if (left && withinBounds(playerX - playerSpeed, playerY, gameBounds)) {
+		    		playerX -= playerSpeed;
 		    	}
-		    	if (right) {
-		    		playerX += 5;
+		    	if (right && withinBounds(playerX + playerSpeed, playerY - playerSpeed, gameBounds)) {
+		    		playerX += playerSpeed;
 		    	}
 
 	    	}
@@ -324,6 +328,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
 				right = false;
 			}
+			System.out.println(playerX + " " + playerY);
     	}
     }
     
@@ -332,15 +337,39 @@ public class battle extends JPanel implements Runnable, KeyListener {
     
 
 	// create an objects for measurements
-	public static class position{
+	public static class corner{
 
 		public int x;
 		public int y;
-		public position(int x, int y) {
+		public corner(int x, int y) {
 			this.x = x;
 			this.y = y;
 		}
 	}
+	public static class dimension {
+		public corner topLeft;
+		public corner bottomRight;
+		public dimension(corner topLeft, corner bottomRight) {
+			this.topLeft = topLeft;
+			this.bottomRight = bottomRight;
+		}
+	}
+	
+	public static boolean withinBounds(int x, int y, ArrayList<dimension> q) {
+		for (dimension cur: q) { // for every boundary in the current setting
+			// check if within top left corner
+			corner topL = cur.topLeft;
+			corner bottomR = cur.bottomRight;
+			if (topL.x <= x && x <= bottomR.x && topL.y <= y && y <= bottomR.y) {
+				return true;
+			}
+
+		}
+		return false;
+	}
+
+	
+
 
 
 
