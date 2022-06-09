@@ -28,9 +28,6 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	public static File path1 = new File("assets/battleImages/menus");
 	public static File[] menuFiles = path1.listFiles();
 	
-    public static BufferedImage[] healthImages = new BufferedImage[11];
-	public static File path2 = new File("assets/battleImages/health");
-	public static File[] healthFiles = path2.listFiles();
 	
     public static BufferedImage[] selectionImages = new BufferedImage[4];
 	public static File path3 = new File("assets/battleImages/options");
@@ -43,7 +40,12 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public static boolean invulnerable = false;
     public static int selectionState = 1;
     public static int health = 10;
+    public static int textState = 1;
+    public static int heals;
     
+    public static position[] optionPos = new position[4];
+	public static Font font;
+	
     
     
 	public undertale game;
@@ -67,42 +69,169 @@ public class battle extends JPanel implements Runnable, KeyListener {
         
         
         try {
-			character = ImageIO.read(new File("assets/battleImages/heart.png"));
 			menuImages[1] = ImageIO.read(new File("assets/battleImages/menus/menu1.png"));
 			menuImages[2] = ImageIO.read(new File("assets/battleImages/menus/menu2.png"));
 			menuImages[3] = ImageIO.read(new File("assets/battleImages/menus/menu3.png"));
-			System.out.println(healthFiles.length);
-			System.out.println(selectionFiles.length);
-
-			for (int i = 1; i < 11; i++) {
-				healthImages[i] = ImageIO.read(healthFiles[i - 1]);
-			}
-			for (int i = 1; i < 4; i++) {
-				selectionImages[i] = ImageIO.read(selectionFiles[i - 1]);
-			}
-            
+			selectionImages[1] = ImageIO.read(new File("assets/battleImages/options/option1.png"));
+			selectionImages[2] = ImageIO.read(new File("assets/battleImages/options/option2.png"));
+			selectionImages[3] = ImageIO.read(new File("assets/battleImages/options/option3.png"));     
+		
         }
+        
         catch (Exception e) {
         	System.out.println("image does not exist");
         }
         
+
+		try {
+		     font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/DTM-Sans.ttf")).deriveFont(30f);
+		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		    //register the font
+		    ge.registerFont(font);
+		} catch (IOException e) {
+		    e.printStackTrace();
+		} catch(FontFormatException e) {
+		    e.printStackTrace();
+		}
+	
+		//use the font
+		this.setFont(font);
+		
+		optionPos[1] = new position(235, 539);
+		optionPos[2] = new position(442, 539);
+		optionPos[3] = new position(650, 539);
+		
+	
+    
     }
 
     public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		g.setColor(new Color(255, 255, 255));
+		g.setFont(font);
     	if (battling) {
-            g.drawImage(character, playerX, playerY, null);
+
+    		// menu background
     		g.drawImage(menuImages[menuState], 0, 0, null);
     		
+
     		// highlight selection
     		if (menuState == 1) {
-    			g.drawImage(selectionImages[selectionState], 0, 0, null);
+    			if (textState == 1) {
+    				g.drawString("What will Chara do?", 75, 360);
+    			}
+    			else if (textState == 2) {
+    				g.drawString("You healed 2 HP! You have " + heals + " left", 75, 360);
+    			}
+    			else if (textState == 3) {
+    				g.drawString("You fled the scene" , 75, 360);
+
+    			}
+    			
+    			g.drawImage(selectionImages[selectionState], optionPos[selectionState].x, optionPos[selectionState].y, null);
     		}
     		
     		
     	}
 
     }
+    
+    public void keyPressed(KeyEvent e) 
+    {
+    	int xe = e.getKeyCode();
+    	if (menuState == 1) {
+    		if (textState == 1) {
+	    		
+	    		// left 
+				if (xe == 37) { 
+					System.out.println(selectionState);
+					if (selectionState - 1 > 0) {
+						selectionState --;
+						System.out.println(selectionState);
+	
+					}
+				}
+				
+				// right
+				else if (xe == 39) {
+					System.out.println(selectionState);
+					if (selectionState + 1 < 4) {
+						selectionState ++;
+						System.out.println(selectionState);
+	
+					}
+					
+				}
+	    		// if the key is z, then select
+				else if (xe == 90) {
+					if (selectionState == 1) {
+						textState = 1;
+						menuState ++;
+						
+					}
+					else if (selectionState == 2) {
+						textState = 2;
+						
+					}
+					else if (selectionState == 3) {
+						textState = 3;
+						
+					}
+					
+				}
+				/*
+				// if the key is x, then go back
+				else if (x == 88) {
+				}
+				*/
+    		}
+    		
+    		// if you picked to heal or flee, you must click z another time to progress
+    		else {
+    			if (xe == 90) {
+    				if (selectionState == 2) {
+    					textState = 1;
+    					menuState++;
+    				}
+    				else if (selectionState == 3) {
+    					battling = false;
+    					
+    				}
+    			}
+    		}
+			repaint();
+    	}
+    	
+    	
+    	// slider
+    	else if (menuState == 2) {
+    		
+    	}
+    	
+    	
+    	else if (menuState == 3) {
+			if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { // keycode 39 is the up arrow key
+				System.out.println("up");
+				up = true;
+			}
+			
+			if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
+				down = true;
+			}
+			
+	
+			if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
+				left = true;
+			}
+			
+	
+			if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
+				right = true;
+			}
+    	}
+
+    }
+
 
     public void run() {
     	while (true) {
@@ -153,74 +282,6 @@ public class battle extends JPanel implements Runnable, KeyListener {
     
 
     
-    
-    public void keyPressed(KeyEvent e) 
-    {
-    	int x = e.getKeyCode();
-    	if (menuState == 1) {
-    		
-    		// left 
-			if (x == 37) { 
-				if (selectionState - 1 > 0) {
-					selectionState --;
-				}
-			}
-			
-			// right
-			else if (x == 30) {
-				if (selectionState + 1 < 3) {
-					selectionState ++;
-				}
-		
-				
-			}
-    		// if the key is z, then select
-			else if (x == 90) {
-				menuState ++;
-				if (selectionState == 1) {
-					
-				}
-				else if (selectionState == 2) {
-					
-				}
-				
-			}
-			/*
-			// if the key is x, then go back
-			else if (x == 88) {
-			}
-			*/  		
-    	}
-    	
-    	
-    	// slider
-    	else if (menuState == 2) {
-    		
-    	}
-    	
-    	
-    	else if (menuState == 3) {
-			if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { // keycode 39 is the up arrow key
-				System.out.println("up");
-				up = true;
-			}
-			
-			if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
-				down = true;
-			}
-			
-	
-			if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
-				left = true;
-			}
-			
-	
-			if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
-				right = true;
-			}
-    	}
-
-    }
 
     public void keyReleased(KeyEvent e)
     {
@@ -249,6 +310,20 @@ public class battle extends JPanel implements Runnable, KeyListener {
     
     
     
+    
+
+	// create an objects for measurements
+	public static class position{
+
+		public int x;
+		public int y;
+		public position(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+
+
 
     public void keyTyped(KeyEvent e) {    	
     }
