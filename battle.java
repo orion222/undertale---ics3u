@@ -107,16 +107,25 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
     public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.setColor(new Color(255, 255, 255));
-		g.setFont(font);
     	if (battling) {
+    		g.setColor(new Color(255, 255, 255));
+    		g.setFont(font);
 
     		// menu background
     		g.drawImage(menuImages[menuState], 0, 0, null);
     		
+    		// stats
+    		g.drawString(health + "", 350, 518);
+    		g.drawString("10", 430, 518);
+    		g.drawString(heals + "", 645, 518);
+    		g.drawString("5", 710, 518);
+
+		
+    		
 
     		// highlight selection
     		if (menuState == 1) {
+    			g.setFont(font);
     			if (textState == 1) {
     				g.drawString("What will Chara do?", 75, 360);
     			}
@@ -127,10 +136,17 @@ public class battle extends JPanel implements Runnable, KeyListener {
     				g.drawString("You fled the scene" , 75, 360);
 
     			}
-    			
     			g.drawImage(selectionImages[selectionState], optionPos[selectionState].x, optionPos[selectionState].y, null);
     		}
     		
+    		else if (menuState == 2) {
+    			
+    		}
+    		else if (menuState == 3) {
+    			System.out.println("yo");
+    			g.drawImage(character, playerX, playerY, null);
+    			
+    		}
     		
     	}
 
@@ -140,6 +156,8 @@ public class battle extends JPanel implements Runnable, KeyListener {
     {
     	int xe = e.getKeyCode();
     	if (menuState == 1) {
+    		
+    		// start state
     		if (textState == 1) {
 	    		
 	    		// left 
@@ -166,7 +184,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 				else if (xe == 90) {
 					if (selectionState == 1) {
 						textState = 1;
-						menuState ++;
+						menuState += 2;
 						
 					}
 					else if (selectionState == 2) {
