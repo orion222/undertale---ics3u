@@ -202,7 +202,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		allPos[2][4][2] = new corner(865, 140); // In front of exit
 
 		// Flowey
-		allPos[3][1][1] = new corner(200, 200);
+		allPos[3][1][1] = new corner(450, 120);
 		allPos[3][1][2] = new corner(0,0);
 
 
@@ -225,10 +225,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		// ruins3
 		ruinsBounds[3].add(new dimension(new corner(55, 180), new corner(135,285)));
 		ruinsBounds[3].add(new dimension(new corner(135, 125), new corner(765,460)));
-		// boundary needs to move
-		ruinsBounds[3].add(new dimension(new corner(765, 355), new corner(915,460)));
+		ruinsBounds[3].add(new dimension(new corner(765, 355), new corner(900,460)));
 		ruinsExits[3].add(new dimension(new corner(55,180), new corner(55,285))); // entrance
-		ruinsExits[3].add(new dimension(new corner(890,355), new corner(890,460))); // exit
+		ruinsExits[3].add(new dimension(new corner(900,355), new corner(900,460))); // exit
 
 		// ruins4
 		ruinsBounds[4].add(new dimension(new corner(450, 275), new corner(495,480)));
@@ -240,27 +239,26 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 		// snowden1
 		snowdenBounds[1].add(new dimension(new corner(210, 265), new corner(365, 320)));
-		snowdenBounds[1].add(new dimension(new corner(210, 320), new corner(960, 470)));
+		snowdenBounds[1].add(new dimension(new corner(210, 320), new corner(945, 470)));
 		snowdenBounds[1].add(new dimension(new corner(90, 370), new corner(210, 470)));
 		snowdenExits[1].add(new dimension(new corner(90, 370), new corner (90, 415))); // entrance
 		snowdenExits[1].add(new dimension(new corner(945, 320), new corner(945, 470))); // exit
 
 		// snowden2
-		snowdenBounds[2].add(new dimension(new corner(-25, 250), new corner(2000, 445)));
+		snowdenBounds[2].add(new dimension(new corner(-25, 250), new corner(950, 445)));
 		snowdenBounds[2].add(new dimension(new corner(70, 0), new corner(605, 250)));
 		snowdenBounds[2].add(new dimension(new corner(605, 180), new corner(820, 250)));
-
-		snowdenExits[2].add(new dimension(new corner(-25, 250), new corner(-25, 445)));
-		snowdenExits[2].add(new dimension(new corner(950, 250), new corner(950, 445)));
+		snowdenExits[2].add(new dimension(new corner(-25, 250), new corner(-25, 445))); // entrance
+		snowdenExits[2].add(new dimension(new corner(950, 250), new corner(950, 445))); // exit
 
 		// snowden3
-		snowdenBounds[3].add(new dimension(new corner(805, 310), new corner(960, 400)));
+		snowdenBounds[3].add(new dimension(new corner(805, 310), new corner(945, 400)));
 		snowdenBounds[3].add(new dimension(new corner(525, 160), new corner(805, 400)));
 		snowdenBounds[3].add(new dimension(new corner(125, 250), new corner(525, 400)));
 		snowdenBounds[3].add(new dimension(new corner(0, 160), new corner(390, 250)));
 		snowdenBounds[3].add(new dimension(new corner(45, 130), new corner(75, 160)));
-		snowdenExits[3].add(new dimension(new corner(945, 310), new corner(945, 400)));
-		snowdenExits[3].add(new dimension(new corner(45, 130), new corner(75, 130)));
+		snowdenExits[3].add(new dimension(new corner(945, 310), new corner(945, 400))); // entrance
+		snowdenExits[3].add(new dimension(new corner(45, 130), new corner(75, 130))); // exit
 
 		// snowden4
 		snowdenBounds[4].add(new dimension(new corner(-40, 185), new corner(355,290)));
@@ -270,13 +268,16 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		snowdenBounds[4].add(new dimension(new corner(880, 130), new corner(910,155)));
 		snowdenBounds[4].add(new dimension(new corner(880, 155), new corner(895,175)));
 		snowdenBounds[4].add(new dimension(new corner(880, 175), new corner(910,280)));
-		snowdenExits[4].add(new dimension(new corner(-35, 190), new corner(-35, 305)));
-		snowdenExits[4].add(new dimension(new corner(910, 130), new corner(910, 155))); // exit is wrong
+		snowdenExits[4].add(new dimension(new corner(-40, 190), new corner(-40, 305))); // entrance
+		snowdenExits[4].add(new dimension(new corner(910, 130), new corner(910, 155))); // exit
 
 		// Flowey
-		floweyBounds[1].add(new dimension(new corner(0, 0), new corner(1000, 625)));
-		floweyExits[1].add(new dimension(new corner(0, 0), new corner(0,0)));
-		floweyExits[1].add(new dimension(new corner(0, 0), new corner(0,0)));
+		floweyBounds[1].add(new dimension(new corner(10, 15), new corner(300, 495)));
+		floweyBounds[1].add(new dimension(new corner(300, 110), new corner(615, 495)));
+		floweyBounds[1].add(new dimension(new corner(615, 15), new corner(910, 495)));
+		floweyBounds[1].add(new dimension(new corner(440, 75), new corner(470, 110)));
+		floweyExits[1].add(new dimension(new corner(1, 1), new corner(1,1)));
+		floweyExits[1].add(new dimension(new corner(440, 75), new corner(470,75)));
 
 
 		// putting them all in a list
@@ -431,15 +432,16 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			if (change != 0) {
 				// save the current map
 				fadeStart = allMaps[gameState][setting];
-				System.out.println(gameState + " " + setting);
+				System.out.println(gameState + " " + setting + " change " + change);
 
 				// go to next map
 				if (change == 1) {
 					System.out.println("next setting");
 					// if there are no more maps
 					if (gameState + 1 == 4) {
-						setting = 1;
-						gameState++;
+						setting = 4;
+						gameState--;
+						change = 2;
 					}
 
 					// going to next map
@@ -485,7 +487,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				fadeStart = titleScreen;
 				fadeEnd = ruinsImages[1];
 				gameState = 2;
-				setting = 4;
+				setting = 2;
 				animation.fade(fadeStart, fadeEnd, "fast");
 
 
