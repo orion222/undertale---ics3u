@@ -16,7 +16,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public static int pointerX;
     public static int playerX = 500;
     public static int playerY = 400;
-    public static BufferedImage character;
+    public static BufferedImage player;
 
     
     public static boolean up = false;
@@ -74,7 +74,8 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			menuImages[3] = ImageIO.read(new File("assets/battleImages/menus/menu3.png"));
 			selectionImages[1] = ImageIO.read(new File("assets/battleImages/options/option1.png"));
 			selectionImages[2] = ImageIO.read(new File("assets/battleImages/options/option2.png"));
-			selectionImages[3] = ImageIO.read(new File("assets/battleImages/options/option3.png"));     
+			selectionImages[3] = ImageIO.read(new File("assets/battleImages/options/option3.png"));   
+			player = ImageIO.read(new File("assets/battleImages/health/player.png"));
 		
         }
         
@@ -144,7 +145,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     		}
     		else if (menuState == 3) {
     			System.out.println("yo");
-    			g.drawImage(character, playerX, playerY, null);
+    			g.drawImage(player, playerX, playerY, null);
     			
     		}
     		
