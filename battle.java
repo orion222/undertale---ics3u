@@ -94,7 +94,6 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			selectionImages[2] = ImageIO.read(new File("assets/battleImages/options/option2.png"));
 			selectionImages[3] = ImageIO.read(new File("assets/battleImages/options/option3.png"));   
 			player = ImageIO.read(new File("assets/battleImages/health/player.png"));
-			slider = ImageIO.read(new File("assets/battleImages/menus/sliderMenu2.png"));
 			bar = ImageIO.read(new File("assets/battleImages/menus/bar.jpg"));
 		
         }
@@ -168,7 +167,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     			}
         		if(barX >= 940) {
         			try {
-        				Thread.sleep(500);
+        				Thread.sleep(1000);
         			} catch (InterruptedException e1) {
         				e1.printStackTrace();
         			}
@@ -257,7 +256,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     	
     	// slider
     	else if (menuState == 2) {
-    		if(e.getKeyChar() == ' ' && menuState == 2) {
+    		if(e.getKeyChar() == 'z' ) {
     			space = true;
     			if(barX <= 275 || barX >= 705) {
     				damage = 1;
@@ -269,7 +268,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     				damage = 3;
     			}
        			try {
-    				Thread.sleep(500);
+    				Thread.sleep(1000);
     			} catch (InterruptedException e1) {
     				e1.printStackTrace();
     			}
