@@ -62,7 +62,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	public static BufferedImage bar;
 	public static int barX = 60;
 	public int counter = 0;
-	public static boolean space = false;
+	public static boolean stopped = false;
 	public static int damage;
     
     
@@ -132,12 +132,16 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
     		// menu background
     		g.drawImage(menuImages[menuState], 0, 0, null);
+
     		
     		// stats
     		g.drawString(health + "", 350, 518);
     		g.drawString("10", 430, 518);
     		g.drawString(heals + "", 645, 518);
     		g.drawString("5", 710, 518);
+    		g.drawString("BOSS HEALTH: ", 360, 75);
+    		g.drawString(bossHealth + "", 550, 75);
+    		
 
 		
     		
@@ -167,16 +171,18 @@ public class battle extends JPanel implements Runnable, KeyListener {
     			}
         		if(barX >= 940) {
         			try {
-        				Thread.sleep(1000);
+        				System.out.println("damaged");
+        				g.drawString("DAMAGE - 0", 400, 200);
+        				Thread.sleep(2000);
         			} catch (InterruptedException e1) {
         				e1.printStackTrace();
         			}
         			menuState = 3;
     			}
-        		if(menuState == 2) {
-        			g.drawImage(bar, barX, 314, null);
-        			barX += 20;
-        		}
+        		g.drawImage(bar, barX, 314, null);
+        		barX += 20;
+        		
+        		
     		}
     		else if (menuState == 3) {
     			g.drawImage(player, playerX, playerY, null);
@@ -257,7 +263,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     	// slider
     	else if (menuState == 2) {
     		if(e.getKeyChar() == 'z' ) {
-    			space = true;
+    			stopped = true;
     			if(barX <= 275 || barX >= 705) {
     				damage = 1;
     			}
@@ -268,6 +274,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     				damage = 3;
     			}
        			try {
+
     				Thread.sleep(1000);
     			} catch (InterruptedException e1) {
     				e1.printStackTrace();
