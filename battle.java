@@ -57,6 +57,13 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public static corner[] optionPos = new corner[4];
 	public static Font font;
 	
+	
+	public static BufferedImage slider;
+	public static BufferedImage bar;
+	public static int barX = 60;
+	public int counter = 0;
+	public static boolean space = false;
+	public static int damage;
     
     
 	public undertale game;
@@ -87,6 +94,8 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			selectionImages[2] = ImageIO.read(new File("assets/battleImages/options/option2.png"));
 			selectionImages[3] = ImageIO.read(new File("assets/battleImages/options/option3.png"));   
 			player = ImageIO.read(new File("assets/battleImages/health/player.png"));
+			slider = ImageIO.read(new File("assets/battle/sliderMenu2.png"));
+			bar = ImageIO.read(new File("assets/battle/bar.jpg"));
 		
         }
         
@@ -151,7 +160,24 @@ public class battle extends JPanel implements Runnable, KeyListener {
     		}
     		
     		else if (menuState == 2) {
-    			
+    			if(counter == 0) {
+    				g.drawImage(slider, 0, 0, null);
+    				counter++;
+    				barX = 60;
+    				damage = 0;
+    			}
+        		if(barX >= 940) {
+        			try {
+        				Thread.sleep(500);
+        			} catch (InterruptedException e1) {
+        				e1.printStackTrace();
+        			}
+        			menuState = 3;
+    			}
+        		if(menuState == 2) {
+        			g.drawImage(bar, barX, 314, null);
+        			barX += 20;
+        		}
     		}
     		else if (menuState == 3) {
     			g.drawImage(player, playerX, playerY, null);
@@ -191,6 +217,8 @@ public class battle extends JPanel implements Runnable, KeyListener {
 					if (selectionState == 1) {
 						textState = 1;
 						menuState = 2;
+						counter = 0;
+						System.out.println("menu2");
 						
 					}
 					else if (selectionState == 2) {
@@ -229,7 +257,25 @@ public class battle extends JPanel implements Runnable, KeyListener {
     	
     	// slider
     	else if (menuState == 2) {
-    		
+    		if(e.getKeyChar() == ' ' && menuState == 2) {
+    			space = true;
+    			if(barX <= 275 || barX >= 705) {
+    				damage = 1;
+    			}
+    			else if(barX <= 450 || barX >= 530) {
+    				damage = 2;
+    			}
+    			else {
+    				damage = 3;
+    			}
+       			try {
+    				Thread.sleep(500);
+    			} catch (InterruptedException e1) {
+    				e1.printStackTrace();
+    			}
+       			menuState = 3;
+    			System.out.println("DAMAGE: " + damage);
+    		}
     	}
     	
     	
