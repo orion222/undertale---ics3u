@@ -27,6 +27,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public static int playerY = 400;
     public static int playerSpeed = 5;
     public static BufferedImage player;
+    public static int bossHealth = 15;
 
     
     public static boolean up = false;
