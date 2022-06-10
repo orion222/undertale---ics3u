@@ -189,7 +189,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 				else if (xe == 90) {
 					if (selectionState == 1) {
 						textState = 1;
-						menuState += 2;
+						menuState = 2;
 						
 					}
 					else if (selectionState == 2) {
