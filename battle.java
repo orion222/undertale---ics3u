@@ -56,6 +56,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     
     public static corner[] optionPos = new corner[4];
 	public static Font font;
+	public static Font damageFont;
 	
 	
 	public static BufferedImage slider;
@@ -105,7 +106,9 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
 		try {
 		     font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/DTM-Sans.ttf")).deriveFont(30f);
-		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		     damageFont = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/DTM-Sans.ttf")).deriveFont(50f);
+
+		     GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		    //register the font
 		    ge.registerFont(font);
 		} catch (IOException e) {
@@ -139,8 +142,8 @@ public class battle extends JPanel implements Runnable, KeyListener {
     		g.drawString("10", 430, 518);
     		g.drawString(heals + "", 645, 518);
     		g.drawString("5", 710, 518);
-    		g.drawString("BOSS HEALTH: ", 360, 75);
-    		g.drawString(bossHealth + "", 550, 75);
+    		g.drawString("BOSS HEALTH: ", 385, 75);
+    		g.drawString(bossHealth + "", 575, 75);
     		
 
 		
@@ -164,25 +167,29 @@ public class battle extends JPanel implements Runnable, KeyListener {
     		
     		else if (menuState == 2) {
     			if(counter == 0) {
-    				g.drawImage(slider, 0, 0, null);
-    				counter++;
+    				counter = 1;
     				barX = 60;
     				damage = 0;
+    				stopped = false;
     			}
-        		if(barX >= 940) {
+        		if(stopped) {
         			try {
         				System.out.println("damaged");
-        				g.drawString("DAMAGE - 0", 400, 200);
-        				Thread.sleep(2000);
-        			} catch (InterruptedException e1) {
+        				Thread.sleep(1500);
+        			} 
+        			catch (InterruptedException e1) {
         				e1.printStackTrace();
         			}
         			menuState = 3;
     			}
-        		g.drawImage(bar, barX, 314, null);
-        		barX += 20;
-        		
-        		
+        		else {
+	        		g.drawImage(bar, barX, 314, null);
+	        		barX += 20;
+	        		if(barX >= 940 || damage >= 1) {
+	        			g.drawString("MINUS " + damage + " HP", 620, 150);
+	        			stopped = true;
+	        		}
+        		}
     		}
     		else if (menuState == 3) {
     			g.drawImage(player, playerX, playerY, null);
@@ -262,8 +269,8 @@ public class battle extends JPanel implements Runnable, KeyListener {
     	
     	// slider
     	else if (menuState == 2) {
-    		if(e.getKeyChar() == 'z' ) {
-    			stopped = true;
+    		if(e.getKeyChar() == 'z') {
+    			stopped = false;
     			if(barX <= 275 || barX >= 705) {
     				damage = 1;
     			}
@@ -273,13 +280,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     			else {
     				damage = 3;
     			}
-       			try {
-
-    				Thread.sleep(1000);
-    			} catch (InterruptedException e1) {
-    				e1.printStackTrace();
-    			}
-       			menuState = 3;
+    			bossHealth -= damage;
     			System.out.println("DAMAGE: " + damage);
     		}
     	}
@@ -384,10 +385,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			System.out.println(playerX + " " + playerY);
     	}
     }
-    
-    
-    
-    
+
 
 	// create an objects for measurements
 	public static class corner{
