@@ -2,6 +2,6 @@
 kanaad was gere
 no kanaad
 
-jump dude is better than this btw
+jump dude is better than this 
 
-jump dude some ass
+🧢
