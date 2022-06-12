@@ -27,6 +27,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public static int playerY = 400;
     public static int playerSpeed = 5;
     public static BufferedImage player;
+    public static BufferedImage brokenHeart;
     public static int bossHealth = 100;
 
     
@@ -62,7 +63,9 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	public static BufferedImage slider;
 	public static BufferedImage bar;
 	public static BufferedImage bone;
+	public static BufferedImage bone2;
 	public static BufferedImage BD;
+	public static BufferedImage gameOver;
 	public static int attack;
 	public static int boneHeight = 100;
 	public static int boneWidth = 15;
@@ -74,6 +77,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	
 	// attacks
 	public static corner[] bonePositions = new corner[11];
+	public static corner[] bonePositions2 = new corner[11];
 
     
     
@@ -104,8 +108,10 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			player = ImageIO.read(new File("assets/battleImages/characters/player.png"));
 			bar = ImageIO.read(new File("assets/battleImages/menus/bar.jpg"));
 			bone = ImageIO.read(new File("assets/battleImages/attacks/bone.png"));
+			bone2 = ImageIO.read(new File("assets/battleImages/attacks/bone2.png"));
 			BD = ImageIO.read(new File("assets/battleImages/characters/boss.png"));
-		
+			brokenHeart = ImageIO.read(new File("assets/battleImages/characters/deadPlayer.png"));
+			gameOver = ImageIO.read(new File("assets/battleImages/menus/menu4.png"));
         }
         
         catch (Exception e) {
@@ -141,87 +147,114 @@ public class battle extends JPanel implements Runnable, KeyListener {
     	if (battling) {
     		g.setColor(new Color(255, 255, 255));
     		g.setFont(font);
-
-    		// menu background
-    		g.drawImage(menuImages[menuState], 0, 0, null);
-    		g.drawImage(BD, 430, 85, null);
     		
-    		// stats
-    		g.drawString(health + "", 335, 518);
-    		g.drawString("100", 430, 518);
-    		g.drawString(heals + "", 645, 518);
-    		g.drawString("5", 710, 518);
-    		g.drawString("BOSS HEALTH: ", 385, 75);
-    		g.drawString(bossHealth + "", 575, 75);
-    		
+    		// if u lose or win
+    		if (menuState > 3) {
+    			if (menuState == 4) {
+    				g.drawImage(brokenHeart, playerX, playerY, null);
 
-		
-    		
-
-    		// highlight selection
-    		if (menuState == 1) {
-    			g.setFont(font);
-    			if (textState == 1) {
-    				g.drawString("What will Chara do?", 75, 360);
-    			}
-    			else if (textState == 2) {
-    				g.drawString("You healed 2 HP! You have " + heals + " left", 75, 360);
-    			}
-    			else if (textState == 3) {
-    				g.drawString("You fled the scene" , 75, 360);
-
-    			}
-    			g.drawImage(selectionImages[selectionState], optionPos[selectionState].x, optionPos[selectionState].y, null);
-    		}
-    		
-    		else if (menuState == 2) {
-    			if(counter == 0) {
-    				counter = 1;
-    				barX = 60;
-    				damage = 0;
-    				stopped = false;
-    			}
-        		if(stopped) {
         			try {
-        				System.out.println("damaged");
-        				Thread.sleep(1500);
-        			} 
-        			catch (InterruptedException e1) {
-        				e1.printStackTrace();
-        			}
-        			menuState = 3;
-        			
-        			attack = (int) (Math.random() * (3 - 1) + 1);
-        			attack = 1;
-        			if (attack == 1) {
-        				firstAttack(); 
-        			}
-        			
-        			
-    			}
-        		else {
-	        		g.drawImage(bar, barX, 314, null);
-	        		barX += 20;
-	        		if(barX >= 940 || damage >= 1) {
-	        			g.drawString("MINUS " + damage + " HP", 620, 150);
-	        			stopped = true;
-	        		}
-        		}
-    		}
-    		else if (menuState == 3) {
-    			g.drawImage(player, playerX, playerY, null);    			
-
-    			if (attack == 1) {
-    				for (int i = 1; i < 11; i++) {
-    					corner cur = bonePositions[i];
-    					if (310 < cur.x && cur.x < 680) {
-    						g.drawImage(bone, cur.x, cur.y, null);
-    					}
+    					Thread.sleep(2000);
+    					g.drawImage(gameOver, 0, 0, null);
+    				} catch (InterruptedException e) {
+    					// TODO Auto-generated catch block
+    					e.printStackTrace();
     				}
+
+        		}
+    		
+    			else if (menuState == 5) {
+    				
     			}
     			
-    			//g.drawImage(bone, 680, 295, null);
     		}
+    		else {
+	    		// menu background
+	    		g.drawImage(menuImages[menuState], 0, 0, null);
+	    		g.drawImage(BD, 430, 85, null);
+	    		
+	    		// stats
+	    		g.drawString(health + "", 335, 518);
+	    		g.drawString("100", 430, 518);
+	    		g.drawString(heals + "", 645, 518);
+	    		g.drawString("5", 710, 518);
+	    		g.drawString("BOSS HEALTH: ", 385, 75);
+	    		g.drawString(bossHealth + "", 575, 75);
+	    		
+	
+			
+	    		
+	
+	    		// highlight selection
+	    		if (menuState == 1) {
+	    			g.setFont(font);
+	    			if (textState == 1) {
+	    				g.drawString("What will Chara do?", 75, 360);
+	    			}
+	    			else if (textState == 2) {
+	    				g.drawString("You healed 2 HP! You have " + heals + " left", 75, 360);
+	    			}
+	    			else if (textState == 3) {
+	    				g.drawString("You fled the scene" , 75, 360);
+	
+	    			}
+	    			g.drawImage(selectionImages[selectionState], optionPos[selectionState].x, optionPos[selectionState].y, null);
+	    		}
+	    		
+	    		else if (menuState == 2) {
+	    			if(counter == 0) {
+	    				counter = 1;
+	    				barX = 60;
+	    				damage = 0;
+	    				stopped = false;
+	    			}
+	        		if(stopped) {
+	        			try {
+	        				System.out.println("damaged");
+	        				Thread.sleep(1500);
+	        			} 
+	        			catch (InterruptedException e1) {
+	        				e1.printStackTrace();
+	        			}
+	        			menuState = 3;
+	        			
+	        			attack = (int) (Math.random() * (3 - 1) + 1);
+	        			attack = 1;
+	        			if (attack == 1) {
+	        				firstAttack(); 
+	        			}
+	        			else if (attack == 2) {
+	        				secondAttack();
+	        			}
+	        			
+	        			
+	    			}
+	        		else {
+		        		g.drawImage(bar, barX, 314, null);
+		        		barX += 20;
+		        		if(barX >= 940 || damage >= 1) {
+		        			g.drawString("MINUS " + damage + " HP", 620, 150);
+		        			stopped = true;
+		        		}
+	        		}
+	    		}
+	    		else if (menuState == 3) {
+	    			g.drawImage(player, playerX, playerY, null);    			
+	
+	    			if (attack == 1) {
+	    				for (int i = 1; i < 11; i++) {
+	    					corner cur = bonePositions[i];
+	    					if (297 < cur.x && cur.x < 680) {
+	    						g.drawImage(bone, cur.x, cur.y, null);
+	    					}
+	    				}
+	    			}
+	    			
+	    			//g.drawImage(bone, 680, 295, null);
+	    		}
+    		}
+    		
+    	
     		
     	}
 
@@ -333,6 +366,18 @@ public class battle extends JPanel implements Runnable, KeyListener {
 				right = true;
 			}
     	}
+    	
+    	else if (menuState == 4 || menuState == 5) {
+    		if(e.getKeyChar() == 'z' || e.getKeyChar() == 'Z') {
+    			menuState = 1;
+    			textState = 1;
+    			health = 100;
+    			bossHealth = 100;
+    			battling = false;
+    			System.out.println("quit");
+    		}
+
+    	}
 
     }
 
@@ -369,6 +414,12 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		    			corner cur = bonePositions[i];
 		    			if (collision(new corner(playerX, playerY), new corner(playerX + 25, playerY + 25), new corner(cur.x, cur.y), new corner(cur.x + boneWidth, cur.y + boneHeight))) {
 		            		health -= 1;
+		            		
+		            		// player has died
+		            		if (health == 0) {
+		            			menuState = 4;
+		            			
+		            		}
 		    			}
 		    		}
 		    		updateFirstAttack();
@@ -376,6 +427,26 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		    			menuState = 1;
 		    			System.out.println(bonePositions[10].x);
 		    		}
+		    	}
+		    	else if (attack == 2) {
+		    		for (int i = 1; i < 11; i++) {
+		    			corner cur = bonePositions2[i];
+		    			if (collision(new corner(playerX, playerY), new corner(playerX + 25, playerY + 25), new corner(cur.x, cur.y), new corner(cur.x + boneHeight, cur.y + boneWidth))) {
+		            		health -= 1;
+		            		
+		            		// player has died
+		            		if (health == 0) {
+		            			menuState = 4;
+		            			
+		            		}
+		    			}
+		    		}
+		    		updateSecondAttack();
+		    		if (bonePositions2[10].x < 0) {
+		    			menuState = 1;
+		    			System.out.println(bonePositions[10].x);
+		    		}
+		    	
 		    	}
 		    	
 		    	
@@ -432,12 +503,42 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			if (Math.abs(bonePositions[i].x - bonePositions[i - 1].x) >= 100) {
 				System.out.println("bone " + i + " = " + bonePositions[i].x);
 				
-				// speed must be odd number for some logic reason 
-				bonePositions[i].x -= 7;
+				// speed must be odd number not equal to 5 for some logic reason
+				if (bossHealth > 50)
+					bonePositions[i].x -= 3;
+				else {
+					bonePositions[i].x -= 7;
+				}
 			}
 		}
 	}
     
+	
+	// bones are thrown leftwards
+	public void secondAttack() {
+		bonePositions[0] = new corner(Integer.MIN_VALUE, 0);
+		for (int i = 1; i < 11; i++) {
+			bonePositions2[i] = new corner(680, 295 + (i - 1) * boneWidth);
+
+		}
+	}
+	public void updateSecondAttack() {
+		for (int i = 1; i < 11; i++) {
+			
+			// if the gap is greater than 100 pixels
+			// update the next bone
+			if (Math.abs(bonePositions2[i].x - bonePositions2[i - 1].x) >= 100) {
+				
+				// speed must be odd number not equal to 5 for some logic reason
+				if (bossHealth > 50)
+					bonePositions2[i].x -= 3;
+				else {
+					bonePositions2[i].x -= 7;
+				}
+			}
+		}
+	}
+	
 
     
     
