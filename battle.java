@@ -27,7 +27,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public static int playerY = 400;
     public static int playerSpeed = 5;
     public static BufferedImage player;
-    public static int bossHealth = 15;
+    public static int bossHealth = 100;
 
     
     public static boolean up = false;
@@ -50,7 +50,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	public static int menuState = 1;
     public static boolean invulnerable = false;
     public static int selectionState = 1;
-    public static int health = 10;
+    public static int health = 100;
     public static int textState = 1;
     public static int heals;
     
@@ -61,12 +61,16 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	
 	public static BufferedImage slider;
 	public static BufferedImage bar;
+	public static BufferedImage bone;
+	public static int boneHeight = 95;
+	public static int boneWidth = 15;
 	public static int barX = 60;
 	public int counter = 0;
 	public static boolean stopped = false;
 	public static int damage;
     
     
+	
 	public undertale game;
 
 	
@@ -96,6 +100,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			selectionImages[3] = ImageIO.read(new File("assets/battleImages/options/option3.png"));   
 			player = ImageIO.read(new File("assets/battleImages/health/player.png"));
 			bar = ImageIO.read(new File("assets/battleImages/menus/bar.jpg"));
+			bone = ImageIO.read(new File("assets/battleImages/attacks/bone.png"));
 		
         }
         
@@ -138,8 +143,8 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
     		
     		// stats
-    		g.drawString(health + "", 350, 518);
-    		g.drawString("10", 430, 518);
+    		g.drawString(health + "", 335, 518);
+    		g.drawString("100", 430, 518);
     		g.drawString(heals + "", 645, 518);
     		g.drawString("5", 710, 518);
     		g.drawString("BOSS HEALTH: ", 385, 75);
@@ -193,7 +198,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     		}
     		else if (menuState == 3) {
     			g.drawImage(player, playerX, playerY, null);
-    			
+    			g.drawImage(bone, 355, 295, null);
     		}
     		
     	}
@@ -272,13 +277,13 @@ public class battle extends JPanel implements Runnable, KeyListener {
     		if(e.getKeyChar() == 'z') {
     			stopped = false;
     			if(barX <= 275 || barX >= 705) {
-    				damage = 1;
+    				damage = 5;
     			}
     			else if(barX <= 450 || barX >= 530) {
-    				damage = 2;
+    				damage = 10;
     			}
     			else {
-    				damage = 3;
+    				damage = 15;
     			}
     			bossHealth -= damage;
     			System.out.println("DAMAGE: " + damage);
@@ -320,6 +325,11 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			}
 
     		if (menuState == 3) { //  if you are fighting then we need this 
+    			
+    			if (collision(new corner(playerX, playerY), new corner(playerX + 25, playerY + 25), new corner(355, 295), new corner(370, 390))) {
+    				System.out.println("collided");
+    				
+    			}
 				if (up && withinBounds(playerX, playerY - playerSpeed, gameBounds)) {
 		    		playerY -= playerSpeed;
 		    		
@@ -331,7 +341,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		    	if (left && withinBounds(playerX - playerSpeed, playerY, gameBounds)) {
 		    		playerX -= playerSpeed;
 		    	}
-		    	if (right && withinBounds(playerX + playerSpeed, playerY - playerSpeed, gameBounds)) {
+		    	if (right && withinBounds(playerX + playerSpeed, playerY, gameBounds)) {
 		    		playerX += playerSpeed;
 		    	}
 
@@ -358,8 +368,6 @@ public class battle extends JPanel implements Runnable, KeyListener {
     }
     
 
-    
-
     public void keyReleased(KeyEvent e)
     {
     	
@@ -384,6 +392,22 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			}
 			System.out.println(playerX + " " + playerY);
     	}
+    }
+    
+    public boolean collision(corner playerTopLeft, corner playerBottomRight, corner topL2, corner bottomR2) {
+		//System.out.println(topL1.x  + " < " + topL2.x + " < " + bottomR1.x + "  OR  " + topL1.x + " < " + bottomR2.x + " < " + bottomR1.x);
+		//System.out.println(topL1.y  + " < " + topL2.y + " < " + bottomR1.y + "  OR  " + topL1.y + " < " + bottomR2.y + " < " + bottomR1.y);
+
+    	if ((topL2.x < playerTopLeft.x && playerTopLeft.x < bottomR2.x ) || (topL2.x < playerBottomRight.x && playerBottomRight.x < bottomR2.x)){
+    		
+    	  	if ((topL2.y < playerTopLeft.y && playerTopLeft.y < bottomR2.y ) || (topL2.y < playerBottomRight.y && playerBottomRight.y < bottomR2.y)) {
+    	  		
+    	  		health -= 1;
+    	  		return true;
+    	  	}
+    	}
+    	
+    	return false;
     }
 
 
