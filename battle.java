@@ -62,6 +62,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	public static BufferedImage slider;
 	public static BufferedImage bar;
 	public static BufferedImage bone;
+	public static BufferedImage BD;
 	public static int attack;
 	public static int boneHeight = 100;
 	public static int boneWidth = 15;
@@ -103,6 +104,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			player = ImageIO.read(new File("assets/battleImages/characters/player.png"));
 			bar = ImageIO.read(new File("assets/battleImages/menus/bar.jpg"));
 			bone = ImageIO.read(new File("assets/battleImages/attacks/bone.png"));
+			BD = ImageIO.read(new File("assets/battleImages/characters/boss.png"));
 		
         }
         
@@ -142,7 +144,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
     		// menu background
     		g.drawImage(menuImages[menuState], 0, 0, null);
-
+    		g.drawImage(BD, 430, 85, null);
     		
     		// stats
     		g.drawString(health + "", 335, 518);
@@ -372,6 +374,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		    		updateFirstAttack();
 		    		if (bonePositions[10].x < 310) {
 		    			menuState = 1;
+		    			System.out.println(bonePositions[10].x);
 		    		}
 		    	}
 		    	
@@ -426,8 +429,11 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			
 			// if the gap is greater than 100 pixels
 			// update the next bone
-			if (Math.abs(bonePositions[i].x - bonePositions[i - 1].x) > 100) {
-				bonePositions[i].x -= 3;
+			if (Math.abs(bonePositions[i].x - bonePositions[i - 1].x) >= 100) {
+				System.out.println("bone " + i + " = " + bonePositions[i].x);
+				
+				// speed must be odd number for some logic reason 
+				bonePositions[i].x -= 7;
 			}
 		}
 	}
