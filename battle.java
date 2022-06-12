@@ -372,7 +372,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		    			}
 		    		}
 		    		updateFirstAttack();
-		    		if (bonePositions[10].x < 310) {
+		    		if (bonePositions[10].x < 0) {
 		    			menuState = 1;
 		    			System.out.println(bonePositions[10].x);
 		    		}
