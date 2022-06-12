@@ -100,7 +100,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			selectionImages[1] = ImageIO.read(new File("assets/battleImages/options/option1.png"));
 			selectionImages[2] = ImageIO.read(new File("assets/battleImages/options/option2.png"));
 			selectionImages[3] = ImageIO.read(new File("assets/battleImages/options/option3.png"));   
-			player = ImageIO.read(new File("assets/battleImages/players/player.png"));
+			player = ImageIO.read(new File("assets/battleImages/characters/player.png"));
 			bar = ImageIO.read(new File("assets/battleImages/menus/bar.jpg"));
 			bone = ImageIO.read(new File("assets/battleImages/attacks/bone.png"));
 		
