@@ -62,18 +62,21 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	public static BufferedImage slider;
 	public static BufferedImage bar;
 	public static BufferedImage bone;
-	public static int boneHeight = 95;
+	public static int attack;
+	public static int boneHeight = 100;
 	public static int boneWidth = 15;
 	public static int barX = 60;
 	public int counter = 0;
 	public static boolean stopped = false;
 	public static int damage;
-    
-    
 	
-	public undertale game;
+	
+	// attacks
+	public static corner[] bonePositions = new corner[11];
 
-	
+    
+    
+	public undertale game;
 	public battle(undertale e){
 		
 		 game = e;
@@ -82,7 +85,6 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public battle() {
 		setPreferredSize(new Dimension(990, 615));
 		setBackground(new Color(0, 0, 0));
-		
 		addKeyListener(this);
 		this.setFocusable(true);
         Thread thread = new Thread(this);
@@ -186,6 +188,14 @@ public class battle extends JPanel implements Runnable, KeyListener {
         				e1.printStackTrace();
         			}
         			menuState = 3;
+        			
+        			attack = (int) (Math.random() * (3 - 1) + 1);
+        			attack = 1;
+        			if (attack == 1) {
+        				firstAttack(); 
+        			}
+        			
+        			
     			}
         		else {
 	        		g.drawImage(bar, barX, 314, null);
@@ -197,8 +207,18 @@ public class battle extends JPanel implements Runnable, KeyListener {
         		}
     		}
     		else if (menuState == 3) {
-    			g.drawImage(player, playerX, playerY, null);
-    			g.drawImage(bone, 355, 295, null);
+    			g.drawImage(player, playerX, playerY, null);    			
+
+    			if (attack == 1) {
+    				for (int i = 1; i < 11; i++) {
+    					corner cur = bonePositions[i];
+    					if (cur.x < 680) {
+    						g.drawImage(bone, cur.x, cur.y, null);
+    					}
+    				}
+    			}
+    			
+    			//g.drawImage(bone, 680, 295, null);
     		}
     		
     	}
@@ -274,7 +294,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     	
     	// slider
     	else if (menuState == 2) {
-    		if(e.getKeyChar() == 'z') {
+    		if(e.getKeyChar() == 'z' || e.getKeyChar() == 'Z') {
     			stopped = false;
     			if(barX <= 275 || barX >= 705) {
     				damage = 5;
@@ -325,11 +345,8 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			}
 
     		if (menuState == 3) { //  if you are fighting then we need this 
+       				
     			
-    			if (collision(new corner(playerX, playerY), new corner(playerX + 25, playerY + 25), new corner(355, 295), new corner(370, 390))) {
-    				System.out.println("collided");
-    				
-    			}
 				if (up && withinBounds(playerX, playerY - playerSpeed, gameBounds)) {
 		    		playerY -= playerSpeed;
 		    		
@@ -344,29 +361,24 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		    	if (right && withinBounds(playerX + playerSpeed, playerY, gameBounds)) {
 		    		playerX += playerSpeed;
 		    	}
-
-	    	}
-	    	repaint();
-
-	    	
+		    	
+		    	if (attack == 1) {
+		    		for (int i = 1; i < 11; i++) {
+		    			corner cur = bonePositions[i];
+		    			if (collision(new corner(playerX, playerY), new corner(playerX + 25, playerY + 25), new corner(cur.x, cur.y), new corner(cur.x + boneWidth, cur.y + boneHeight))) {
+		            		health -= 1;
+		    			}
+		    		}
+		    		updateFirstAttack();
+		    	}
+    		}
+    	repaint();	
     	}
-
+    		
 	}
 
-        	
-       
+	
 
-    
-    public static void main(String[] args) {
-		JFrame frame = new JFrame("battle");
-		battle panel = new battle();
-		frame.add(panel);
-		frame.pack();
-		frame.setVisible(true);
-		frame.setResizable(false);
-
-    }
-    
 
     public void keyReleased(KeyEvent e)
     {
@@ -394,21 +406,30 @@ public class battle extends JPanel implements Runnable, KeyListener {
     	}
     }
     
-    public boolean collision(corner playerTopLeft, corner playerBottomRight, corner topL2, corner bottomR2) {
-		//System.out.println(topL1.x  + " < " + topL2.x + " < " + bottomR1.x + "  OR  " + topL1.x + " < " + bottomR2.x + " < " + bottomR1.x);
-		//System.out.println(topL1.y  + " < " + topL2.y + " < " + bottomR1.y + "  OR  " + topL1.y + " < " + bottomR2.y + " < " + bottomR1.y);
 
-    	if ((topL2.x < playerTopLeft.x && playerTopLeft.x < bottomR2.x ) || (topL2.x < playerBottomRight.x && playerBottomRight.x < bottomR2.x)){
-    		
-    	  	if ((topL2.y < playerTopLeft.y && playerTopLeft.y < bottomR2.y ) || (topL2.y < playerBottomRight.y && playerBottomRight.y < bottomR2.y)) {
-    	  		
-    	  		health -= 1;
-    	  		return true;
-    	  	}
-    	}
-    	
-    	return false;
-    }
+	public void firstAttack() {
+		bonePositions[0] = new corner(Integer.MIN_VALUE, 0);
+		for (int i = 1; i < 11; i++) {
+			if (i % 2 == 0)
+				bonePositions[i] = new corner(680, 295);
+			else
+				bonePositions[i] = new corner(680, 370);
+		}
+	}
+	public void updateFirstAttack() {
+		for (int i = 1; i < 11; i++) {
+			
+			// if the gap is greater than 100 pixels
+			// update the next bone
+			if (Math.abs(bonePositions[i].x - bonePositions[i - 1].x) > 100) {
+				bonePositions[i].x -= 3;
+			}
+		}
+	}
+    
+
+    
+    
 
 
 	// create an objects for measurements
@@ -442,6 +463,32 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		}
 		return false;
 	}
+    public boolean collision(corner playerTopLeft, corner playerBottomRight, corner objectTopLeft, corner objectBottomRight) {
+		//System.out.println(topL1.x  + " < " + topL2.x + " < " + bottomR1.x + "  OR  " + topL1.x + " < " + bottomR2.x + " < " + bottomR1.x);
+		//System.out.println(topL1.y  + " < " + topL2.y + " < " + bottomR1.y + "  OR  " + topL1.y + " < " + bottomR2.y + " < " + bottomR1.y);
+
+    	if (playerTopLeft.y < objectBottomRight.y && playerBottomRight.y > objectTopLeft.y) {
+        	if (playerTopLeft.x < objectBottomRight.x && playerBottomRight.x > objectTopLeft.x) {
+        		return true;
+        	}
+
+    	}
+    	  	
+    	
+    	
+    	return false;
+    }
+    
+    public static void main(String[] args) {
+		JFrame frame = new JFrame("battle");
+		battle panel = new battle();
+		frame.add(panel);
+		frame.pack();
+		frame.setVisible(true);
+		frame.setResizable(false);
+
+    }
+    
 
 	
 
