@@ -621,6 +621,33 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		}
 	}
 
+		
+	public static boolean interact(int x, int y, dimension object) {
+		
+		// approaching from the left
+		// add 76 because thats chara width, and charaX is relative to his top left corner
+		if (x + 76 == object.topLeft.x && object.topLeft.y <= y && y <= object.bottomRight.y) {
+			return true;
+		}
+		
+		// approaching from the right
+		else if (x == object.bottomRight.x && object.topLeft.y <= y && y <= object.bottomRight.y)
+			return true;
+		
+		// approaching from the bottom
+		else if (y == object.bottomRight.y && object.topLeft.x <= x && x <= object.topLeft.x ) {
+			return true;
+		}
+		
+		// approaching from the top
+		else if (y == object.topLeft.y && object.topLeft.x <= x && x <= object.topLeft.x ) {
+			return true;
+		}
+		
+		
+		return false;
+		
+	}
 
 	@Override
 	public void run() {
