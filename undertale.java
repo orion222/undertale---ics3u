@@ -87,15 +87,13 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 	public static AudioInputStream startSongInput;
 
-	// battle
-	boolean battling = true;
+	// position
 
 
 
 	// other
 	animation animation = new animation(this);
 	charaAnimation charaAnimation = new charaAnimation(this);
-	battle battle = new battle(this);
 
 	public undertale() {
 
@@ -105,6 +103,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		// 615
 		setPreferredSize(new Dimension(990, 615));
 		setBackground(new Color(0, 0, 0));
+		
+		
 
 		// import images
 		try {
@@ -371,9 +371,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			}
 
 		}
-		else if (battling) {
-			// call paint component of battle.java
-		}
 		// the start menu
 		else if (gameState == 0) {
 			g2d.drawImage(titleScreen, 0, 0, null);
@@ -408,10 +405,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		// the map will stop moving and the character itself will.
 
 		charaAnimation.x = e.getKeyCode();
-		if (battling) {
-			battle.keyPressed(e);
-		}
-		else if (!animation.fading && 1 <= gameState && gameState <= 3) {
+		if (!animation.fading && 1 <= gameState && gameState <= 3) {
 			// change animation to run method as it depends on each click
 			// for animation to change directions
 			if(e.getKeyCode() == 38)
@@ -589,39 +583,124 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public void keyReleased(KeyEvent e) {
 		int x = e.getKeyCode();
 		if(!animation.fading && 1 <= gameState && gameState <= 3) {
-			if (e.getKeyChar() == 'w' || x == 38) {
+			if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) {
 				System.out.println("up");
 				up = false;
 				curChara = 0;
 			}
 
-			if (e.getKeyChar() == 's' || x == 40) {
+			if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
 				down = false;
 				curChara = 2;
 				charaAnimation.legS = false;
 			}
 
 
-			if (e.getKeyChar() == 'a' || x == 37) {
+			if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
 				left = false;
 				curChara = 1;
 				charaAnimation.legA = false;
 			}
 
 
-			if (e.getKeyChar() == 'd' || x == 39) {
+			if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
 				right = false;
 				curChara = 3;
-			}
-			
-			if (x == 90) {
-				
 			}
 
 		}
 	}
 
-		
+
+	@Override
+	public void run() {
+
+		while(true) {
+			try {
+
+				Thread.sleep(1000 / fps);
+				if (up && withinBounds(charaX, charaY - charaSpeed, allBounds[gameState][setting])) {
+					charaAnimation.key = 1;
+					if(gameState == 1) {
+						if(setting > 2 && moveMap[gameState][setting].topLeft.y < globalPos && globalPos <= moveMap[gameState][setting].bottomRight.y) {
+							mapY += charaSpeed;
+							globalPos -= charaSpeed;
+						}
+						else {
+							charaY -= charaSpeed;
+							globalPos -= charaSpeed;
+						}
+					}
+					else {
+						charaY -= charaSpeed;
+					}
+					charaAnimation.run();
+
+				}
+				if (down && withinBounds(charaX, charaY + charaSpeed, allBounds[gameState][setting])) {
+					charaAnimation.key = 3;
+					if(gameState == 1) {
+						if(setting > 2 && moveMap[gameState][setting].topLeft.y <= globalPos && globalPos < moveMap[gameState][setting].bottomRight.y) {
+							mapY -= charaSpeed;
+							globalPos += charaSpeed;
+						}
+						else {
+							charaY += charaSpeed;
+							globalPos += charaSpeed;
+						}
+					}
+					else {
+						charaY += charaSpeed;
+					}
+					charaAnimation.run();
+
+
+				}
+				if (left && withinBounds(charaX - charaSpeed, charaY, allBounds[gameState][setting])) {
+					charaAnimation.key = 2;
+					// for moving the camera horizontally
+					if(gameState == 2 && (setting == 1 || setting == 4)) {
+						if(moveMap[gameState][setting].topLeft.x < globalPos && globalPos <= moveMap[gameState][setting].bottomRight.x) {
+							mapX += charaSpeed;
+						}
+						else {
+							charaX -= charaSpeed;
+						}
+						globalPos -= charaSpeed;
+					}
+					else {
+						charaX -= charaSpeed;
+					}
+					charaAnimation.run();
+
+				}
+				if (right && withinBounds(charaX + charaSpeed, charaY, allBounds[gameState][setting])) {
+					charaAnimation.key = 4;
+					if(gameState == 2 && (setting == 1 || setting == 4)) {
+						if(moveMap[gameState][setting].topLeft.x <= globalPos && globalPos < moveMap[gameState][setting].bottomRight.x) {
+							mapX -= charaSpeed;
+						}
+						else {
+							charaX += charaSpeed;
+						}
+						globalPos += charaSpeed;
+					}
+					else {
+						charaX += charaSpeed;
+					}
+					charaAnimation.run();
+
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			repaint();
+
+		}
+
+	}
+	
 	public static boolean interact(int x, int y, dimension object) {
 		
 		// approaching from the left
@@ -647,99 +726,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		
 		return false;
 		
-	}
-
-	@Override
-	public void run() {
-
-		while(true) {
-			if (battling) {
-				battle.run();
-			}
-			else if (1 <= gameState && gameState <= 3) {
-				try {
-	
-					Thread.sleep(1000 / fps);
-					if (up && withinBounds(charaX, charaY - charaSpeed, allBounds[gameState][setting])) {
-						charaAnimation.key = 1;
-						if(gameState == 1) {
-							if(setting > 2 && moveMap[gameState][setting].topLeft.y < globalPos && globalPos <= moveMap[gameState][setting].bottomRight.y) {
-								mapY += charaSpeed;
-								globalPos -= charaSpeed;
-							}
-							else {
-								charaY -= charaSpeed;
-								globalPos -= charaSpeed;
-							}
-						}
-						else {
-							charaY -= charaSpeed;
-						}
-						charaAnimation.run();
-	
-					}
-					if (down && withinBounds(charaX, charaY + charaSpeed, allBounds[gameState][setting])) {
-						charaAnimation.key = 3;
-						if(gameState == 1) {
-							if(setting > 2 && moveMap[gameState][setting].topLeft.y <= globalPos && globalPos < moveMap[gameState][setting].bottomRight.y) {
-								mapY -= charaSpeed;
-								globalPos += charaSpeed;
-							}
-							else {
-								charaY += charaSpeed;
-								globalPos += charaSpeed;
-							}
-						}
-						else {
-							charaY += charaSpeed;
-						}
-						charaAnimation.run();
-	
-	
-					}
-					if (left && withinBounds(charaX - charaSpeed, charaY, allBounds[gameState][setting])) {
-						charaAnimation.key = 2;
-						// for moving the camera horizontally
-						if(gameState == 2 && (setting == 1 || setting == 4)) {
-							if(moveMap[gameState][setting].topLeft.x < globalPos && globalPos <= moveMap[gameState][setting].bottomRight.x) {
-								mapX += charaSpeed;
-							}
-							else {
-								charaX -= charaSpeed;
-							}
-							globalPos -= charaSpeed;
-						}
-						else {
-							charaX -= charaSpeed;
-						}
-						charaAnimation.run();
-	
-					}
-					if (right && withinBounds(charaX + charaSpeed, charaY, allBounds[gameState][setting])) {
-						charaAnimation.key = 4;
-						if(gameState == 2 && (setting == 1 || setting == 4)) {
-							if(moveMap[gameState][setting].topLeft.x <= globalPos && globalPos < moveMap[gameState][setting].bottomRight.x) {
-								mapX -= charaSpeed;
-							}
-							else {
-								charaX += charaSpeed;
-							}
-							globalPos += charaSpeed;
-						}
-						else {
-							charaX += charaSpeed;
-						}
-						charaAnimation.run();
-	
-					}
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				repaint();
-			}
-		}
-
 	}
 
 
