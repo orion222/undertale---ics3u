@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -49,7 +51,6 @@ public class battle extends JPanel implements Runnable, KeyListener {
     
     public static boolean battling = true;
 	public static int menuState = 1;
-    public static boolean invulnerable = false;
     public static int selectionState = 1;
     public static int health = 100;
     public static int textState = 1;
@@ -62,13 +63,11 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	
 	public static BufferedImage slider;
 	public static BufferedImage bar;
-	public static BufferedImage bone;
-	public static BufferedImage bone2;
+
 	public static BufferedImage BD;
 	public static BufferedImage gameOver;
-	public static int attack;
-	public static int boneHeight = 100;
-	public static int boneWidth = 15;
+	public static int attack = 1;
+
 	public static int barX = 60;
 	public int counter = 0;
 	public static boolean stopped = false;
@@ -76,8 +75,19 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	
 	
 	// attacks
+	
+	public static int boneHeight = 100;
+	public static int boneWidth = 15;
+	public static BufferedImage bone;
+	public static BufferedImage bone2;
 	public static corner[] bonePositions = new corner[11];
-	public static corner[] bonePositions2 = new corner[11];
+	
+	public static corner[] bonePositions2 = new corner[12];
+	public static boolean[] bonesReleased;
+	public static LinkedList<Integer> boneOrder = new LinkedList<Integer>();
+	public static int startBone;
+	public static int endBone;
+
 
     
     
@@ -167,6 +177,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     				
     			}
     			
+    			
     		}
     		else {
 	    		// menu background
@@ -192,10 +203,20 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	    				g.drawString("What will Chara do?", 75, 360);
 	    			}
 	    			else if (textState == 2) {
-	    				g.drawString("You healed 2 HP! You have " + heals + " left", 75, 360);
+	    				if (heals == 0) 
+		    				g.drawString("You are out of heals!", 75, 360);
+	    					
+	    				else {
+		    				g.drawString("You healed 10 HP! You have " + heals + " left", 75, 360);
+		    				health += 10;
+	    				}
+	    	
 	    			}
 	    			else if (textState == 3) {
 	    				g.drawString("You fled the scene" , 75, 360);
+	    				health = 100;
+	    				bossHealth = 100;
+	    				
 	
 	    			}
 	    			g.drawImage(selectionImages[selectionState], optionPos[selectionState].x, optionPos[selectionState].y, null);
@@ -218,8 +239,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	        			}
 	        			menuState = 3;
 	        			
-	        			attack = (int) (Math.random() * (3 - 1) + 1);
-	        			attack = 1;
+	        			attack = 2;
 	        			if (attack == 1) {
 	        				firstAttack(); 
 	        			}
@@ -249,7 +269,14 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	    					}
 	    				}
 	    			}
-	    			
+	    			else if (attack == 2) {
+	    				for (int i = 1; i < 11; i++) {
+	    					corner cur = bonePositions2[i];
+	    					if (cur.x < 680) {
+	    						g.drawImage(bone2, cur.x, cur.y, null);
+	    					}
+	    				}
+	    			}
 	    			//g.drawImage(bone, 680, 295, null);
 	    		}
     		}
@@ -263,6 +290,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public void keyPressed(KeyEvent e) 
     {
     	int xe = e.getKeyCode();
+
     	if (menuState == 1) {
     		
     		// start state
@@ -348,7 +376,6 @@ public class battle extends JPanel implements Runnable, KeyListener {
     	
     	else if (menuState == 3) {
 			if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { // keycode 39 is the up arrow key
-				System.out.println("up");
 				up = true;
 			}
 			
@@ -369,11 +396,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     	
     	else if (menuState == 4 || menuState == 5) {
     		if(e.getKeyChar() == 'z' || e.getKeyChar() == 'Z') {
-    			menuState = 1;
-    			textState = 1;
-    			health = 100;
-    			bossHealth = 100;
-    			battling = false;
+    			resetStats();
     			System.out.println("quit");
     		}
 
@@ -423,15 +446,21 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		    			}
 		    		}
 		    		updateFirstAttack();
-		    		if (bonePositions[10].x < 0) {
+		    		if (bonePositions[10].x < 100) {
 		    			menuState = 1;
-		    			System.out.println(bonePositions[10].x);
+		    			up = false;
+		    			down = false;
+		    			left = false;
+		    			right = false;
 		    		}
 		    	}
 		    	else if (attack == 2) {
 		    		for (int i = 1; i < 11; i++) {
 		    			corner cur = bonePositions2[i];
-		    			if (collision(new corner(playerX, playerY), new corner(playerX + 25, playerY + 25), new corner(cur.x, cur.y), new corner(cur.x + boneHeight, cur.y + boneWidth))) {
+		    			
+		    			// the width for a horizontal bone is 70
+		    			// the height for a horizontal one is the width of bone 1
+		    			if (collision(new corner(playerX, playerY), new corner(playerX + 25, playerY + 25), new corner(cur.x, cur.y), new corner(cur.x + 70, cur.y + boneWidth))) {
 		            		health -= 1;
 		            		
 		            		// player has died
@@ -442,15 +471,20 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		    			}
 		    		}
 		    		updateSecondAttack();
-		    		if (bonePositions2[10].x < 0) {
+		    		if (bonePositions2[endBone].x < 100) {
 		    			menuState = 1;
-		    			System.out.println(bonePositions[10].x);
+		    			up = false;
+		    			down = false;
+		    			left = false;
+		    			right = false;
 		    		}
-		    	
 		    	}
 		    	
 		    	
+		    	
+		    	
     		}
+    	
     	repaint();	
     	}
     		
@@ -464,7 +498,6 @@ public class battle extends JPanel implements Runnable, KeyListener {
     	
     	if (menuState == 3) {
 			if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { 
-				System.out.println("up");
 				up = false;
 			}
 			
@@ -516,27 +549,45 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	
 	// bones are thrown leftwards
 	public void secondAttack() {
-		bonePositions[0] = new corner(Integer.MIN_VALUE, 0);
-		for (int i = 1; i < 11; i++) {
+		for (int i = 1; i < 12; i++) {
 			bonePositions2[i] = new corner(680, 295 + (i - 1) * boneWidth);
-
+			boneOrder.add(i);
 		}
+		
+		bonesReleased = new boolean[12];
+		
+		Collections.shuffle(boneOrder);
+		endBone = boneOrder.get(boneOrder.size() - 1);
+		startBone = boneOrder.poll();
+		bonesReleased[startBone] = true;
+		
 	}
 	public void updateSecondAttack() {
-		for (int i = 1; i < 11; i++) {
+		
+		for (int i = 1; i < 12; i++) {
 			
 			// if the gap is greater than 100 pixels
 			// update the next bone
-			if (Math.abs(bonePositions2[i].x - bonePositions2[i - 1].x) >= 100) {
-				
+			if (bonesReleased[i]) {
 				// speed must be odd number not equal to 5 for some logic reason
 				if (bossHealth > 50)
-					bonePositions2[i].x -= 3;
-				else {
+					bonePositions2[i].x -= 5;
+				else 
 					bonePositions2[i].x -= 7;
-				}
 			}
 		}
+		
+		// for every multiple of 150 that the first bone has traveled, we will release a next bone
+		System.out.println(bonePositions2[startBone].x);
+		
+		if (boneOrder.size() > 0) {
+			if (bonePositions2[startBone].x - 680 + (100 * (11 - boneOrder.size())) < 0) {
+				System.out.println("yo");
+				bonesReleased[boneOrder.poll()] = true;
+				
+			}
+		}
+		
 	}
 	
 
@@ -594,6 +645,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public static void main(String[] args) {
 		JFrame frame = new JFrame("battle");
 		battle panel = new battle();
+		
 		frame.add(panel);
 		frame.pack();
 		frame.setVisible(true);
@@ -602,7 +654,17 @@ public class battle extends JPanel implements Runnable, KeyListener {
     }
     
 
-	
+	public void resetStats() {
+		health = 100;
+		bossHealth = 100;
+		playerX = 500;
+		playerY = 500;
+		menuState = 1;
+		selectionState = 1;
+		textState = 1;
+		attack = 1;
+		
+	}
 
 
 
