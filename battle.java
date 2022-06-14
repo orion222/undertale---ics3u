@@ -52,7 +52,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public static boolean battling = true;
 	public static int menuState = 1;
     public static int selectionState = 1;
-    public static int health = 100;
+    public static int health = 50;
     public static int textState = 1;
     public static int heals;
     
@@ -155,17 +155,32 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public void paintComponent(Graphics g) {
 		super.paintComponent(g);
     	if (battling) {
+    		
     		g.setColor(new Color(255, 255, 255));
     		g.setFont(font);
     		
+    		// menu background
+    		g.drawImage(menuImages[menuState], 0, 0, null);
+    		g.drawImage(BD, 430, 85, null);
+    		
+    		// stats
+    		g.drawString(health + "", 345, 518);
+    		System.out.println(health);
+    		g.drawString("50", 425, 518);
+    		g.drawString(heals + "", 645, 518);
+    		g.drawString("5", 710, 518);
+    		g.drawString("BOSS HEALTH: ", 385, 75);
+    		g.drawString(bossHealth + "", 575, 75);
+
+  
     		// if u lose or win
     		if (menuState > 3) {
     			if (menuState == 4) {
+    				super.paintComponent(g);
     				g.drawImage(brokenHeart, playerX, playerY, null);
 
         			try {
     					Thread.sleep(2000);
-    					g.drawImage(gameOver, 0, 0, null);
     				} catch (InterruptedException e) {
     					// TODO Auto-generated catch block
     					e.printStackTrace();
@@ -180,22 +195,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     			
     		}
     		else {
-	    		// menu background
-	    		g.drawImage(menuImages[menuState], 0, 0, null);
-	    		g.drawImage(BD, 430, 85, null);
-	    		
-	    		// stats
-	    		g.drawString(health + "", 335, 518);
-	    		g.drawString("100", 430, 518);
-	    		g.drawString(heals + "", 645, 518);
-	    		g.drawString("5", 710, 518);
-	    		g.drawString("BOSS HEALTH: ", 385, 75);
-	    		g.drawString(bossHealth + "", 575, 75);
-	    		
-	
-			
-	    		
-	
+
 	    		// highlight selection
 	    		if (menuState == 1) {
 	    			g.setFont(font);
@@ -214,9 +214,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	    			}
 	    			else if (textState == 3) {
 	    				g.drawString("You fled the scene" , 75, 360);
-	    				health = 100;
-	    				bossHealth = 100;
-	    				
+
 	
 	    			}
 	    			g.drawImage(selectionImages[selectionState], optionPos[selectionState].x, optionPos[selectionState].y, null);
@@ -239,13 +237,13 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	        			}
 	        			menuState = 3;
 	        			
-	        			attack = 2;
 	        			if (attack == 1) {
-	        				firstAttack(); 
+	        				firstAttack();
 	        			}
 	        			else if (attack == 2) {
 	        				secondAttack();
 	        			}
+
 	        			
 	        			
 	    			}
@@ -452,6 +450,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		    			down = false;
 		    			left = false;
 		    			right = false;
+		    			attack ++;
 		    		}
 		    	}
 		    	else if (attack == 2) {
@@ -477,6 +476,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		    			down = false;
 		    			left = false;
 		    			right = false;
+		    			attack --;
 		    		}
 		    	}
 		    	
@@ -571,9 +571,9 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			if (bonesReleased[i]) {
 				// speed must be odd number not equal to 5 for some logic reason
 				if (bossHealth > 50)
-					bonePositions2[i].x -= 5;
+					bonePositions2[i].x -= 13;
 				else 
-					bonePositions2[i].x -= 7;
+					bonePositions2[i].x -= 17;
 			}
 		}
 		
@@ -591,6 +591,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 	}
 	
 
+	
     
     
 
@@ -655,7 +656,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
     
 
 	public void resetStats() {
-		health = 100;
+		health = 50;
 		bossHealth = 100;
 		playerX = 500;
 		playerY = 500;
