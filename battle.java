@@ -66,7 +66,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
 	public static BufferedImage BD;
 	public static BufferedImage gameOver;
-	public static int attack = 1;
+	public static int attack = 2;
 
 	public static int barX = 60;
 	public int counter = 0;
@@ -450,6 +450,8 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		    			down = false;
 		    			left = false;
 		    			right = false;
+		    			playerX = 500;
+		    			playerY = 400; 
 		    			attack ++;
 		    		}
 		    	}
@@ -472,6 +474,8 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		    		updateSecondAttack();
 		    		if (bonePositions2[endBone].x < 100) {
 		    			menuState = 1;
+		    			playerX = 500;
+		    			playerY = 400;
 		    			up = false;
 		    			down = false;
 		    			left = false;
