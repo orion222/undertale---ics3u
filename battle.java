@@ -66,7 +66,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
 	public static BufferedImage BD;
 	public static BufferedImage gameOver;
-	public static int attack = 2;
+	public static int attack = 1;
 	public static int variation;
 
 	public static int barX = 60;
