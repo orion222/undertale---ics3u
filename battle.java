@@ -122,7 +122,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 			bone2 = ImageIO.read(new File("assets/battleImages/attacks/bone2.png"));
 			BD = ImageIO.read(new File("assets/battleImages/characters/boss.png"));
 			brokenHeart = ImageIO.read(new File("assets/battleImages/characters/deadPlayer.png"));
-			gameOver = ImageIO.read(new File("assets/battleImages/menus/menu4.png"));
+			gameOver = ImageIO.read(new File("assets/battleImages/menus/gameOver.png"));
         }
         
         catch (Exception e) {
@@ -161,8 +161,10 @@ public class battle extends JPanel implements Runnable, KeyListener {
     		g.setFont(font);
     		
     		// menu background
-    		g.drawImage(menuImages[menuState], 0, 0, null);
-    		g.drawImage(BD, 430, 85, null);
+		if(menuState <= 3) {
+    			g.drawImage(menuImages[menuState], 0, 0, null);
+    			g.drawImage(BD, 430, 85, null);
+		}
     		
     		// stats
     		g.drawString(health + "", 345, 518);
@@ -176,15 +178,37 @@ public class battle extends JPanel implements Runnable, KeyListener {
     		// if u lose or win
     		if (menuState > 3) {
     			if (menuState == 4) {
-    				super.paintComponent(g);
-    				g.drawImage(brokenHeart, playerX, playerY, null);
-
-        			try {
-    					Thread.sleep(2000);
-    				} catch (InterruptedException e) {
-    					// TODO Auto-generated catch block
-    					e.printStackTrace();
+    				// We use if statements to ensure that the order of
+    				// execution is correct as the thread.sleep runs before
+    				// some of the drawing. Menus / Text need to be redrawn
+    				// as the text for HP freezes at "1", then the sleep runs.
+    				if(x == 0) {
+    					g.drawImage(menuImages[3], 0, 0, null);
+    					g.drawImage(BD, 430, 85, null); 
+    					g.drawString(health + "", 345, 518);
+    					g.drawString("50", 425, 518);
+    		    		g.drawString(heals + "", 645, 518);
+    		    		g.drawString("5", 710, 518);
+    		    		g.drawString("BOSS HEALTH: ", 385, 75);
+    		    		g.drawString(bossHealth + "", 575, 75);
+    					x++;
+    					
+    				} 
+    				else if (x == 1) {
+    					super.paintComponent(g);
+        				g.drawImage(brokenHeart, playerX, playerY, null);
+        				x++;
     				}
+    				else if(x == 2) {
+	    				try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+	    				g.drawImage(gameOver, 0, 0, null);
+        			}
+    				System.out.println("X : " + x + " TEST: " + test);
 
         		}
     		
@@ -742,6 +766,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 		selectionState = 1;
 		textState = 1;
 		attack = 1;
+		x = 0;
 		
 	}
 
