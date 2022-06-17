@@ -8,38 +8,30 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-
-
-// implement runnable for constant update in main file
-public class dialogue extends JPanel implements Runnable, KeyListener {
-
-
-    public static int key;
-    public static int pointerX;
-    public static int playerX = 500;
-    public static int playerY = 400;
-    public static int playerSpeed = 5;
-    public static BufferedImage player;
-    
-
-    
-    public static boolean up = false;
-    public static boolean down = false;
-    public static boolean right = false;
-    public static boolean left = false;
-    public static boolean speaking = false;
-
-	public static Font font;
-	public static BufferedImage box;
+public class dialogue extends JPanel implements KeyListener{
 	
-    public static ArrayList<dimension> interactionArea = new ArrayList<dimension>();
+	public static Scanner sc = new Scanner(System.in);
+	
+	public static BufferedImage dialogueBox;
+	public static Font font;
+	
+	// max letters = 54
+	
+	public static boolean speaking = true;
+	public static Scanner currentFile;
+	public static ArrayList<String>[][] allScripts = new ArrayList[4][5];
+	public static int startLine = 0;
+	public static int maxLines = 0;
+    
+
+    
     
 	public undertale game;
 	public dialogue(undertale e){
@@ -47,194 +39,98 @@ public class dialogue extends JPanel implements Runnable, KeyListener {
 		 game = e;
 	}
 	
-    public dialogue() {
-		setPreferredSize(new Dimension(990, 615));
-		setBackground(new Color(0, 0, 0));
-		
-		addKeyListener(this);
-		this.setFocusable(true);
-        Thread thread = new Thread(this);
-        thread.start();
-        
-        
-        
-        
-        try {
-			player = ImageIO.read(new File("assets/battleImages/health/player.png"));
-			box = ImageIO.read(new File("assets/story/dialogueBox.png"));
-        }
-        
-        catch (Exception e) {
-        	System.out.println("image does not exist");
-        }
-        
-
+	public dialogue(){
 		try {
-		     font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/DTM-Sans.ttf")).deriveFont(30f);
+			dialogueBox = ImageIO.read(new File("assets/scripts/dialogueBox.png"));
+		    font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/DTM-Sans.ttf")).deriveFont(30f);
+
 		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		    //register the font
 		    ge.registerFont(font);
-		} catch (IOException e) {
-		    e.printStackTrace();
-		} catch(FontFormatException e) {
-		    e.printStackTrace();
+		    
+		} catch (IOException | FontFormatException e) {
+			// TODO Auto-generated catch block
+			System.out.println("image does not exist");
+			e.printStackTrace();
 		}
-	
-		//use the font
-		this.setFont(font);
-    }
+		setPreferredSize(new Dimension(990, 615));
+		setBackground(new Color(0, 0, 0));
+		addKeyListener(this);
+		this.setFocusable(true);
+		// import scripts
+		
+		for (int i = 1; i < 4; i++) {
+			for (int x = 1; x < 5; x++) {
+			
+				try {
+					allScripts[i][x] = new ArrayList<String>();
+					currentFile = new Scanner(new File("assets/scripts/" + i + "_" + x + "_script.txt"));
+					while (currentFile.hasNextLine()){
+						allScripts[i][x].add(currentFile.nextLine());
+					}
+				} 
+				catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block 
+				}
 
-    public void paintComponent(Graphics g) {
+			}
+		}
+	}
+	
+	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		g.drawImage(player, playerX, playerY, null);
-		
 		if (speaking) {
-			g.drawImage(box, 55, 425, null);
-		}
-    			
-
-    }
-    
-    public void keyPressed(KeyEvent e) 
-    {
-    	int xe = e.getKeyCode();
-		if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { // keycode 39 is the up arrow key
-			up = true;
-		}
-		
-		if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
-			down = true;
-		}
-		
-
-		if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
-			left = true;
-		}
-		
-
-		if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
-			right = true;
-		}
-    	
-
-    }
-
-
-    public void run() {
-    	while (true) {
-			try {
-				Thread.sleep(50);
-				if (up) {
-		    		playerY -= playerSpeed;
-		    		
-		    	}
-		    	if (down) {
-		    		playerY += playerSpeed;
-		    		
-		    	}
-		    	if (left) {
-		    		playerX -= playerSpeed;
-		    	}
-		    	if (right) {
-		    		playerX += playerSpeed;
-		    	}
-
-			} 
-			catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+	   		g.setColor(new Color(255, 255, 255));
+			g.setFont(font);
+			g.drawImage(dialogueBox, 40, 420, null);
+			for (int i = 0; i < 3; i++) {
+				if (i + startLine < allScripts[1][1].size()) {
+					g.drawString(allScripts[1][1].get(i + startLine), 300, 485 + 40 * i);
+				}
+				else {
+					startLine = 0;
+					speaking = false;
+					break;
+				}
 			}
-				
-	    	repaint();
-	    	
-    	}
+		}
 
 	}
-
-        	
-       
-
-    
-    public static void main(String[] args) {
-		JFrame frame = new JFrame("battle");
+	public static void main(String[] args) throws IOException{
+		JFrame frame = new JFrame("UNDERTALE");
 		dialogue panel = new dialogue();
 		frame.add(panel);
 		frame.pack();
 		frame.setVisible(true);
 		frame.setResizable(false);
-
-    }
-    
-
-    
-
-    public void keyReleased(KeyEvent e)
-    {
-    	
-    	
-		if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { 
-			up = false;
-		}
-		
-		if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
-			down = false;
-		}
-		
-
-		if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
-			left = false;
-		}
-		if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
-			right = false;
-		}
-    	System.out.println(playerX + " " + playerY);
-
-    	
-    }
-    
-    
-    
-    
-
-	// create an objects for measurements
-	public static class corner{
-
-		public int x;
-		public int y;
-		public corner(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-	}
-	public static class dimension {
-		public corner topLeft;
-		public corner bottomRight;
-		public dimension(corner topLeft, corner bottomRight) {
-			this.topLeft = topLeft;
-			this.bottomRight = bottomRight;
-		}
 	}
 	
-	public static int interact(int x, int y, ArrayList<dimension> q) {
-		for (int i = 1; i < q.size(); i++) { // for every interaction area in the current setting
-			// check if within top left corner
-			dimension cur = q.get(i - 1);
-			corner topL = cur.topLeft;
-			corner bottomR = cur.bottomRight;
-			if (topL.x <= x && x <= bottomR.x && topL.y <= y && y <= bottomR.y) {
-				return i;
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		if (speaking) {
+			if (e.getKeyChar() == 'z') {
+				
+				startLine += 3;
 			}
-
+			System.out.println(startLine);
 		}
-		return -1;
+		repaint();
+
 	}
 
-	
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+	}
 
 
 
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    public void keyTyped(KeyEvent e) {    	
-    }
 }
