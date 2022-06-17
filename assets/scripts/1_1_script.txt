@@ -1,7 +1,9 @@
-Lorem ipsum dolor sit amet, consectetur 
- Praesent ac ipsum ultricies, gravida 
-Suspendisse potenti. Integer ac ultrici
-Aliquam ac odio in lectus bibendum ultri
-Donec ut rhoncus augue. Duis posuere feu
-a. Nullam varius augue in congue eleife
-Ut pharetra vel quam a dignissim. Suspen
+Hello, welcome to UNDERTALE.
+My name is ORION and I will explain how
+to play the game. Click z to continue
+Use the arrow keys to navigate around the
+map. The z key the interact key, use
+it to skip dialogue or interact with
+things in the map. 
+
+
