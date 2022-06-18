@@ -109,9 +109,16 @@ public class dialogue extends JPanel implements KeyListener{
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
+		
 		if (speaking) {
-			if (e.getKeyChar() == 'z') {
-				
+			if (e.getKeyChar() == 'z' || e.getKeyChar() == 'Z') {
+				if (undertale.grabbedHeal) {
+					battle.heals++;
+					speaking = false;
+					undertale.grabbedHeal = false;
+					
+					
+				}
 				startLine += 3;
 			}
 			System.out.println(startLine);
@@ -130,7 +137,7 @@ public class dialogue extends JPanel implements KeyListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-	
+		
 	}
 
 }
