@@ -81,6 +81,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static boolean stop = false;
 	// battle
 	public static boolean battling = false;
+	public static boolean winner = false;
 
 	public static BufferedImage player;
 	public static BufferedImage brokenHeart;
@@ -423,7 +424,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		slashCoords[3] = new corner(410, 70);
 
 		// interactables
-
 		// ruins
 		allInteractables[1][3] = new dimension(new corner(230, 860), new corner(355, 970));  // the bottom red bush, use globalPos
 
@@ -691,7 +691,13 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 					// If the boss is defeated
 					if (battle.menuState == 5 && !battle.slashDraw) {
+						g.drawImage(deadBoss, 0, 0, null);
 						animation.fade(deadBoss, allMaps[2][4], "slow");
+						try {audio.playMusic(gameState);}
+						catch (LineUnavailableException | UnsupportedAudioFileException | IOException e1) {
+							e1.printStackTrace();}
+						snowdenBounds[4].add(new dimension(new corner(495, 130), new corner(880, 140)));
+						winner = true;
 					}
 				}
 			}
@@ -887,7 +893,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 						if (interact(newX, newY, allInteractables[gameState][setting])) {
 							System.out.println("interacted");
-							visitedInteractables[gameState][setting] = true;
+							if(!(!winner && gameState == 2 && setting == 4)){
+								visitedInteractables[gameState][setting] = true;
+							}
 							if (!battling)
 								dialogue.speaking = true;
 
