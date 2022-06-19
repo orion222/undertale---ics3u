@@ -4,8 +4,14 @@ the names sans.
 theres a big bad dude ahead that 
 goes by the name of BD 
 its up to you to take him
-im feeling nice today, come to me
-for one of my heals.
+you will be given the options to 
+fight, heal, or to run away.
+BD will be attacking you with bones.
+you will have to navigate away from
+these bones using your movement keys.
+Everytime you get hit, you lose 1 HP.
+im feeling nice today, come to me for one 
+of my heals.
 stay safe.
 ima get me some mcdons
 
