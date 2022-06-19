@@ -69,7 +69,6 @@ public class audio {
             }
         }
         if(!game.battling) {
-            if(fight.fleed) {change = true; clip.stop(); fight.fleed = false;}
             if(x != game.gameState) {
                 System.out.println("changess");
                 x = game.gameState;
