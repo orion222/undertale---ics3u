@@ -501,10 +501,18 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 		// fade
 		if (!battling) {
+			if(winner) {
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				audio.x = 1;
+				winner = false;
+			}
 			try {
 				audio.playMusic(gameState);
 			} catch (LineUnavailableException | UnsupportedAudioFileException | IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -690,14 +698,14 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					}
 
 					// If the boss is defeated
-					if (battle.menuState == 5 && !battle.slashDraw) {
+					if (battle.menuState == 5 && !battle.slashDraw && !winner) {
+						// set another boo lean and write text then set to winner
 						g.drawImage(deadBoss, 0, 0, null);
-						animation.fade(deadBoss, allMaps[2][4], "slow");
-						try {audio.playMusic(gameState);}
-						catch (LineUnavailableException | UnsupportedAudioFileException | IOException e1) {
-							e1.printStackTrace();}
-						snowdenBounds[4].add(new dimension(new corner(495, 130), new corner(880, 140)));
 						winner = true;
+					}
+					if(winner) {
+						snowdenBounds[4].add(new dimension(new corner(495, 130), new corner(880, 140)));
+						battling = false;
 					}
 				}
 			}

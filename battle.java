@@ -38,8 +38,6 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public static undertale.corner[] slashCoords = new undertale.corner[4];
     public static boolean slash = false;
     public static boolean slashDraw = false;
-
-    public static boolean battling = true;
     public static int menuState = 1;
     public static int selectionState = 1;
     public static int health = 50;
@@ -65,7 +63,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
     public static int attack = 1;
     public static int variation;
-    public static boolean stopped = false;
+    public static boolean fleed = false;
 
     public static int boneHeight = 100;
     public static int boneWidth = 15;
@@ -375,7 +373,10 @@ public class battle extends JPanel implements Runnable, KeyListener {
                         menuState++;
                     }
                     else if (selectionState == 3) {
+                        audio.x = 1;
+                        System.out.println("music stop!!!");
                         game.battling = false;
+                        resetStats();
                         
                     }
                     System.out.println("brodie");

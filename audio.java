@@ -23,6 +23,7 @@ public class audio {
     public static int x = -1;
     public static boolean change = false;
     public static boolean playing = false;
+    public static boolean s = false;
 
     // footP = Play footstep sound
     // footS = Stop footstep sound
@@ -67,8 +68,10 @@ public class audio {
                 audioStream = AudioSystem.getAudioInputStream(boss);
             }
         }
-        else if(!game.battling) {
+        if(!game.battling) {
+            if(fight.fleed) {change = true; clip.stop(); fight.fleed = false;}
             if(x != game.gameState) {
+                System.out.println("changess");
                 x = game.gameState;
                 change = true;
                 if(game.gameState > 0) {
@@ -93,11 +96,11 @@ public class audio {
             }
         }
         if(playing) {
+            playing = false;
             clip = AudioSystem.getClip();
             clip.open(audioStream);
             clip.start();
             if(!battle.dead) {clip.loop(Clip.LOOP_CONTINUOUSLY);}
-            playing = false;
         }
     }
 
