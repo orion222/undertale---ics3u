@@ -1,4 +1,6 @@
 import javax.swing.*;
+
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -7,7 +9,6 @@ import java.io.*;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.util.*;
-
 
 
 public class undertale extends JPanel implements KeyListener, MouseListener, Runnable{
@@ -128,6 +129,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static corner[] bonePositions2 = new corner[12];
 
 	public static int xe;
+	public static boolean ended = false;
 
 
 
@@ -138,6 +140,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 	// startScript must be 1-indexed
 	public static boolean[][] startScript;
+	public static boolean bossDefeated = false;
 	public static ArrayList<String> healScript = new ArrayList<String>();
 	public static Scanner healText;
 	public static Font speakingFont;
@@ -391,7 +394,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 		// Flowey
 		floweyBounds[1].add(new dimension(new corner(10, 15), new corner(300, 495)));
-		floweyBounds[1].add(new dimension(new corner(300, 110), new corner(615, 495)));
+
+		floweyBounds[1].add(new dimension(new corner(300, 110), new corner(615, 245)));
+		floweyBounds[1].add(new dimension(new corner(300, 245), new corner(380, 430)));
+		floweyBounds[1].add(new dimension(new corner(535, 245), new corner(615, 430)));
+		floweyBounds[1].add(new dimension(new corner(300, 430), new corner(615, 495)));
+
 		floweyBounds[1].add(new dimension(new corner(615, 15), new corner(910, 495)));
 		floweyBounds[1].add(new dimension(new corner(440, 75), new corner(470, 110)));
 		floweyExits[1].add(new dimension(new corner(1, 1), new corner(1,1)));
@@ -432,10 +440,13 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		allInteractables[2][2] = new dimension(new corner(705, 180), new corner(770, 180));  // sans
 		allInteractables[2][3] = new dimension(new corner(390, 195), new corner(525, 250));  // clarence (the snowman)
 		allInteractables[2][4] = new dimension(new corner(1165, 130), new corner(1165, 140));  // the boss, must use globalPos
+		allInteractables[3][1] = new dimension(new corner(380, 245), new corner(535, 430));
 
 		//
-		startScript = new boolean[][] {{false, false, false, false, false}, {false, true, false, true, false}, {false, true, true, true, true}};
-		// import scripts
+		startScript = new boolean[4][5];
+		startScript[1] = new boolean[] {false, true, false, true, false};
+		startScript[2] = new boolean[] {false, true, true, true, true};
+		startScript[3] = new boolean[] {false, true, false, false, false};
 
 		for (int i = 1; i < 4; i++) {
 			for (int x = 1; x < 5; x++) {
@@ -501,14 +512,15 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 		// fade
 		if (!battling) {
-			if(winner) {
+			if(bossDefeated) {
 				try {
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 				audio.x = 1;
-				winner = false;
+				bossDefeated = false;
+				
 			}
 			try {
 				audio.playMusic(gameState);
@@ -698,14 +710,18 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					}
 
 					// If the boss is defeated
-					if (battle.menuState == 5 && !battle.slashDraw && !winner) {
+					if (battle.menuState == 5 && !battle.slashDraw) {
 						// set another boo lean and write text then set to winner
+						System.out.println("yo");
 						g.drawImage(deadBoss, 0, 0, null);
-						winner = true;
-					}
-					if(winner) {
+	
+						
+						// make sure that you cannot fight the boss again
+						allInteractables[2][4] = new dimension(new corner(-1, -1), new corner(-1, -1));
 						snowdenBounds[4].add(new dimension(new corner(495, 130), new corner(880, 140)));
 						battling = false;
+						winner = true;
+						bossDefeated = true;
 					}
 				}
 			}
@@ -840,7 +856,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					g.drawString("You now have " + battle.heals + ((battle.heals > 1)? " heals.": " heal."), 300, 485 + 40);
 
 				}
+				else if (ended) {
+					g.drawString("You got a #1 Trophy!", 300, 485);
+					g.drawString("Thank you for playing our game.", 300, 525);
 
+
+				}
 				else if (i + dialogue.startLine < allScripts[gameState][setting].size()) {
 					g.drawString(allScripts[gameState][setting].get(i + dialogue.startLine), 300, 485 + 40 * i);
 				}
@@ -1275,11 +1296,16 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			if (gameState == 2 && setting == 4) {
 				battling = true;
 			}
+			
+			else if (gameState == 3 && setting == 1) {
+				ended = true;
+			}
 			else grabbedHeal = true;
 			return true;
 		}
 
 		return false;
+
 
 	}
 	// Attacks
