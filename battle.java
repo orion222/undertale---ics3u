@@ -22,7 +22,7 @@ import javax.swing.JPanel;
 
 
 // implement runnable for constant update in main file
-public class battle extends JPanel implements Runnable {
+public class battle extends JPanel implements Runnable, KeyListener {
 
 
     public static int key;
@@ -48,7 +48,7 @@ public class battle extends JPanel implements Runnable {
 	public static boolean slash = false;
 	public static boolean slashDraw = false;
 	
-	public static ArrayList<dimension> gameBounds = new ArrayList<dimension>();
+	//public static ArrayList<dimension> gameBounds = new ArrayList<dimension>();
     
     public static boolean battling = true;
 	public static int menuState = 1;
@@ -67,7 +67,7 @@ public class battle extends JPanel implements Runnable {
 
 	// Bar
 	public static int barX = 60;
-	public int count = 0;
+	public static int count = 0;
 	public static boolean stopBar = false;
 	
 	// Attacks
@@ -76,6 +76,7 @@ public class battle extends JPanel implements Runnable {
 	
 	public static int attack = 1;
 	public static int variation;
+	public static boolean stopped = false;
 	
 	public static int boneHeight = 100;
 	public static int boneWidth = 15;
@@ -124,7 +125,7 @@ public class battle extends JPanel implements Runnable {
 		optionPos[2] = new undertale.corner(442, 539);
 		optionPos[3] = new undertale.corner(650, 539);
 		
-		gameBounds.add(new dimension(new undertale.corner(310, 295), new undertale.corner(655,445)));
+		//gameBounds.add(new dimension(new undertale.corner(310, 295), new undertale.corner(655,445)));
     }
 
     public void paintComponent(Graphics g) {}
@@ -142,25 +143,24 @@ public class battle extends JPanel implements Runnable {
 			// the next time u continue, it will automatically move ur character
 			// in that direction in ur next run
     		if (menuState == 3) { //  if you are fighting then we need this 
+    			System.out.println("up = " + up);
+    			System.out.println("down = " + down);
+    			System.out.println("left = " + left);
+    			System.out.println("right = " + right);
+
 				if (up && withinBounds(playerX, playerY - playerSpeed, game.gameBounds)) {
 		    		playerY -= playerSpeed;
-		    		System.out.println("roman bukd");
-		    		
 		    	}
 		    	if (down && withinBounds(playerX, playerY + playerSpeed, game.gameBounds)) {
 		    		playerY += playerSpeed;
-		    		System.out.println("roman bukd2");
 		    		
 		    	}
 		    	if (left && withinBounds(playerX - playerSpeed, playerY, game.gameBounds)) {
 		    		playerX -= playerSpeed;
-		    		System.out.println("roman bukd3");
 		    	}
 		    	if (right && withinBounds(playerX + playerSpeed, playerY, game.gameBounds)) {
 		    		playerX += playerSpeed;
-		    		System.out.println("roman bukd4");
 		    	}
-		    	System.out.println("PLAYERX : " + playerX + " PLAYERY : " + playerY);
 		    	if (attack == 1) {
 		    		for (int i = 1; i < 11; i++) {
 		    			undertale.corner cur = game.bonePositions[i];
@@ -261,7 +261,6 @@ public class battle extends JPanel implements Runnable {
     				e.printStackTrace();
     			}
         		num++;
-        		System.out.println("yo");
         		slashDraw = true;
     			
     		}
@@ -269,15 +268,7 @@ public class battle extends JPanel implements Runnable {
     	game.repaint();	
     	}
     }
-    	
-	public static class dimension {
-		public undertale.corner topLeft;
-		public undertale.corner bottomRight;
-		public dimension(undertale.corner topLeft, undertale.corner bottomRight) {
-			this.topLeft = topLeft;
-			this.bottomRight = bottomRight;
-		}
-	}
+
 	
 	public static boolean withinBounds(int x, int y, ArrayList<undertale.dimension> gameBounds2) {
 		for (undertale.dimension cur: gameBounds2) { // for every boundary in the current setting
@@ -322,5 +313,157 @@ public class battle extends JPanel implements Runnable {
 		down = false;
 		left = false;
 		right = false;
+	}
+	
+    public void keyPressed(KeyEvent e) 
+    {
+    	int xe = e.getKeyCode();
+
+    	if (menuState == 1) {
+    		
+    		// start state
+    		if (textState == 1) {
+	    		
+	    		// left 
+				if (xe == 37) { 
+					if (selectionState - 1 > 0) {
+						selectionState --;
+	
+					}
+				}
+				
+				// right
+				else if (xe == 39) {
+					if (selectionState + 1 < 4) {
+						selectionState ++;
+	
+					}
+					
+				}
+	    		// if the key is z, then select
+				else if (xe == 90) {
+					if (selectionState == 1) {
+						textState = 1;
+						menuState = 2;
+						game.counter = 0;
+						System.out.println("menu2");
+						
+					}
+					else if (selectionState == 2 && health < 50 && heals > 0) {
+						if (health + 10 > 50) {
+							health += 50 - health;
+						}
+						else health += 10;
+						textState = 2;
+						heals--;
+						
+					}
+					else if (selectionState == 3) {
+						textState = 3;
+						
+					}
+					
+				}
+				/*
+				// if the key is x, then go back
+				else if (x == 88) {
+				}
+				*/
+    		}
+    		
+    		// if you picked to heal or flee, you must click z another time to progress
+    		else {
+    			if (xe == 90) {
+    				if (selectionState == 2) {
+    					textState = 1;
+    					menuState++;
+    				}
+    				else if (selectionState == 3) {
+    					battling = false;
+    					
+    				}
+    			}
+    		}
+			repaint();
+    	}
+    	
+    	
+    	// slider
+    	else if (menuState == 2) {
+    		if(e.getKeyChar() == 'z' || e.getKeyChar() == 'Z') {
+    			stopped = false;
+    			if(barX <= 275 || barX >= 705) {
+    				damage = 5;
+    			}
+    			else if(barX <= 450 || barX >= 530) {
+    				damage = 10;
+    			}
+    			else {
+    				damage = 15;
+    			}
+    			bossHealth -= damage;
+    			System.out.println("DAMAGE: " + damage);
+    		}
+    	}
+    	
+    	
+    	else if (menuState == 3) {
+			if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { // keycode 39 is the up arrow key
+				up = true;
+			}
+			
+			if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
+				down = true;
+			}
+			
+	
+			if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
+				left = true;
+			}
+			
+	
+			if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
+				right = true;
+			}
+    	}
+    	
+    	else if (menuState == 4 || menuState == 5) {
+    		if(e.getKeyChar() == 'z' || e.getKeyChar() == 'Z') {
+    			resetStats();
+    			System.out.println("quit");
+    		}
+
+    	}
+
+    }
+    public void keyReleased(KeyEvent e)
+    {
+    	
+    	if (menuState == 3) {
+			if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { 
+				up = false;
+			}
+			
+			if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
+				down = false;
+			}
+			
+	
+			if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
+				left = false;
+			}
+			
+	
+			if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
+				right = false;
+			}
+			System.out.println(playerX + " " + playerY);
+    	}
+    }
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
