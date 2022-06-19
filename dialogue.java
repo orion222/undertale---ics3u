@@ -116,8 +116,12 @@ public class dialogue extends JPanel implements KeyListener{
 					battle.heals++;
 					speaking = false;
 					undertale.grabbedHeal = false;
+
 					
-					
+				}
+				else if (undertale.ended) {
+					undertale.ended = false;
+					speaking = false;
 				}
 				startLine += 3;
 			}
