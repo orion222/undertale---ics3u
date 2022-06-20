@@ -55,6 +55,8 @@ public class audio {
     }
 
     // The general background music for each setting and battle
+    // This method takes in the current gameState of the main file
+    // a displays a specific song according to the map
     public void playMusic(int gameState) throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         // music when in battle
         // "loser" is when Chara has been defeated and "boss" is the general bg music
@@ -110,6 +112,8 @@ public class audio {
     }
 
     // footstep sound effect in snowden
+    // The method takes in the gameState, though it only matters
+    // on snowden
     public void footstep(int gameState) throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         audioStream2 = AudioSystem.getAudioInputStream(snowWalk);
         if(gameState == 2) {
@@ -135,6 +139,8 @@ public class audio {
     }
 
     // hit sound when doing damage to the boss in battle
+    // This method takes in damage during the battle
+    // and only plays when you deal damage to the boss
     public void hitSound(int damage) throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         audioStream3 = AudioSystem.getAudioInputStream(hit);
         if(damage > 0) {
