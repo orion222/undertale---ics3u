@@ -23,31 +23,38 @@ import javax.swing.JPanel;
 
 // implement runnable for constant update in main file
 public class battle extends JPanel implements Runnable, KeyListener {
-
+	// Player / Boss stats
     public static int playerX = 500;
     public static int playerY = 400;
     public static int playerSpeed = 5;
+    public static int health = 50;
     public static int bossHealth = 100;
 
+    // Movement
     public static boolean up = false;
     public static boolean down = false;
     public static boolean right = false;
     public static boolean left = false;
 
+    // Slash
+    // num is to display each frame of the slash animation
     public static int num = 0;
-    public static undertale.corner[] slashCoords = new undertale.corner[4];
+    // Slash is used to add a thread.sleep to ensure it is timed properly
+    // slashDraw is the variable where it actually draws
     public static boolean slash = false;
     public static boolean slashDraw = false;
+    
+    // Game states
     public static int menuState = 1;
     public static int selectionState = 1;
-    public static int health = 50;
     public static int textState = 1;
-
-    public static undertale.corner[] optionPos = new undertale.corner[4];
+    
+    // Fonts
     public static Font font;
     public static Font damageFont;
 
     // When user runs out of hp
+    // x is the order of execution when player dies
     public static int x = 0;
     public static boolean dead = false;
 
@@ -65,7 +72,9 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
     public static int boneHeight = 100;
     public static int boneWidth = 15;
-
+    
+    // bonesReleased tells the program if a specific bone has been released or not
+    // boneOrder is the order of the bones that should be released
     public static boolean[] bonesReleased;
     public static LinkedList<Integer> boneOrder = new LinkedList<Integer>();
     public static int startBone;
@@ -85,12 +94,8 @@ public class battle extends JPanel implements Runnable, KeyListener {
         setBackground(new Color(0, 0, 0));
         thread = new Thread(this);
         thread.start();
-
-        slashCoords[0] = new undertale.corner(350, 0);
-        slashCoords[1] = new undertale.corner(350, 40);
-        slashCoords[2] = new undertale.corner(340, 70);
-        slashCoords[3] = new undertale.corner(350, 70);
-
+        
+        // Font
         try {
             font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/DTM-Sans.ttf")).deriveFont(30f);
             damageFont = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/DTM-Sans.ttf")).deriveFont(50f);
@@ -102,14 +107,8 @@ public class battle extends JPanel implements Runnable, KeyListener {
             e.printStackTrace();
         }
 
-        //use the font
+        // use the font
         this.setFont(font);
-
-        optionPos[1] = new undertale.corner(235, 539);
-        optionPos[2] = new undertale.corner(442, 539);
-        optionPos[3] = new undertale.corner(650, 539);
-
-        //gameBounds.add(new dimension(new undertale.corner(310, 295), new undertale.corner(655,445)));
     }
 
     public void paintComponent(Graphics g) {}
@@ -124,15 +123,14 @@ public class battle extends JPanel implements Runnable, KeyListener {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
-                // bug where if u hold down a movement key and ur hp drops to 0
-                // the next time u continue, it will automatically move ur character
-                // in that direction in ur next run
+                // The actual fight
                 if (menuState == 3) { //  if you are fighting then we need this
                     System.out.println("up = " + up);
                     System.out.println("down = " + down);
                     System.out.println("left = " + left);
                     System.out.println("right = " + right);
 
+                    // movement
                     if (up && withinBounds(playerX, playerY - playerSpeed, game.gameBounds)) {
                         playerY -= playerSpeed;
                     }
@@ -146,6 +144,9 @@ public class battle extends JPanel implements Runnable, KeyListener {
                     if (right && withinBounds(playerX + playerSpeed, playerY, game.gameBounds)) {
                         playerX += playerSpeed;
                     }
+                    
+                    // Attack one
+                    // Checking if there is any contact with each bone
                     if (attack == 1) {
                         for (int i = 1; i < 11; i++) {
                             undertale.corner cur = game.bonePositions[i];
@@ -163,7 +164,10 @@ public class battle extends JPanel implements Runnable, KeyListener {
                                 }
                             }
                         }
+                        // update bone positions
                         game.updateFirstAttack();
+                        
+                        // Variations of attacks (comes from the right or left)
                         if (variation == 1) {
                             if (game.bonePositions[10].x < 150) {
                                 menuState = 1;
@@ -175,7 +179,8 @@ public class battle extends JPanel implements Runnable, KeyListener {
                                 playerY = 400;
                                 attack++;
                             }
-                        } else if (variation == 2) {
+                        } 
+                        else if (variation == 2) {
                             if (game.bonePositions[10].x > 850) {
                                 menuState = 1;
                                 up = false;
@@ -188,7 +193,11 @@ public class battle extends JPanel implements Runnable, KeyListener {
                             }
                         }
 
-                    } else if (attack == 2) {
+                        
+                    } 
+                    // Attack two
+                    // Checking for collision
+                    else if (attack == 2) {
                         for (int i = 1; i < 11; i++) {
                             undertale.corner cur = game.bonePositions2[i];
 
@@ -208,8 +217,10 @@ public class battle extends JPanel implements Runnable, KeyListener {
                                 }
                             }
                         }
+                        // update bone positions
                         game.updateSecondAttack();
 
+                        // Variations of attacks (comes from right or left)
                         if (variation == 1) {
                             if (game.bonePositions2[endBone].x < 100) {
                                 menuState = 1;
@@ -238,6 +249,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
 
                 }
+                // when slash animation is initiated
                 if (slash) {
                     game.repaint();
                     try {
@@ -261,18 +273,14 @@ public class battle extends JPanel implements Runnable, KeyListener {
         }
     }
 
-//    public static class dimension {
-//        public undertale.corner topLeft;
-//        public undertale.corner bottomRight;
-//        public dimension(undertale.corner topLeft, undertale.corner bottomRight) {
-//            this.topLeft = topLeft;
-//            this.bottomRight = bottomRight;
-//        }
-//    }
-
+    // Takes in character's current position and the array of boundaries for that
+	// specific setting. Then, it checks if the character's current position is within
+	// the X and Y values of any of the boundaries. Within those values, she will be
+	// able to move freely. Otherwise, if her values go beyond the boundaries, the array
+	// will return false and she will not be able to move.
     public static boolean withinBounds(int x, int y, ArrayList<undertale.dimension> gameBounds2) {
         for (undertale.dimension cur: gameBounds2) { // for every boundary in the current setting
-            // check if within top left undertale.corner
+
             undertale.corner topL = cur.topLeft;
             undertale.corner bottomR = cur.bottomRight;
             if (topL.x <= x && x <= bottomR.x && topL.y <= y && y <= bottomR.y) {
@@ -283,6 +291,9 @@ public class battle extends JPanel implements Runnable, KeyListener {
         return false;
     }
 
+    // Same concept as withinBounds method
+    // For each bone, this method checks if you are within their X and Y values.
+    // If you are, it will return true. Otherwise, false is returned.
     public boolean collision(undertale.corner playerTopLeft, undertale.corner playerBottomRight, undertale.corner objectTopLeft, undertale.corner objectBottomRight) {
         //System.out.println(topL1.x  + " < " + topL2.x + " < " + bottomR1.x + "  OR  " + topL1.x + " < " + bottomR2.x + " < " + bottomR1.x);
         //System.out.println(topL1.y  + " < " + topL2.y + " < " + bottomR1.y + "  OR  " + topL1.y + " < " + bottomR2.y + " < " + bottomR1.y);
@@ -298,6 +309,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
     public static void main(String[] args) {}
 
+    // Reset values
     public void resetStats() {
         health = 50;
         bossHealth = 100;
@@ -315,9 +327,11 @@ public class battle extends JPanel implements Runnable, KeyListener {
         right = false;
     }
 
+    
     public void keyPressed(KeyEvent e)
     {
-        int xe = game.xe;
+        // key code
+    	int xe = game.xe;
         if (menuState == 1) {
 
             // start state
@@ -341,6 +355,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
                 }
                 // if the key is z, then select
                 else if (xe == 90) {
+                	// fight
                     if (selectionState == 1) {
                         textState = 1;
                         menuState = 2;
@@ -348,6 +363,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
                         System.out.println("menu2");
 
                     }
+                    // heal
                     else if (selectionState == 2 && health < 50 && game.heals > 0) {
                         if (health + 10 > 50) {
                             health += 50 - health;
@@ -358,25 +374,24 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
 
                     }
+                    // quit
                     else if (selectionState == 3) {
                         textState = 3;
 
                     }
 
                 }
-					/*
-					// if the key is x, then go back
-					else if (x == 88) {
-					}
-					*/
             }
 
             // if you picked to heal or flee, you must click z another time to progress
             else {
                 if (xe == 90) {
+                	// heal (confirm)
                     if (selectionState == 2) {
                         textState = 1;
                         menuState = 3;
+                        
+                        // deciding variation and attack
                         if (Math.random() >= 0.50)
                             variation = 1;
                         else variation = 2;
@@ -384,19 +399,17 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
                         if (attack == 1) {
                             game.firstAttack();
-                        } else if (attack == 2) {
+                        } 
+                        else if (attack == 2) {
                             game.secondAttack();
                         }
-                        System.out.println(menuState + " THIS ONE!!");
                     }
+                    // quit(confirm)
                     else if (selectionState == 3) {
                         audio.x = 1;
-                        System.out.println("music stop!!!");
                         game.battling = false;
-                        resetStats();
-                        
+                        resetStats();   
                     }
-                    System.out.println("brodie");
                 }
             }
             game.repaint();
@@ -418,16 +431,20 @@ public class battle extends JPanel implements Runnable, KeyListener {
                 else {
                     damage = 20;
                 }
+                // start slash animation
                 if(damage > 0) {slash = true;}
                 bossHealth -= damage;
+                // if boss is defeated
                 if(bossHealth <= 0) { bossHealth = 0; menuState = 5;}
+                // hit sound
                 playHit = true;
                 System.out.println("DAMAGE: " + damage);
             }
         }
 
-
+        // the battle
         else if (menuState == 3) {
+        	// movement
             if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { // keycode 39 is the up arrow key
                 up = true;
             }
@@ -447,8 +464,9 @@ public class battle extends JPanel implements Runnable, KeyListener {
             }
         }
 
+        // if you lost
         else if (menuState == 4) {
-
+        	// press z again to continue and battle again
             if(e.getKeyChar() == 'z' || e.getKeyChar() == 'Z') {
                 game.z = 0;
                 resetStats();
