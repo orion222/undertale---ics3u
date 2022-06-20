@@ -1,3 +1,10 @@
+/*
+ * This method does exactly what the file is titled.
+ * It is purely meant to animate Chara (the player) walking
+ * up, left, down, and right when the corresponding movement 
+ * keys are pressed
+ */
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.sound.sampled.AudioInputStream;
