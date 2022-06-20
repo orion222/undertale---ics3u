@@ -1,3 +1,19 @@
+/*
+ * ICS3U - Final Culminating Project
+ * By Orion Chen & Nicky Lam
+ * For Mr. Chow
+ * 
+ * UNDERTALE
+ * This project is a re-make of the famous indie game UNDERTALE.
+ * It is a game about exploration, finding items, and talking to new
+ * characters that you meet in the game. However, we obviously do not 
+ * have the expertise to implement all the things in the original game.
+ * In this re-make, you can explore 2 different maps of the game and 
+ * find heals in each setting. You are then able to fight 1 boss
+ * at the very last setting in the second map.
+ * After that, you will be taken to a trophy room and the game ends there.
+ * 
+ */
 import javax.swing.*;
 
 
@@ -483,6 +499,13 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 	}
 
+	
+	/*
+	 * The method that paints the screen accordingly to each game state or
+	 * if we are in battle mode. It also paints the dialogue for the game.
+	 * 
+	 * 
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
@@ -853,7 +876,14 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				}
 			}
 		}
+		
+		
 		// put this at the bottom because game must draw first and then dialogue
+		/*
+		 * This if statement checks if there is dialogue on the screen.
+		 * If there is, it will draw a box and the dialogue from the appropriate text-file
+		 * from gameState and setting.
+		 */
 		if (dialogue.speaking && !animation.fading && 1 <= gameState && gameState <= 3) {
 			g.setColor(new Color(255, 255, 255));
 			g.setFont(speakingFont);
@@ -904,7 +934,13 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			}
 		}
 	}
-
+	
+	
+	/*
+	 * The keyboard method that updates the player's position during exploration.
+	 * Or if battle, it will call a keyboard method in battle.java that pretty much
+	 * does the same thing but it adjusted to battle conditions
+	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
 		xe = 0;
@@ -1052,7 +1088,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			battle.keyPressed(e);
 		}
 	}
-
+	
+	
+	/*
+	 * A method that tracks mouse interaction ONLY for the 
+	 * title screen, since our game is keyboard based for everything else.
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
@@ -1107,12 +1148,16 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			}
 		}
 	}
-
+	
+	
+	/*
 	// Takes in character's current position and the array of boundaries for that
 	// specific setting. Then, it checks if the character's current position is within
 	// the X and Y values of any of the boundaries. Within those values, she will be
 	// able to move freely. Otherwise, if her values go beyond the boundaries, the array
 	// will return false and she will not be able to move.
+	 * 
+	 */
 
 	public static boolean withinBounds(int x, int y, ArrayList<dimension> q) {
 		for (dimension cur: q) { // for every boundary in the current setting
@@ -1127,16 +1172,20 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		return false;
 	}
 
-
-	// 1 equals you go to the entrance of the next setting
-	// 0 equals we haven't exited
-	// 2 equals go to the exit of the previous setting
+	
+	/*
+	 *	For each exit in the setting, the method checks if you
+		have entered a exit/entrance vertically or horizontally using
+		the two boolean variables. If any of those are true, we can tell
+		if it is an exit or entrance through the value of i. When i is 1,
+		you have entered an entrance, and when i is 2, you entered an exit
+		
+		1 equals you go to the entrance of the next setting
+		0 equals we haven't exited
+		2 equals go to the exit of the previous setting
+	 */
 	public static int withinExit(int x, int y, ArrayList<dimension> exits) {
-		// For each exit in the setting, the method checks if you
-		// have entered a exit/entrance vertically or horizontally using
-		// the two boolean variables. If any of those are true, we can tell
-		// if it is an exit or entrance through the value of i. When i is 0,
-		// you have entered an entrance, and when i is 1, you entered an exit
+
 		for (int i = 0; i < 2; i++) {
 			dimension cur = exits.get(i);
 
@@ -1172,9 +1221,10 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		return 0;
 	}
 
-	// When button is released, chara
-	// should go back to default standing
-	// position in whichever direction
+	/*
+	 * This method resets chara's default standing position when a key is released
+	 * so that he doesn't have one foot up when he is standing still.
+	 */
 	public void keyReleased(KeyEvent e) {
 		int x = e.getKeyCode();
 		if(!animation.fading && 1 <= gameState && gameState <= 3 && !dialogue.speaking) {
@@ -1219,6 +1269,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		}
 	}
 
+	/*
+	 * This thread is needed since our game is dynamic.
+	 * It repaints the screen constantly.
+	 * There 2 applications of this thread are to update the screen
+	 * during exploration and in battle.
+	 */
 	public void run() {
 		while(true) {
 			if(!battling) {
@@ -1340,7 +1396,14 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 	}
 
-
+	
+	/*
+	 * The interact method is run whenever the user presses 'Z' or 'z'.
+	 * It is used to approach objects and check if they can find a heal.
+	 * The logic is basically the same as withinBounds, where the code
+	 * checks if the user is within a certain area when they press the interact
+	 * key.
+	 */
 	public static boolean interact(int x, int y, dimension object) {
 		up = false;
 		down = false;
@@ -1369,6 +1432,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		return false;
 	}
 	// Attacks
+	
+	/*
+	 * This method initializes the first Attack (where bones appear
+	 * top and bottom only). It creates an array that stores the positions
+	 * depending on variation of each bone. 
+	 */
 	public void firstAttack() {
 		int k = (battle.variation == 1) ? 680: 290;
 		bonePositions[0] = new corner(Integer.MIN_VALUE, 0);
@@ -1379,6 +1448,14 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				bonePositions[i] = new corner(k, 370);
 		}
 	}
+	
+	/*
+	 * This method is to update the bone positions for the first 
+	 * attack (where bones appear top and bottom only). It loops
+	 * through the array that stores the position of each bone 
+	 * and updates accordingly to the variation.
+	 * 
+	 */
 	public void updateFirstAttack() {
 		int k = (battle.variation == 1) ? 1: -1;
 		for (int i = 1; i < 11; i++) {
@@ -1398,7 +1475,13 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			}
 		}
 	}
-
+	
+	/*
+	 * This method is to initialize the second attack (where bones are thrown)
+	 * It creates the starting positions of every bone depending on the 
+	 * variation. It then stores some important variables such as startBone and 
+	 * endBone to determine when the attack is over.
+	 */
 	public void secondAttack() {
 
 		// if variation is 1, bones will come from the right
@@ -1419,9 +1502,21 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		battle.bonesReleased[battle.startBone] = true;
 
 	}
-
+	
+	/*
+	 * This method is to update the second attack (where bones are thrown)
+	 * of the boss during the battle. It loops through the coordinates of 
+	 * each bone and sees if it is their turn to launch by measuring the gap
+	 * between it and the previous bone launched. 
+	 */
+	
 	public void updateSecondAttack() {
+		
+		// if the variation is 1, the bones will go from right to left
+		// if the variation is 2, the bones will go from left to right
+		// k represents the direction; 1 is right to left, -1 is left to right
 		int k = (battle.variation == 1) ? 1: -1;
+		
 
 		for (int i = 1; i < 12; i++) {
 
@@ -1462,6 +1557,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 
 	// create an objects to measure the boundaries
+	
+	/*
+	 * The corner class is meant to represent a corner of a rectangle in
+	 * form of (x, y). It is also used in arrays that store the position
+	 * of the player because the position is also represented in terms of (x, y)
+	 */
 	public static class corner{
 
 		public int x;
@@ -1471,7 +1572,11 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			this.y = y;
 		}
 	}
-
+	/*
+	 * The dimension class is meant to represent a theoretical rectangle given
+	 * 2 corners. The 2 corners are the top left and the bottom right, which you can
+	 * draw a rectangle out of.
+	 */
 	public static class dimension {
 		public corner topLeft;
 		public corner bottomRight;
