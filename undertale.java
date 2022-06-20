@@ -42,8 +42,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static corner[][][] allPos = new corner[4][5][3];
 
 	// Creating a path to import the pictures
-	public static File path = new File("assets/charaAnimation");
-	public static File[] charaFile = path.listFiles();
 	public static BufferedImage[] charaImages = new BufferedImage[10];
 	public static int curChara = 2;  // know which frame of chara to show
 
@@ -53,8 +51,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static boolean about = false;
 
 	// Map images
-	public static File path2 = new File("assets/maps/ruins");
-	public static File[] ruinsFile = path2.listFiles();
 	public static BufferedImage[] ruinsImages = new BufferedImage[5];
 
 	public static ArrayList<dimension>[] ruinsBounds = new ArrayList[5];
@@ -96,13 +92,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 	// Menu images
 	public static BufferedImage[] menuImages = new BufferedImage[4];
-	public static File path1 = new File("assets/battleImages/menus");
-	public static File[] menuFiles = path1.listFiles();
 
 	// Menu options
 	public static BufferedImage[] selectionImages = new BufferedImage[4];
-	public static File path3 = new File("assets/battleImages/options");
-	public static File[] selectionFiles = path3.listFiles();
 	public static corner[] optionPos = new corner[4];
 
 	// Slash animation
