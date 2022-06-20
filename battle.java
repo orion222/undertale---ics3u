@@ -453,21 +453,21 @@ public class battle extends JPanel implements Runnable, KeyListener {
         // the battle
         else if (menuState == 3) {
         	// movement
-            if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) { // keycode 39 is the up arrow key
+            if (e.getKeyCode() == 38) { // keycode 39 is the up arrow key
                 up = true;
             }
 
-            if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
+            if (e.getKeyCode() == 40) {
                 down = true;
             }
 
 
-            if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
+            if (e.getKeyCode() == 37) {
                 left = true;
             }
 
 
-            if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
+            if (e.getKeyCode() == 39) {
                 right = true;
             }
         }
