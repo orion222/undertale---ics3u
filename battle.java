@@ -1,3 +1,11 @@
+
+// INTRO COMMENTS
+// This file is used to integrate the logic of the boss fight
+// The following is used to set the proper values to each variable
+// used in the battle. In return, it is used in the paint component
+// in undertale.java. The following includes the run, key pressed,
+// and key released, which is unique to the battles.
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
