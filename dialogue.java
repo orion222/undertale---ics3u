@@ -113,7 +113,6 @@ public class dialogue extends JPanel implements KeyListener{
 		if (speaking) {
 			if (e.getKeyChar() == 'z' || e.getKeyChar() == 'Z') {
 				if (undertale.grabbedHeal) {
-					battle.heals++;
 					speaking = false;
 					undertale.grabbedHeal = false;
 

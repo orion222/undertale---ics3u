@@ -42,7 +42,6 @@ public class battle extends JPanel implements Runnable, KeyListener {
     public static int selectionState = 1;
     public static int health = 50;
     public static int textState = 1;
-    public static int heals = 1;
 
     public static undertale.corner[] optionPos = new undertale.corner[4];
     public static Font font;
@@ -342,13 +341,13 @@ public class battle extends JPanel implements Runnable, KeyListener {
                         System.out.println("menu2");
 
                     }
-                    else if (selectionState == 2 && health < 50 && heals > 0) {
+                    else if (selectionState == 2 && health < 50 && game.heals > 0) {
                         if (health + 10 > 50) {
                             health += 50 - health;
                         }
                         else health += 10;
                         textState = 2;
-                        heals--;
+                        game.heals--;
 
 
                     }

@@ -152,6 +152,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static BufferedImage BDspeaking;
 
 	public static boolean grabbedHeal = false;
+    public static int heals = 0;
 
 
 
@@ -615,7 +616,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			if(!(battle.menuState > 3)) {
 				g.drawString(battle.health + "", 345, 518);
 				g.drawString("50", 425, 518);
-				g.drawString(battle.heals + "", 645, 518);
+				g.drawString(heals + "", 645, 518);
 				g.drawString("5", 710, 518);
 				g.drawString("BOSS HEALTH: ", 385, 75);
 				g.drawString(battle.bossHealth + "", 575, 75);
@@ -635,7 +636,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 							g.drawImage(BD, 430, 85, null);
 							g.drawString(battle.health + "", 345, 518);
 							g.drawString("50", 425, 518);
-							g.drawString(battle.heals + "", 645, 518);
+							g.drawString(heals + "", 645, 518);
 							g.drawString("5", 710, 518);
 							g.drawString("BOSS HEALTH: ", 385, 75);
 							g.drawString(battle.bossHealth + "", 575, 75);
@@ -685,7 +686,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 						g.drawImage(BD, 430, 85, null);
 						g.drawString(battle.health + "", 345, 518);
 						g.drawString("50", 425, 518);
-						g.drawString(battle.heals + "", 645, 518);
+						g.drawString(heals + "", 645, 518);
 						g.drawString("5", 710, 518);
 						g.drawString("BOSS HEALTH: ", 385, 75);
 						g.drawString(battle.bossHealth + "", 575, 75);
@@ -738,13 +739,13 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 							g.drawString("Press 'Z' again to continue", 75, 390);
 						}
 
-						else if (battle.heals == 0) {
+						else if (heals == 0) {
 							g.drawString("You are out of heals!", 75, 360);
 							g.drawString("Press 'Z' again to continue", 75, 390);
 						}
 
 						else {
-							g.drawString("You healed 10 HP! You have " + battle.heals + " left", 75, 360);
+							g.drawString("You healed 10 HP! You have " + heals + " left", 75, 360);
 							g.drawString("Press 'Z' again to continue", 75, 390);
 						}
 
@@ -853,7 +854,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 				if (grabbedHeal){
 					g.drawString(healScript.get(i), 300, 485);
-					g.drawString("You now have " + battle.heals + ((battle.heals > 1)? " heals.": " heal."), 300, 485 + 40);
+					g.drawString("You now have " + heals + ((heals > 1)? " heals.": " heal."), 300, 485 + 40);
 
 				}
 				else if (ended) {
@@ -1036,7 +1037,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				fadeStart = titleScreen;
 				fadeEnd = ruinsImages[1];
 				gameState = 2;
-				setting = 4;
+				setting = 3;
 				dialogue.speaking = true;
 				animation.fade(fadeStart, fadeEnd, "fast");
 
@@ -1300,7 +1301,10 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			else if (gameState == 3 && setting == 1) {
 				ended = true;
 			}
-			else grabbedHeal = true;
+			else{
+				grabbedHeal = true;
+				heals ++;
+			}
 			return true;
 		}
 
