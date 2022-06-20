@@ -5,16 +5,14 @@ import javax.sound.sampled.*;
 
 public class audio {
     File boss = new File("assets/audio/mus_boss.wav");
-    File cymbal = new File("assets/audio/mus_cymbal.wav");
-    File fallen = new File("assets/audio/mus_fallendown2.wav");
-    File gameOver = new File("assets/audio/mus_gameover.wav");
+    File end = new File("assets/audio/mus_end.wav");
     File musicBox = new File("assets/audio/mus_musicBox.wav");
     File ruinSound = new File("assets/audio/mus_ruins.wav");
     File snowdenSound = new File("assets/audio/mus_snowden.wav");
     File snowWalk = new File("assets/audio/mus_snowwalk.wav");
-    File story = new File("assets/audio/mus_story.wav");
     File loser = new File("assets/audio/lose.wav");
     File hit = new File("assets/audio/hit.wav");
+    File dmgTaken = new File("assets/audio/damageTaken.wav");
 
     // x allows the program to understand
     // if a map has been changed. Change
@@ -23,7 +21,6 @@ public class audio {
     public static int x = -1;
     public static boolean change = false;
     public static boolean playing = false;
-    public static boolean s = false;
 
     // footP = Play footstep sound
     // footS = Stop footstep sound
@@ -90,7 +87,7 @@ public class audio {
                     audioStream = AudioSystem.getAudioInputStream(snowdenSound);
                 }
                 else if(game.gameState == 3) {
-                    audioStream = AudioSystem.getAudioInputStream(fallen);
+                    audioStream = AudioSystem.getAudioInputStream(end);
                 }
             }
         }
@@ -107,6 +104,7 @@ public class audio {
         audioStream2 = AudioSystem.getAudioInputStream(snowWalk);
         if(gameState == 2) {
             if(footS || (game.setting == 4 && game.globalPos >= 375 && game.globalPos <= 1520)) {
+                System.out.println("STOP FOOT");
                 clip2.stop();
                 footS = false;
                 footP = false;
@@ -127,5 +125,11 @@ public class audio {
             clip3.open(audioStream3);
             clip3.start();
         }
+    }
+    public void dmgTakenSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        audioStream3 = AudioSystem.getAudioInputStream(dmgTaken);
+        clip3 = AudioSystem.getClip();
+        clip3.open(audioStream3);
+        clip3.start();
     }
 }

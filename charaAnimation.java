@@ -1,5 +1,8 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.io.*;
 import javax.imageio.ImageIO;
@@ -100,4 +103,3 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
     public void keyPressed(KeyEvent e) {}
     public void keyReleased(KeyEvent e) {}
 }
-

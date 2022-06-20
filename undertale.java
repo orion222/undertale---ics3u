@@ -46,6 +46,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 	//IMAGES
 	public static BufferedImage titleScreen;
+	public static BufferedImage aboutScreen;
+	public static boolean about = false;
 
 	// map images
 	public static File path2 = new File("assets/maps/ruins");
@@ -58,6 +60,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static BufferedImage[] snowdenImages = new BufferedImage[5];
 	public static ArrayList<dimension>[] snowdenBounds = new ArrayList[5];
 	public static ArrayList<dimension>[] snowdenExits = new ArrayList[5];
+	public static BufferedImage replace;
 
 	public static BufferedImage[] flowey = new BufferedImage[2];
 	public static ArrayList<dimension>[] floweyBounds = new ArrayList[2];
@@ -111,6 +114,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	// slider
 	public static BufferedImage bar;
 
+	// number of heals
+	public static int heals = 0;
+
 	// boss image
 	public static BufferedImage BD;
 	public static BufferedImage deadBoss;
@@ -125,10 +131,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static BufferedImage bone;
 	public static BufferedImage bone2;
 	public static corner[] bonePositions = new corner[11];
-
 	public static corner[] bonePositions2 = new corner[12];
 
+	// keycode specifically for battle
 	public static int xe;
+
+	// to display winning text when claiming trophy
 	public static boolean ended = false;
 
 
@@ -143,6 +151,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static boolean bossDefeated = false;
 	public static ArrayList<String> healScript = new ArrayList<String>();
 	public static Scanner healText;
+	public static boolean grabbedHeal = false;
 	public static Font speakingFont;
 	public static BufferedImage dialogueBox;
 	public static BufferedImage orion;
@@ -150,12 +159,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public static BufferedImage sans;
 	public static BufferedImage clarence;
 	public static BufferedImage BDspeaking;
-
-	public static boolean grabbedHeal = false;
-    public static int heals = 0;
-
-
-
 
 	public static Thread thread;
 	// other
@@ -178,12 +181,14 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		// import images
 		try {
 			titleScreen = ImageIO.read(new File("assets/undertalestartmenu.png"));
+			aboutScreen = ImageIO.read(new File("assets/aboutScreen.png"));
 
+			// maps
 			snowdenImages[1] = ImageIO.read(new File("assets/maps/snowden/snowden1.png"));
 			snowdenImages[2] = ImageIO.read(new File("assets/maps/snowden/snowden2.png"));
 			snowdenImages[3] = ImageIO.read(new File("assets/maps/snowden/snowden3.png"));
 			snowdenImages[4] = ImageIO.read(new File("assets/maps/snowden/snowden4.png"));
-
+			replace = ImageIO.read(new File("assets/maps/snowden/realsnowden4.png"));
 
 			ruinsImages[1] = ImageIO.read(new File("assets/maps/ruins/ruins1.png"));
 			ruinsImages[2] = ImageIO.read(new File("assets/maps/ruins/ruins2.png"));
@@ -215,8 +220,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 			// BATTLE.JAVA
 			// menu / buttons
-
-
 			menuImages[1] = ImageIO.read(new File("assets/battleImages/menus/menu1.png"));
 			menuImages[2] = ImageIO.read(new File("assets/battleImages/menus/menu2.png"));
 			menuImages[3] = ImageIO.read(new File("assets/battleImages/menus/menu3.png"));
@@ -225,20 +228,16 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			selectionImages[2] = ImageIO.read(new File("assets/battleImages/options/option2.png"));
 			selectionImages[3] = ImageIO.read(new File("assets/battleImages/options/option3.png"));
 
-
 			player = ImageIO.read(new File("assets/battleImages/characters/player.png"));
 			bar = ImageIO.read(new File("assets/battleImages/menus/bar.jpg"));
 			bone = ImageIO.read(new File("assets/battleImages/attacks/bone.png"));
 			bone2 = ImageIO.read(new File("assets/battleImages/attacks/bone2.png"));
 			BD = ImageIO.read(new File("assets/battleImages/characters/boss.png"));
 
-
 			brokenHeart = ImageIO.read(new File("assets/battleImages/characters/deadPlayer.png"));
 			gameOver = ImageIO.read(new File("assets/battleImages/menus/gameOver.png"));
 			gameOver2 = ImageIO.read(new File("assets/battleImages/menus/gameOver2.png"));
 			deadBoss = ImageIO.read(new File("assets/battleImages/menus/deadBoss.png"));
-
-
 
 			// slash animation
 			slashImage[0] = ImageIO.read(new File("assets/battleImages/slash/slash1.1.png"));
@@ -283,7 +282,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			}
 		}
 
-		// Positions of Chara
+		// Positions of Chara when entering a new setting
 		// ruins1
 		allPos[1][1][1] = new corner(480, 220); // Initial position after menu
 		allPos[1][1][2] = new corner(15, 340); // In front of exit
@@ -320,11 +319,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		allPos[3][1][1] = new corner(450, 120);
 		allPos[3][1][2] = new corner(0,0);
 
-
-
-
-
-
+		// Adding boundaries
 		// ruins1
 		ruinsBounds[1].add(new dimension(new corner (135, -10), new corner (800, 375)));
 		ruinsBounds[1].add(new dimension(new corner(-35, 260), new corner(135, 375)));
@@ -379,13 +374,10 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		snowdenBounds[4].add(new dimension(new corner(-40, 185), new corner(355,290)));
 		snowdenBounds[4].add(new dimension(new corner(65, 10), new corner(355,290)));
 		snowdenBounds[4].add(new dimension(new corner(355, 130), new corner(450,140)));
-
 		snowdenBounds[4].add(new dimension(new corner(455, 130), new corner(495, 140)));
 
 		// add this boundary below when the boss is beat so the player can progress
 		//snowdenBounds[4].add(new dimension(new corner(495, 130), new corner(880, 140)));
-
-
 
 		snowdenBounds[4].add(new dimension(new corner(880, 130), new corner(910,155)));
 		snowdenBounds[4].add(new dimension(new corner(880, 155), new corner(895,175)));
@@ -440,10 +432,10 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		allInteractables[2][1] = new dimension(new corner(210, 265), new corner(345, 265));  // the bush
 		allInteractables[2][2] = new dimension(new corner(705, 180), new corner(770, 180));  // sans
 		allInteractables[2][3] = new dimension(new corner(390, 195), new corner(525, 250));  // clarence (the snowman)
-		allInteractables[2][4] = new dimension(new corner(1165, 130), new corner(1165, 140));  // the boss, must use globalPos
+		allInteractables[2][4] = new dimension(new corner(1225, 130), new corner(1225, 140));  // the boss, must use globalPos
 		allInteractables[3][1] = new dimension(new corner(380, 245), new corner(535, 430));
 
-		//
+		// scripts
 		startScript = new boolean[4][5];
 		startScript[1] = new boolean[] {false, true, false, true, false};
 		startScript[2] = new boolean[] {false, true, true, true, true};
@@ -513,7 +505,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 		// fade
 		if (!battling) {
-			if(bossDefeated) {
+			if (bossDefeated) {
 				try {
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {
@@ -521,13 +513,13 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				}
 				audio.x = 1;
 				bossDefeated = false;
-				
 			}
 			try {
 				audio.playMusic(gameState);
 			} catch (LineUnavailableException | UnsupportedAudioFileException | IOException e1) {
 				e1.printStackTrace();
 			}
+			if(gameState == 3 && audio.footP || (grabbedHeal && audio.footP)) {audio.clip2.stop(); audio.footP = false; System.out.println("lionel x roman");}
 
 			if (animation.fading) {
 				if (!animation.faded) {
@@ -539,12 +531,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					}
 
 
-				}
-				else {
+				} else {
 					// change chara position
-					charaX = allPos[gameState][setting][change].x;
-					charaY = allPos[gameState][setting][change].y;
-
+					if(gameState != 0) {
+						charaX = allPos[gameState][setting][change].x;
+						charaY = allPos[gameState][setting][change].y;
+					}
 					// Used to determine if map needs to move
 					// at a certain point
 
@@ -552,23 +544,15 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					if (charaY > 312 && gameState == 1 && setting == 3) {
 						globalPos = 1025;
 
-					}
-					else if (charaY < 312 && gameState == 1 && setting == 3) {
+					} else if (charaY < 312 && gameState == 1 && setting == 3) {
 						globalPos = charaY;
-					}
-
-					else if (charaY > 312 && gameState == 1 && setting == 4) {
+					} else if (charaY > 312 && gameState == 1 && setting == 4) {
 						globalPos = 1075;
-					}
-
-					else if (charaY < 312 && gameState == 1 && setting == 4) {
+					} else if (charaY < 312 && gameState == 1 && setting == 4) {
 						globalPos = 240;
-					}
-
-					else if(gameState == 2 && charaX > 625) {
+					} else if (gameState == 2 && charaX > 625 && setting != 4) {
 						globalPos = (1250 - (640 - charaX));
-					}
-					else if (gameState == 2 && charaX < 625) {
+					} else if (gameState == 2 && charaX < 625 && setting != 4) {
 						globalPos = charaX;
 					}
 
@@ -578,12 +562,13 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 						g2d.drawImage(charaImages[curChara], charaX, charaY, null);
 					}
 				}
-
+			}
+			else if(about) {
+				g2d.drawImage(aboutScreen, 0, 0, null);
 			}
 
-
 			// the start menu
-			else if (gameState == 0) {
+			else if (gameState == 0 && !about) {
 				g2d.drawImage(titleScreen, 0, 0, null);
 				// startSong.start();
 
@@ -591,6 +576,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 			// exploration
 			else if (1 <= gameState && gameState <= 3) {
+				if(winner) {allMaps[2][4] = replace;}
 				g2d.drawImage(allMaps[gameState][setting], mapX, mapY, null);
 
 				try {
@@ -601,19 +587,23 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					e.printStackTrace();
 				}
 			}
-		}
-		else if (battling) {
+		} else if (battling) {
 			g.setColor(new Color(255, 255, 255));
 			g.setFont(speakingFont);
 
 			// menu background
-			if(battle.menuState <= 3) {
-				g.drawImage(menuImages[battle.menuState], 0, 0, null);
+
+			if (battle.menuState <= 3 || (battle.menuState == 5 && !winner)) {
+				if (battle.menuState != 5) {
+					g.drawImage(menuImages[battle.menuState], 0, 0, null);
+				} else {
+					g.drawImage(menuImages[2], 0, 0, null);
+				}
 				g.drawImage(BD, 430, 85, null);
 			}
 
 			// stats
-			if(!(battle.menuState > 3)) {
+			if (!(battle.menuState > 3) || (battle.menuState == 5 && !winner)) {
 				g.drawString(battle.health + "", 345, 518);
 				g.drawString("50", 425, 518);
 				g.drawString(heals + "", 645, 518);
@@ -630,8 +620,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					// execution is correct as the thread.sleep causes
 					// issues with the order. Menus / Text need to be redrawn
 					// as the text for HP freezes at "1", then the sleep runs.
-					if(z == 0) {
-						if(battle.x == 0) {
+					if (z == 0) {
+						if (battle.x == 0) {
 							g.drawImage(menuImages[3], 0, 0, null);
 							g.drawImage(BD, 430, 85, null);
 							g.drawString(battle.health + "", 345, 518);
@@ -642,14 +632,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 							g.drawString(battle.bossHealth + "", 575, 75);
 							battle.x++;
 							System.out.println("runed");
-						}
-						else if(battle.x == 1) {
+						} else if (battle.x == 1) {
 							super.paintComponent(g);
 							g.drawImage(brokenHeart, battle.playerX, battle.playerY, null);
 							battle.x++;
 							System.out.println("runed2");
-						}
-						else if (battle.x == 2) {
+						} else if (battle.x == 2) {
 							super.paintComponent(g);
 							g.drawImage(brokenHeart, battle.playerX, battle.playerY, null);
 							battle.x++;
@@ -657,21 +645,28 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 							System.out.println("runed3");
 						}
 					}
-					if(battle.dead) {
+					if (battle.dead) {
 						over = true;
-						try {audio.playMusic(gameState);}
-						catch (LineUnavailableException | UnsupportedAudioFileException | IOException e1) {e1.printStackTrace();}
+						try {
+							audio.playMusic(gameState);
+						} catch (LineUnavailableException | UnsupportedAudioFileException | IOException e1) {
+							e1.printStackTrace();
+						}
 						try {
 							Thread.sleep(2000);
 						} catch (InterruptedException e1) {
 							e1.printStackTrace();
 						}
 						battle.dead = false;
-					}
-					else if(battle.x == 3) {
+					} else if (battle.x == 3) {
 						z++;
-						if(z < 30) {g.drawImage(gameOver2, 0, 0, null);}
-						if (z >= 30) {g.drawImage(gameOver, 0, 0, null); over = false;}
+						if (z < 30) {
+							g.drawImage(gameOver2, 0, 0, null);
+						}
+						if (z >= 30) {
+							g.drawImage(gameOver, 0, 0, null);
+							over = false;
+						}
 					}
 				}
 
@@ -679,8 +674,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				// a slash animation. To do so, you have to redraw
 				// all the images and the slash images
 				else if (battle.slashDraw) {
-					if(battle.num <= 3) {
-						super.paintComponent(g);
+					if (battle.num <= 3) {
 						g.drawImage(menuImages[2], 0, 0, null);
 						g.drawImage(bar, battle.barX, 314, null);
 						g.drawImage(BD, 430, 85, null);
@@ -691,10 +685,12 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 						g.drawString("BOSS HEALTH: ", 385, 75);
 						g.drawString(battle.bossHealth + "", 575, 75);
 						g.drawString("MINUS " + battle.damage + " HP", 620, 150);
-						if(battle.playHit) {
-							try {audio.hitSound(battle.damage);}
-							catch (LineUnavailableException | UnsupportedAudioFileException | IOException e1) {
-								e1.printStackTrace();}
+						if (battle.playHit) {
+							try {
+								audio.hitSound(battle.damage);
+							} catch (LineUnavailableException | UnsupportedAudioFileException | IOException e1) {
+								e1.printStackTrace();
+							}
 							battle.playHit = false;
 						}
 						g.drawImage(slashImage[battle.num], slashCoords[battle.num].x, slashCoords[battle.num].y, null);
@@ -703,7 +699,9 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					// Reset variable values to ensure
 					// that the animation can be reused
 					else {
-						g.drawImage(bar, battle.barX, 314, null);
+						if (battle.menuState != 5) {
+							g.drawImage(bar, battle.barX, 314, null);
+						}
 						battle.slashDraw = false;
 						battle.slash = false;
 						battle.num = 0;
@@ -715,8 +713,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 						// set another boo lean and write text then set to winner
 						System.out.println("yo");
 						g.drawImage(deadBoss, 0, 0, null);
-	
-						
+
+
 						// make sure that you cannot fight the boss again
 						allInteractables[2][4] = new dimension(new corner(-1, -1), new corner(-1, -1));
 						snowdenBounds[4].add(new dimension(new corner(495, 130), new corner(880, 140)));
@@ -725,55 +723,45 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 						bossDefeated = true;
 					}
 				}
-			}
-			else {
+			} else {
 				// highlight selection
 				if (battle.menuState == 1) {
 					g.setFont(speakingFont);
 					if (battle.textState == 1) {
 						g.drawString("What will Chara do?", 75, 360);
-					}
-					else if (battle.textState == 2) {
+					} else if (battle.textState == 2) {
 						if (battle.health == 50) {
 							g.drawString("You are MAX HP!", 75, 360);
 							g.drawString("Press 'Z' again to continue", 75, 390);
-						}
-
-						else if (heals == 0) {
+						} else if (heals == 0) {
 							g.drawString("You are out of heals!", 75, 360);
 							g.drawString("Press 'Z' again to continue", 75, 390);
-						}
-
-						else {
+						} else {
 							g.drawString("You healed 10 HP! You have " + heals + " left", 75, 360);
 							g.drawString("Press 'Z' again to continue", 75, 390);
 						}
 
 
-					}
-					else if (battle.textState == 3) {
-						g.drawString("You fled the scene" , 75, 360);
+					} else if (battle.textState == 3) {
+						g.drawString("You fled the scene", 75, 360);
 						g.drawString("Press 'Z' again to continue", 75, 390);
 
 
 					}
 					g.drawImage(selectionImages[battle.selectionState], optionPos[battle.selectionState].x, optionPos[battle.selectionState].y, null);
-				}
-
-				else if (battle.menuState == 2) {
+				} else if (battle.menuState == 2) {
 					// Reset bar values
-					if(battle.count == 0) {
+					if (battle.count == 0) {
 						battle.count = 1;
 						battle.barX = 60;
 						battle.damage = 0;
 						battle.stopBar = false;
 					}
-					if(battle.stopBar) {
+					if (battle.stopBar) {
 						try {
 							System.out.println("damaged");
 							Thread.sleep(1000);
-						}
-						catch (InterruptedException e1) {
+						} catch (InterruptedException e1) {
 							e1.printStackTrace();
 						}
 
@@ -784,22 +772,21 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 						if (battle.attack == 1) {
 							firstAttack();
-						}
-						else if (battle.attack == 2) {
+						} else if (battle.attack == 2) {
 							secondAttack();
 						}
 						battle.menuState = 3;
 						battle.stopBar = false;
-					}
-					else {
+					} else if (battle.selectionState != 2) {
 						g.drawImage(bar, battle.barX, 314, null);
-						if(battle.barX >= 920 || battle.damage >= 1) {
+						if (battle.barX >= 920 || battle.damage >= 1) {
 							battle.stopBar = true;
 						}
-						if(!battle.stopBar) {battle.barX += 20;}
+						if (!battle.stopBar) {
+							battle.barX += 20;
+						}
 					}
-				}
-				else if (battle.menuState == 3) {
+				} else if (battle.menuState == 3) {
 					g.drawImage(player, battle.playerX, battle.playerY, null);
 
 					if (battle.attack == 1) {
@@ -809,16 +796,14 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 								g.drawImage(bone, cur.x, cur.y, null);
 							}
 						}
-					}
-					else if (battle.attack == 2) {
+					} else if (battle.attack == 2) {
 						for (int i = 1; i < 11; i++) {
 							corner cur = bonePositions2[i];
 							if (battle.variation == 1) {
 								if (cur.x < 680) {
 									g.drawImage(bone2, cur.x, cur.y, null);
 								}
-							}
-							else {
+							} else {
 								if (cur.x > 297) {
 									g.drawImage(bone2, cur.x, cur.y, null);
 								}
@@ -842,8 +827,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			if (!(gameState == 2 && (setting != 1))) {
 				if (setting == 1) g.drawImage(orion, 53, 430, null);
 				else if (setting == 3 || setting == 4) g.drawImage(nicky, 53, 430, null);
-			}
-			else if (gameState == 2 && setting == 2)
+			} else if (gameState == 2 && setting == 2)
 				g.drawImage(sans, 100, 430, null);
 			else if (gameState == 2 && setting == 3)
 				g.drawImage(clarence, 100, 450, null);
@@ -852,21 +836,18 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 			for (int i = 0; i < 3; i++) {
 
-				if (grabbedHeal){
+				if (grabbedHeal) {
 					g.drawString(healScript.get(i), 300, 485);
-					g.drawString("You now have " + heals + ((heals > 1)? " heals.": " heal."), 300, 485 + 40);
+					g.drawString("You now have " + heals + ((heals > 1) ? " heals." : " heal."), 300, 485 + 40);
 
-				}
-				else if (ended) {
+				} else if (ended) {
 					g.drawString("You got a #1 Trophy!", 300, 485);
 					g.drawString("Thank you for playing our game.", 300, 525);
 
 
-				}
-				else if (i + dialogue.startLine < allScripts[gameState][setting].size()) {
+				} else if (i + dialogue.startLine < allScripts[gameState][setting].size()) {
 					g.drawString(allScripts[gameState][setting].get(i + dialogue.startLine), 300, 485 + 40 * i);
-				}
-				else {
+				} else {
 					dialogue.startLine = 0;
 					dialogue.speaking = false;
 					break;
@@ -879,7 +860,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				startScript[gameState][setting] = false;
 			}
 		}
-
 	}
 
 	@Override
@@ -908,7 +888,13 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				}
 
 				else if ((e.getKeyChar() == 'z' || e.getKeyChar() == 'Z') && !visitedInteractables[gameState][setting]) {
-					System.out.println("huhuhhuhu");
+					if(audio.footP) {audio.footS = true;}
+					try {
+						audio.footstep(gameState);
+					}
+					catch (LineUnavailableException | UnsupportedAudioFileException | IOException e1) {
+						e1.printStackTrace();
+					}
 					if (allInteractables[gameState][setting] != null) {
 
 						int newX = charaX;
@@ -964,6 +950,13 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					System.out.println("chara x = " + charaX + " " + "charaY = " + charaY);
 
 					if (change != 0) {
+						audio.footS = true;
+						try {
+							audio.footstep(gameState);
+						}
+						catch (LineUnavailableException | UnsupportedAudioFileException | IOException e1) {
+							e1.printStackTrace();
+						}
 						// save the current map
 						fadeStart = allMaps[gameState][setting];
 						System.out.println(gameState + " " + setting + " change " + change);
@@ -995,13 +988,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 							// go to the previous setting but still in same map
 							else setting--;
 						}
-						audio.footS = true;
-						try {
-							audio.footstep(gameState);
-						}
-						catch (LineUnavailableException | UnsupportedAudioFileException | IOException e1) {
-							e1.printStackTrace();
-						}
+						System.out.println("foot stopp please");
 						// put this right after change
 						// if the next setting has a starting script
 						if (startScript[gameState][setting]) {
@@ -1029,38 +1016,50 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 
 		mouseX = e.getX();
 		mouseY = e.getY();
-		if (gameState == 0) {
+		System.out.println(mouseX + " " + mouseY);
+		if (gameState == 0 && !animation.fading) {
 
 			// play game
-			if (370 <= mouseX && mouseX <= 670 && 185 <= mouseY && mouseY <= 270) {
-				animation.wait = false;
-				fadeStart = titleScreen;
-				fadeEnd = ruinsImages[1];
-				gameState = 2;
-				setting = 3;
-				dialogue.speaking = true;
-				animation.fade(fadeStart, fadeEnd, "fast");
+			if (!about) {
+				if (370 <= mouseX && mouseX <= 670 && 185 <= mouseY && mouseY <= 270) {
+					animation.wait = false;
+					fadeStart = titleScreen;
+					fadeEnd = ruinsImages[1];
+					gameState = 1;
+					setting = 1;
+					dialogue.speaking = true;
+					animation.fade(fadeStart, fadeEnd, "fast");
 
 
+				}
 
+				// about
+				else if (370 <= mouseX && mouseX <= 670 && 300 <= mouseY && mouseY <= 390) {
+					System.out.println("about");
+					about = true;
+
+					// change to about screen
+					animation.wait = false;
+					fadeStart = titleScreen;
+					fadeEnd = aboutScreen;
+					animation.fade(fadeStart, fadeEnd, "fast");
+
+
+				} else if (370 <= mouseX && mouseX <= 670 && 420 <= mouseY && mouseY <= 505) {
+					System.out.println("quit");
+					System.exit(0); // terminates the program
+				}
 			}
-
-			// about
-			else if (370 <= mouseX && mouseX <= 670 && 300 <= mouseY && mouseY <= 390) {
-				System.out.println("about");
-
-				// change to about screen
-
-
-			}
-
-			else if (370 <= mouseX && mouseX <= 670 && 420 <= mouseY && mouseY <= 505) {
-				System.out.println("quit");
-				System.exit(0); // terminates the program
+			else {
+				if(30 <= mouseX && mouseX <= 93 && 571 <= mouseY && mouseY <= 600) {
+					animation.wait = false;
+					fadeStart = aboutScreen;
+					fadeEnd = titleScreen;
+					animation.fade(fadeStart, fadeEnd, "fast");
+					about = false;
+				}
 			}
 		}
-
-
 	}
 
 	// Takes in character's current position and the array of boundaries for that
@@ -1255,7 +1254,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 						audio.footP = false;
 					}
 
-					if(up || down || left || right) {
+					if((up || down || left || right) && gameState == 2) {
+						audio.footS = false;
 						try {
 							audio.footstep(gameState);
 						} catch (LineUnavailableException | UnsupportedAudioFileException | IOException e1) {
@@ -1297,20 +1297,18 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 			if (gameState == 2 && setting == 4) {
 				battling = true;
 			}
-			
+
 			else if (gameState == 3 && setting == 1) {
 				ended = true;
 			}
-			else{
+			else {
 				grabbedHeal = true;
-				heals ++;
+				heals++;
 			}
 			return true;
 		}
 
 		return false;
-
-
 	}
 	// Attacks
 	public void firstAttack() {

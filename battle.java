@@ -62,7 +62,6 @@ public class battle extends JPanel implements Runnable, KeyListener {
 
     public static int attack = 1;
     public static int variation;
-    public static boolean fleed = false;
 
     public static int boneHeight = 100;
     public static int boneWidth = 15;
@@ -152,6 +151,10 @@ public class battle extends JPanel implements Runnable, KeyListener {
                             undertale.corner cur = game.bonePositions[i];
                             if (collision(new undertale.corner(playerX, playerY), new undertale.corner(playerX + 25, playerY + 25), new undertale.corner(cur.x, cur.y), new undertale.corner(cur.x + boneWidth, cur.y + boneHeight))) {
                                 health -= 1;
+                                try {
+                                    audio.dmgTakenSound();
+                                } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+                                    e.printStackTrace();}
 
                                 // player has died
                                 if (health == 0) {
@@ -193,6 +196,10 @@ public class battle extends JPanel implements Runnable, KeyListener {
                             // the height for a horizontal one is the width of bone 1
                             if (collision(new undertale.corner(playerX, playerY), new undertale.corner(playerX + 25, playerY + 25), new undertale.corner(cur.x, cur.y), new undertale.corner(cur.x + 70, cur.y + boneWidth))) {
                                 health -= 1;
+                                try {
+                                    audio.dmgTakenSound();
+                                } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+                                    e.printStackTrace();}
 
                                 // player has died
                                 if (health == 0) {
@@ -369,7 +376,18 @@ public class battle extends JPanel implements Runnable, KeyListener {
                 if (xe == 90) {
                     if (selectionState == 2) {
                         textState = 1;
-                        menuState++;
+                        menuState = 3;
+                        if (Math.random() >= 0.50)
+                            variation = 1;
+                        else variation = 2;
+                        System.out.println("variation = " + battle.variation);
+
+                        if (attack == 1) {
+                            game.firstAttack();
+                        } else if (attack == 2) {
+                            game.secondAttack();
+                        }
+                        System.out.println(menuState + " THIS ONE!!");
                     }
                     else if (selectionState == 3) {
                         audio.x = 1;
@@ -398,7 +416,7 @@ public class battle extends JPanel implements Runnable, KeyListener {
                     damage = 10;
                 }
                 else {
-                    damage = 100;
+                    damage = 20;
                 }
                 if(damage > 0) {slash = true;}
                 bossHealth -= damage;
