@@ -32,10 +32,6 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
     public static boolean legA = false;
     public static boolean legS = false;
     public static boolean legD = false;
-
-    // Creating a path to import the pictures
-    File path = new File("assets/charaAnimation");
-    File[] charaImages = path.listFiles();
     
 	public undertale game;
 	
@@ -51,11 +47,6 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
         Thread thread = new Thread(this);
         thread.start();
 
-        try {
-            for (int i = 0; i < chara.length; i++) {
-                chara[i] = ImageIO.read(charaImages[i]);
-            }
-        }
         catch (Exception e) {}
 
         addKeyListener(this);
@@ -74,6 +65,8 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
     // user is going at and figuring out
     // the correct pictures to draw
     public void run() {
+    	// For each leg, depending on the variable leg(W/A/S/D), it will
+    	// display a certain frame of Chara where she switches the leg
         if(x >= 37 && x <= 40)
         {
             // w
