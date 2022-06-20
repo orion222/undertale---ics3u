@@ -1,3 +1,13 @@
+
+// INTRO COMMENTS
+// The purpose of this file is to integrate audio into the game.
+// Each map and unique screen will have a specific audio that will
+// play once the player enters that area or initiate the screen.
+// most settings will have a script that will play once the player
+// The file includes multiple methods to easily transition to other
+// songs and play sound effects
+
+
 import java.io.File;
 import java.io.IOException;
 
