@@ -950,7 +950,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 		if(!over) {xe = e.getKeyCode();}
 
 		// Key code for Chara's animation
-		charaAnimation.x = e.getKeyCode();
+		int x = e.getKeyCode();
+		if(x >= 37 && x <= 40) {charaAnimation.x = e.getKeyCode();}
 	
 		if(!battling) {
 			System.out.println("key has pressed");
