@@ -47,8 +47,6 @@ public class charaAnimation extends JPanel implements Runnable, KeyListener {
         Thread thread = new Thread(this);
         thread.start();
 
-        catch (Exception e) {}
-
         addKeyListener(this);
         this.setFocusable(true);
     }
