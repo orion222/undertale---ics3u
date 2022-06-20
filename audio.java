@@ -4,6 +4,7 @@ import java.io.IOException;
 import javax.sound.sampled.*;
 
 public class audio {
+    // importing audio files
     File boss = new File("assets/audio/mus_boss.wav");
     File end = new File("assets/audio/mus_end.wav");
     File musicBox = new File("assets/audio/mus_musicBox.wav");
@@ -17,7 +18,7 @@ public class audio {
     // x allows the program to understand
     // if a map has been changed. Change
     // is to switch the song and playing
-    // is to play that file
+    // tells us if a song is currently playing.
     public static int x = -1;
     public static boolean change = false;
     public static boolean playing = false;
@@ -38,7 +39,7 @@ public class audio {
     public static Clip clip2;
     public static AudioInputStream audioStream2;
 
-    // Variables dedicated to hit sound
+    // Variables dedicated to hit sound and damage taken sound
     public static Clip clip3;
     public static AudioInputStream audioStream3;
 
@@ -53,8 +54,10 @@ public class audio {
         fight = e;
     }
 
-
+    // The general background music for each setting and battle
     public void playMusic(int gameState) throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        // music when in battle
+        // "loser" is when Chara has been defeated and "boss" is the general bg music
         if(game.battling) {
             clip.stop();
             playing = true;
@@ -65,6 +68,9 @@ public class audio {
                 audioStream = AudioSystem.getAudioInputStream(boss);
             }
         }
+        // whenever you are not battling, the variable "x" allows the computer
+        // to understand whenever a map has been changed. thus, x will be set
+        // to that game state value and set "change" to true.
         if(!game.battling) {
             if(x != game.gameState) {
                 System.out.println("changess");
@@ -74,6 +80,8 @@ public class audio {
                     clip.stop();
                 }
             }
+            // if change is true, this is where the next song will be decided
+            // based on the next / previous map
             if(change) {
                 playing = true;
                 change = false;
@@ -91,6 +99,7 @@ public class audio {
                 }
             }
         }
+        // where the songs will be played
         if(playing) {
             playing = false;
             clip = AudioSystem.getClip();
@@ -100,15 +109,21 @@ public class audio {
         }
     }
 
+    // footstep sound effect in snowden
     public void footstep(int gameState) throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         audioStream2 = AudioSystem.getAudioInputStream(snowWalk);
         if(gameState == 2) {
+            // this if statement is to stop the sound effect from playing
+            // the condition to the right is for the sound effect to stop playing
+            // when Chara is on the bridge on snowden's fourth setting
             if(footS || (game.setting == 4 && game.globalPos >= 375 && game.globalPos <= 1520)) {
                 System.out.println("STOP FOOT");
                 clip2.stop();
                 footS = false;
                 footP = false;
             }
+            // this if statement allows the clip to be played when it is not playing
+            // at the moment
             else if(!footP) {
                 clip2 = AudioSystem.getClip();
                 clip2.open(audioStream2);
@@ -118,6 +133,8 @@ public class audio {
             }
         }
     }
+
+    // hit sound when doing damage to the boss in battle
     public void hitSound(int damage) throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         audioStream3 = AudioSystem.getAudioInputStream(hit);
         if(damage > 0) {
@@ -126,6 +143,8 @@ public class audio {
             clip3.start();
         }
     }
+
+    // damage taken sound when taking damage during battle
     public void dmgTakenSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         audioStream3 = AudioSystem.getAudioInputStream(dmgTaken);
         clip3 = AudioSystem.getClip();
