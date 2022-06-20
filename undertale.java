@@ -1110,8 +1110,8 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					animation.wait = false;
 					fadeStart = titleScreen;
 					fadeEnd = ruinsImages[1];
-					gameState = 2;
-					setting = 4;
+					gameState = 1;
+					setting = 1;
 					dialogue.speaking = true;
 					animation.fade(fadeStart, fadeEnd, "fast");
 
@@ -1240,28 +1240,28 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 				}
 			}
 			// movement in battle and out of battle works the same
-			if (e.getKeyChar() == 'w' || e.getKeyCode() == 38) {
+			if (e.getKeyCode() == 38) {
 				System.out.println("up");
 				up = false;
 				battle.up = false;
 				if(!battling) {curChara = 0;}
 			}
 
-			if (e.getKeyChar() == 's' || e.getKeyCode() == 40) {
+			if (e.getKeyCode() == 40) {
 				down = false;
 				battle.down = false;
 				if(!battling) {curChara = 2; charaAnimation.legS = false;}
 			}
 
 
-			if (e.getKeyChar() == 'a' || e.getKeyCode() == 37) {
+			if (e.getKeyCode() == 37) {
 				left = false;
 				battle.left = false;
 				if(!battling) {curChara = 1; charaAnimation.legA = false;}
 			}
 
 
-			if (e.getKeyChar() == 'd' || e.getKeyCode() == 39) {
+			if (e.getKeyCode() == 39) {
 				right = false;
 				battle.right = false;
 				if(!battling) {curChara = 3;}
@@ -1279,6 +1279,7 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public void run() {
 		while(true) {
 			if(!battling) {
+				System.out.println("run statement");
 				try {
 					Thread.sleep(1000 / fps);
 					// movement
