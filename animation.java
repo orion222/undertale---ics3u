@@ -96,12 +96,12 @@ public class animation implements ActionListener{
                 game.mapX = -830;
             }
             else if(game.gameState == 2 && game.setting == 4 && game.change == 1) {
-                game.globalPos = 60;
-            }
-            else if (game.gameState == 2 && game.setting == 4 && game.change == 2) {
-                game.mapX = -670;
-                game.globalPos = 1535;
-            }
+				game.globalPos = 60; 
+			}
+			else if (game.gameState == 2 && game.setting == 4 && game.change == 2) {
+				game.mapX = -670;
+				game.globalPos = 1595;
+			}
         }
     }
     

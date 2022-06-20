@@ -1114,8 +1114,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 					setting = 1;
 					dialogue.speaking = true;
 					animation.fade(fadeStart, fadeEnd, "fast");
-
-
 				}
 
 				// about
@@ -1279,7 +1277,6 @@ public class undertale extends JPanel implements KeyListener, MouseListener, Run
 	public void run() {
 		while(true) {
 			if(!battling) {
-				System.out.println("run statement");
 				try {
 					Thread.sleep(1000 / fps);
 					// movement

@@ -10,7 +10,6 @@
 
 import java.io.File;
 import java.io.IOException;
-
 import javax.sound.sampled.*;
 
 public class audio {
@@ -130,7 +129,7 @@ public class audio {
             // this if statement is to stop the sound effect from playing
             // the condition to the right is for the sound effect to stop playing
             // when Chara is on the bridge on snowden's fourth setting
-            if(footS || (game.setting == 4 && game.globalPos >= 375 && game.globalPos <= 1520)) {
+            if(footS || (game.setting == 4 && game.globalPos >= 445 && game.globalPos <= 1580)) {
                 System.out.println("STOP FOOT");
                 clip2.stop();
                 footS = false;

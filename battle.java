@@ -461,7 +461,6 @@ public class battle extends JPanel implements Runnable, KeyListener {
                 down = true;
             }
 
-
             if (e.getKeyCode() == 37) {
                 left = true;
             }
