@@ -1,9 +1,14 @@
 Hello, welcome to UNDERTALE.
 My name is ORION and I will explain how
-to play the game. Click z to continue
-Use the arrow keys to navigate around the
-map. The z key the interact key, use
-it to skip dialogue or interact with
-things in the map. 
+to play the game. Click z to continue.
+In this game, the 'z' key is used to
+interact with people/objects and to
+skip dialogue.
+The arrow keys are used to move your
+character and navigate around the map.
+
+With this knowledge, you'll be able to
+beat the game! Good luck and have fun!
+
 
 
